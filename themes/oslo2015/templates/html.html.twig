@@ -1,0 +1,147 @@
+{#
+/**
+ * @file
+ * Default theme implementation for the basic structure of a single Drupal page.
+ *
+ * Variables:
+ * - logged_in: A flag indicating if user is logged in.
+ * - root_path: The root path of the current page (e.g., node, admin, user).
+ * - node_type: The content type for the current node, if the page is a node.
+ * - css: A list of CSS files for the current page.
+ * - head: Markup for the HEAD element (including meta tags, keyword tags, and
+ *   so on).
+ * - head_title: A modified version of the page title, for use in the TITLE tag.
+ * - head_title_array: List of text elements that make up the head_title
+ *   variable. May contain or more of the following:
+ *   - title: The title of the page.
+ *   - name: The name of the site.
+ *   - slogan: The slogan of the site.
+ * - page_top: Initial rendered markup. This should be printed before 'page'.
+ * - page: The rendered page markup.
+ * - page_bottom: Closing rendered markup. This variable should be printed after
+ *   'page'.
+ * - styles: Style tags necessary to import all necessary CSS files in the head.
+ * - scripts: Script tags necessary to load the JavaScript files and settings
+ *   in the head.
+ *
+ * @see template_preprocess_html()
+ *
+ * @ingroup themeable
+ */
+#}
+{%
+  set body_classes = [
+    logged_in ? 'user-logged-in',
+    not root_path ? 'path-frontpage' : 'path-' ~ root_path|clean_class,
+    node_type ? 'node--type-' ~ node_type|clean_class,
+  ]
+%}
+<!DOCTYPE html>
+<html{{ html_attributes }}>
+  <head>
+    {{ head }}
+    <title>{{ head_title }}</title>
+    {{ styles }}
+    <style type="text/css" media="all">@import url("http://oslo2015.drupalcamp.no/modules/system/system.base.css?nbkt25");
+@import url("http://oslo2015.drupalcamp.no/modules/system/system.messages.css?nbkt25");
+@import url("http://oslo2015.drupalcamp.no/modules/system/system.theme.css?nbkt25");</style>
+<style type="text/css" media="all">@import url("http://oslo2015.drupalcamp.no/sites/all/modules/simplenews/simplenews.css?nbkt25");
+@import url("http://oslo2015.drupalcamp.no/modules/comment/comment.css?nbkt25");
+@import url("http://oslo2015.drupalcamp.no/modules/field/theme/field.css?nbkt25");
+@import url("http://oslo2015.drupalcamp.no/modules/node/node.css?nbkt25");
+@import url("http://oslo2015.drupalcamp.no/modules/search/search.css?nbkt25");
+@import url("http://oslo2015.drupalcamp.no/modules/user/user.css?nbkt25");
+@import url("http://oslo2015.drupalcamp.no/sites/all/modules/views/css/views.css?nbkt25");</style>
+<style type="text/css" media="all">@import url("http://oslo2015.drupalcamp.no/sites/all/modules/ctools/css/ctools.css?nbkt25");
+@import url("http://oslo2015.drupalcamp.no/sites/all/modules/panels/css/panels.css?nbkt25");
+@import url("http://oslo2015.drupalcamp.no/sites/all/modules/panels/plugins/layouts/onecol/onecol.css?nbkt25");</style>
+<style type="text/css" media="all">@import url("http://oslo2015.drupalcamp.no/sites/default/files/icon/fontello/font_awesome/css/fontello.css?nbkt25");
+@import url("http://oslo2015.drupalcamp.no/sites/all/modules/fontello/css/fontello.fix.css?nbkt25");
+@import url("http://oslo2015.drupalcamp.no/sites/default/files/icon/fontello/font_awesome/css/animation.css?nbkt25");</style>
+
+<!--[if IE 7]>
+<style type="text/css" media="all">@import url("http://oslo2015.drupalcamp.no/sites/default/files/icon/fontello/font_awesome/css/fontello-ie7.css?nbkt25");</style>
+<![endif]-->
+<style type="text/css" media="all">@import url("http://oslo2015.drupalcamp.no/sites/all/themes/md_arista/css/front/bootstrap.min.css?nbkt25");
+@import url("http://oslo2015.drupalcamp.no/sites/all/themes/md_arista/css/front/font-awesome.css?nbkt25");
+@import url("http://oslo2015.drupalcamp.no/sites/all/themes/md_arista/css/front/flexslider.css?nbkt25");
+@import url("http://oslo2015.drupalcamp.no/sites/all/themes/md_arista/css/front/owl.carousel.css?nbkt25");
+@import url("http://oslo2015.drupalcamp.no/sites/all/themes/md_arista/css/front/jquery.fancybox.css?nbkt25");
+@import url("http://oslo2015.drupalcamp.no/sites/all/themes/md_arista/css/front/style.css?nbkt25");</style>
+<link type="text/css" rel="stylesheet" href="http://fonts.googleapis.com/css?family=Istok+Web%7COpen+Sans:400,300,600,700,800" media="all" />
+
+<!--[if lte IE 7]>
+<link type="text/css" rel="stylesheet" href="http://oslo2015.drupalcamp.no/sites/all/themes/md_arista/css/ie7.css?nbkt25" media="all" />
+<![endif]-->
+<script type="text/javascript" src="http://oslo2015.drupalcamp.no/sites/all/modules/jquery_update/replace/jquery/1.8/jquery.min.js?v=1.8.2"></script>
+<script type="text/javascript" src="http://oslo2015.drupalcamp.no/misc/jquery.once.js?v=1.2"></script>
+<script type="text/javascript" src="http://oslo2015.drupalcamp.no/misc/drupal.js?nbkt25"></script>
+<script type="text/javascript" src="http://oslo2015.drupalcamp.no/sites/default/files/languages/nb_Ec8mZ6pISkguUDI5NlGM7n4-kY-SaPhhZicdagujaRk.js?nbkt25"></script>
+<script type="text/javascript" src="http://oslo2015.drupalcamp.no/sites/all/themes/md_arista/js/front/owl.carousel.min.js?nbkt25"></script>
+<script type="text/javascript" src="http://oslo2015.drupalcamp.no/sites/all/themes/md_arista/js/front/jquery.flexslider.js?nbkt25"></script>
+<script type="text/javascript" src="http://oslo2015.drupalcamp.no/sites/all/themes/md_arista/js/front/bootstrap.min.js?nbkt25"></script>
+<script type="text/javascript" src="http://oslo2015.drupalcamp.no/sites/all/themes/md_arista/js/front/appear.js?nbkt25"></script>
+<script type="text/javascript" src="http://oslo2015.drupalcamp.no/sites/all/themes/md_arista/js/front/skrollr.js?nbkt25"></script>
+<script type="text/javascript" src="http://oslo2015.drupalcamp.no/sites/all/themes/md_arista/js/front/jquery.form.min.js?nbkt25"></script>
+<script type="text/javascript" src="http://oslo2015.drupalcamp.no/sites/all/themes/md_arista/js/front/jquery.easing.1.3.js?nbkt25"></script>
+<script type="text/javascript" src="http://oslo2015.drupalcamp.no/sites/all/themes/md_arista/js/front/main-portfoloi.js?nbkt25"></script>
+<script type="text/javascript" src="http://oslo2015.drupalcamp.no/sites/all/themes/md_arista/js/front/jquery.fancybox.pack.js?nbkt25"></script>
+<script type="text/javascript" src="http://oslo2015.drupalcamp.no/sites/all/themes/md_arista/js/front/custom.js?nbkt25"></script>
+<script type="text/javascript" src="http://oslo2015.drupalcamp.no/sites/all/themes/md_arista/js/front/theme.js?nbkt25"></script>
+<script type="text/javascript">
+<!--//--><![CDATA[//><!--
+jQuery.extend(Drupal.settings, {"basePath":"\/","pathPrefix":"","ajaxPageState":{"theme":"md_arista","theme_token":"0u3jIuSpfxU6l-dKHNUcXBEF9nPMPfa_000iXXvi-Rk","js":{"sites\/all\/modules\/jquery_update\/replace\/jquery\/1.8\/jquery.min.js":1,"misc\/jquery.once.js":1,"misc\/drupal.js":1,"public:\/\/languages\/nb_Ec8mZ6pISkguUDI5NlGM7n4-kY-SaPhhZicdagujaRk.js":1,"sites\/all\/themes\/md_arista\/js\/front\/owl.carousel.min.js":1,"sites\/all\/themes\/md_arista\/js\/front\/jquery.flexslider.js":1,"sites\/all\/themes\/md_arista\/js\/front\/bootstrap.min.js":1,"sites\/all\/themes\/md_arista\/js\/front\/appear.js":1,"sites\/all\/themes\/md_arista\/js\/front\/skrollr.js":1,"sites\/all\/themes\/md_arista\/js\/front\/jquery.form.min.js":1,"sites\/all\/themes\/md_arista\/js\/front\/jquery.easing.1.3.js":1,"sites\/all\/themes\/md_arista\/js\/front\/main-portfoloi.js":1,"sites\/all\/themes\/md_arista\/js\/front\/jquery.fancybox.pack.js":1,"sites\/all\/themes\/md_arista\/js\/front\/custom.js":1,"sites\/all\/themes\/md_arista\/js\/front\/theme.js":1},"css":{"modules\/system\/system.base.css":1,"modules\/system\/system.messages.css":1,"modules\/system\/system.theme.css":1,"sites\/all\/modules\/simplenews\/simplenews.css":1,"modules\/comment\/comment.css":1,"modules\/field\/theme\/field.css":1,"modules\/node\/node.css":1,"modules\/search\/search.css":1,"modules\/user\/user.css":1,"sites\/all\/modules\/views\/css\/views.css":1,"sites\/all\/modules\/ctools\/css\/ctools.css":1,"sites\/all\/modules\/panels\/css\/panels.css":1,"sites\/all\/modules\/panels\/plugins\/layouts\/onecol\/onecol.css":1,"sites\/all\/modules\/icon\/bundles\/lullacons\/css\/.css":1,"sites\/all\/modules\/icon\/bundles\/lullacons\/css\/animation.css":1,"sites\/all\/modules\/icon\/bundles\/lullacons\/css\/-ie7.css":1,"public:\/\/icon\/fontello\/font_awesome\/css\/fontello.css":1,"sites\/all\/modules\/fontello\/css\/fontello.fix.css":1,"public:\/\/icon\/fontello\/font_awesome\/css\/animation.css":1,"public:\/\/icon\/fontello\/font_awesome\/css\/fontello-ie7.css":1,"sites\/all\/themes\/md_arista\/css\/front\/bootstrap.min.css":1,"sites\/all\/themes\/md_arista\/css\/front\/font-awesome.css":1,"sites\/all\/themes\/md_arista\/css\/front\/flexslider.css":1,"sites\/all\/themes\/md_arista\/css\/front\/owl.carousel.css":1,"sites\/all\/themes\/md_arista\/css\/front\/jquery.fancybox.css":1,"sites\/all\/themes\/md_arista\/css\/front\/style.css":1,"http:\/\/fonts.googleapis.com\/css?family=Istok+Web%7COpen+Sans:400,300,600,700,800":1,"sites\/all\/themes\/md_arista\/css\/ie7.css":1}},"themePath":"sites\/all\/themes\/md_arista","hdBgType":"static"});
+//--><!]]>
+</script>
+    <style type="text/css">
+                #home .go:hover, #home-down .go:hover {border:5px solid #7987d5; color: #7987d5; }
+#home .go:hover i {color: #7987d5 !important; }
+.loader1 {border: 2px solid #7987d5; }
+.loader2 {border: 2px solid #7987d5; }
+.loader3 {border: 2px solid #7987d5; }
+.loader4 {border: 2px solid #7987d5; background: #7987d5; }
+.owl-fade-in .item-container h4 {color: #7987d5; }
+.pane h3  span:hover {background: #7987d5; }
+.aboutintro-nav li.active a {background: #7987d5; }
+#teamgrid .team .text a {background: none repeat scroll 0 0 #7987d5; }
+.service .btn {border: 1px solid #7987d5; color: #7987d5; }
+.service .btn:hover,.service .btn:active {background: #7987d5; border:1px solid #7987d5; }
+.p-icon {color: #7987d5; }
+.process-container-bg:hover {background-color: #7987d5; }
+#mds-portfolio-content .cbp-l-filters-button .cbp-filter-counter:before {border-top: 4px solid #7987d5; }
+#mds-portfolio-content .cbp-l-filters-button .cbp-filter-counter {background-color: #7987d5; }
+#mds-portfolio-content .cbp-l-filters-button .cbp-filter-item.cbp-filter-item-active {background-color: #7987d5; border-color: #7987d5; }
+.cbp-caption-overlayBottomPush .cbp-caption-activeWrap { background: none repeat scroll 0 0 #7987d5; }
+#action-penal{background: #7987d5; }
+#cuboid form {background: none repeat scroll 0 0 #7987d5; }
+.loader {background: #7987d5; }
+#email, .simplenews-subscribe #edit-mail {background: none repeat scroll 0 0 #7987d5; }
+#cuboid:hover{background: #7987d5; }
+.address-wrap ul li a:hover{color: #7987d5; }
+.form-contact{background: #7987d5; }
+.form-contact h5.form-title {background: none repeat scroll 0 0 #7987d5; }
+#twitter-box a { color: #7987d5; }
+.theme_btn { border: 3px solid #7987d5; background-color: #7987d5; }
+#mds-portfolio-content .cbp-caption-zoom .cbp-caption-activeWrap {  background-color: rgba(121,135,213, 0.9); }
+.bg-image {background-image : url("http://oslo2015.drupalcamp.no/sites/default/files/media/oslo-1600x1000.jpg") !important;}.bg-parallax1 {background-image : url("http://oslo2015.drupalcamp.no/sites/default/files/media/kode-1.jpg") !important;}.bg-parallax2 {background-image : url("http://oslo2015.drupalcamp.no/sites/default/files/media/bg-img-contact.jpg") !important;}        body {}
+a:link, #node-title a {}
+a:hover, #node-title a:hover {}
+a:visited, #node-title a:visited {}
+a:focus, a:active, #node-title a:focus, #node-title a:active {}
+
+            </style>
+        <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+      <script src="js/html5shiv.js"></script>
+      <script src="js/respond.min.js"></script>
+    <![endif]-->
+  </head>
+  <body{{ attributes.addClass(body_classes) }}>
+    <a href="#main-content" class="visually-hidden focusable skip-link">
+      {{ 'Skip to main content'|t }}
+    </a>
+    {{ page_top }}
+    {{ page }}
+    {{ page_bottom }}
+  </body>
+</html>
