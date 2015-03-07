@@ -1,0 +1,23 @@
+uuid: 03f014d7-ca69-4a1c-bb08-8d3c664a4817
+langcode: en
+status: true
+dependencies:
+  module:
+    - user
+  theme:
+    - oslo2015
+id: oslo2015_login
+theme: oslo2015
+region: messages
+weight: 0
+provider: null
+plugin: user_login_block
+settings:
+  id: user_login_block
+  label: 'User login'
+  provider: user
+  label_display: visible
+  cache:
+    max_age: 0
+    contexts: {  }
+visibility: {  }

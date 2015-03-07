@@ -1,0 +1,23 @@
+uuid: f2d83c0c-0247-4d1c-815e-9454b4b2d0a8
+langcode: en
+status: true
+dependencies:
+  module:
+    - search
+  theme:
+    - classy
+id: classy_search
+theme: classy
+region: sidebar_first
+weight: -1
+provider: null
+plugin: search_form_block
+settings:
+  id: search_form_block
+  label: Search
+  provider: search
+  label_display: visible
+  cache:
+    max_age: 0
+    contexts: {  }
+visibility: {  }

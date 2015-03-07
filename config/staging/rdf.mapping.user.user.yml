@@ -1,0 +1,15 @@
+uuid: 3b02908e-826a-4063-895a-90d7ff0190e9
+langcode: und
+status: true
+dependencies:
+  module:
+    - user
+id: user.user
+targetEntityType: user
+bundle: user
+types:
+  - 'schema:Person'
+fieldMappings:
+  name:
+    properties:
+      - 'schema:name'

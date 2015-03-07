@@ -1,0 +1,27 @@
+uuid: bac5b39a-ae08-432f-9000-f6141af63c99
+langcode: en
+status: true
+dependencies:
+  config:
+    - system.menu.main
+  module:
+    - system
+  theme:
+    - oslo2015
+id: oslo2015_main_menu
+theme: oslo2015
+region: messages
+weight: 0
+provider: null
+plugin: 'system_menu_block:main'
+settings:
+  id: 'system_menu_block:main'
+  label: 'Main navigation'
+  provider: system
+  label_display: '0'
+  cache:
+    max_age: -1
+    contexts: {  }
+  level: 1
+  depth: 1
+visibility: {  }

@@ -4,9 +4,8 @@ description: Drupalcamp Oslo theme
 core: 8.x
 base theme: classy
 
-stylesheets:
-  all:
-    - build/css/style.css
+libraries:
+  - oslo2015/base
 
 regions:
   messages: Messages

@@ -1,0 +1,36 @@
+uuid: bad70340-46fc-415e-b242-66525d6fda2c
+langcode: en
+status: true
+dependencies:
+  content:
+    - 'block_content:basic:f7d81459-3a04-4d5d-aa2d-457048db62b8'
+  module:
+    - block_content
+    - node
+    - system
+    - user
+  theme:
+    - oslo2015
+id: introwrapper
+theme: oslo2015
+region: content
+weight: -5
+provider: null
+plugin: 'block_content:f7d81459-3a04-4d5d-aa2d-457048db62b8'
+settings:
+  id: 'block_content:f7d81459-3a04-4d5d-aa2d-457048db62b8'
+  label: 'Intro wrapper'
+  provider: block_content
+  label_display: '0'
+  cache:
+    max_age: -1
+    contexts: {  }
+  status: true
+  info: ''
+  view_mode: full
+visibility:
+  request_path:
+    id: request_path
+    pages: '<front>'
+    negate: false
+    context_mapping: {  }

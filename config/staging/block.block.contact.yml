@@ -1,0 +1,36 @@
+uuid: e7e65a23-8294-41f2-ac00-bad61d351bc2
+langcode: en
+status: true
+dependencies:
+  content:
+    - 'block_content:basic:50de37b4-0512-4046-8100-f9f18b252601'
+  module:
+    - block_content
+    - node
+    - system
+    - user
+  theme:
+    - oslo2015
+id: contact
+theme: oslo2015
+region: content
+weight: null
+provider: null
+plugin: 'block_content:50de37b4-0512-4046-8100-f9f18b252601'
+settings:
+  id: 'block_content:50de37b4-0512-4046-8100-f9f18b252601'
+  label: Contact
+  provider: block_content
+  label_display: '0'
+  cache:
+    max_age: -1
+    contexts: {  }
+  status: true
+  info: ''
+  view_mode: full
+visibility:
+  request_path:
+    id: request_path
+    pages: '<front>'
+    negate: false
+    context_mapping: {  }

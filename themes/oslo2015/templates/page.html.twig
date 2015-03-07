@@ -98,20 +98,20 @@
 <!-- End Header -->
 <!-- Home section -->
 <div id="home" class="parallax bg-image" data-20="opacity:1;" data-700="opacity:0;" style="background:none">
-	    <div class="bg-overlay" ></div>
-    <div class="slideshow-home">
-        <div class="wrapper">
-                <!-- header slider -->
-                <div id="heading-slider-style1" class="owl-carousel clearfix" data-1700="top:100%;" data-2200="top:0%;" data-3000="display:block;" data-3700="top:-100%;display:none;">
-                    <div class="item"><div class="item-container">
-									   <h4>DRUPALCAMP<br/>OSLO</h4>
-									   <hr/>
-                            		   <p>Hele Norges Drupal-miljø samles</p>
-									   </div></div><div class="item"><div class="item-container">
-									   <h4>13./14. NOVEMBER<br/>2015</h4>
-									   <hr/>
-                            		   <p>Hele Norges Drupal-miljø samles</p>
-									   </div></div>                </div>
+	 <div class="bg-overlay" ></div>
+  <div class="slideshow-home">
+    <div class="wrapper">
+      <!-- header slider -->
+        <div id="heading-slider-style1" class="owl-carousel clearfix" data-1700="top:100%;" data-2200="top:0%;" data-3000="display:block;" data-3700="top:-100%;display:none;">
+                <div class="item"><div class="item-container">
+        <h4>ssDRUPALCAMP<br/>OSLO</h4>
+        <hr/>
+                             <p>Hele Norges Drupal-miljø samles</p>
+        </div></div><div class="item"><div class="item-container">
+        <h4>13./14. NOVEMBER<br/>2015</h4>
+        <hr/>
+                             <p>Hele Norges Drupal-miljø samles</p>
+        </div></div>                </div>
                 <!-- end header slider -->
 
         </div>
@@ -123,86 +123,19 @@
     </div>
 </div>
 <!-- End Home section -->
-<div class="layout-container">
+<div class="page-content">
+	  <div class="region region-content">
+    {{ messages }}
 
-  <header role="banner">
-    {% if logo %}
-      <a href="{{ front_page }}" title="{{ 'Home'|t }}" rel="home">
-        <img src="{{ logo }}" alt="{{ 'Home'|t }}"/>
-      </a>
-    {% endif %}
-
-    {% if site_name or site_slogan %}
-      <div class="name-and-slogan">
-
-        {# Use h1 when the content title is empty #}
-        {% if title %}
-          <strong class="site-name">
-            <a href="{{ front_page }}" title="{{ 'Home'|t }}" rel="home">{{ site_name }}</a>
-          </strong>
-        {% else %}
-          <h1 class="site-name">
-            <a href="{{ front_page }}" title="{{ 'Home'|t }}" rel="home">{{ site_name }}</a>
-          </h1>
-        {% endif %}
-
-        {% if site_slogan %}
-          <div class="site-slogan">{{ site_slogan }}</div>
-        {% endif %}
-      </div>{# ./name-and-slogan #}
-    {% endif %}
-
-    {{ page.header }}
-  </header>
-
-  {{ page.primary_menu }}
-  {{ page.secondary_menu }}
-
-  {{ page.breadcrumb }}
-
-  {{ messages }}
-
-  {{ page.help }}
-
-  <main role="main">
-    <a id="main-content" tabindex="-1"></a>{# link is in html.html.twig #}
-
-    <div class="layout-content">
-      {{ page.highlighted }}
-
-      {{ title_prefix }}
-      {% if title %}
-        <h1>{{ title }}</h1>
-      {% endif %}
-      {{ title_suffix }}
-
-      {{ tabs }}
-
-      {% if action_links %}
-        <nav class="action-links">{{ action_links }}</nav>
-      {% endif %}
-
+    <div class="content">
       {{ page.content }}
-    </div>{# /.layout-content #}
+    </div>
+   </div>
+</div>
 
-    {% if page.sidebar_first %}
-      <aside class="layout-sidebar-first" role="complementary">
-        {{ page.sidebar_first }}
-      </aside>
-    {% endif %}
 
-    {% if page.sidebar_second %}
-      <aside class="layout-sidebar-second" role="complementary">
-        {{ page.sidebar_second }}
-      </aside>
-    {% endif %}
-
-  </main>
-
-  {% if page.footer %}
-    <footer role="contentinfo">
-      {{ page.footer }}
-    </footer>
-  {% endif %}
-
-</div>{# /.layout-container #}
+<!-- Footer -->
+<footer>
+		<p>Drupal Norge</p>
+  {{ page.footer }}
+</footer>

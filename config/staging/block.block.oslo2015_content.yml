@@ -1,0 +1,23 @@
+uuid: 61fac5e3-40e5-4c07-9a00-dfe040b40a18
+langcode: en
+status: true
+dependencies:
+  module:
+    - system
+  theme:
+    - oslo2015
+id: oslo2015_content
+theme: oslo2015
+region: content
+weight: -4
+provider: null
+plugin: system_main_block
+settings:
+  id: system_main_block
+  label: 'Main page content'
+  provider: system
+  label_display: '0'
+  cache:
+    max_age: 0
+    contexts: {  }
+visibility: {  }

@@ -1,0 +1,23 @@
+uuid: e3addef3-51d0-4c42-8400-e09d69cf67f5
+langcode: en
+status: true
+dependencies:
+  module:
+    - search
+  theme:
+    - oslo2015
+id: oslo2015_search
+theme: oslo2015
+region: messages
+weight: -1
+provider: null
+plugin: search_form_block
+settings:
+  id: search_form_block
+  label: Search
+  provider: search
+  label_display: visible
+  cache:
+    max_age: 0
+    contexts: {  }
+visibility: {  }

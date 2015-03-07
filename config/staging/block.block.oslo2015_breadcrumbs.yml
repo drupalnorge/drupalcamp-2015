@@ -1,0 +1,23 @@
+uuid: b0ea0302-ea53-4240-9756-867c69e7a092
+langcode: en
+status: true
+dependencies:
+  module:
+    - system
+  theme:
+    - oslo2015
+id: oslo2015_breadcrumbs
+theme: oslo2015
+region: messages
+weight: 0
+provider: null
+plugin: system_breadcrumb_block
+settings:
+  id: system_breadcrumb_block
+  label: Breadcrumbs
+  provider: system
+  label_display: '0'
+  cache:
+    max_age: 0
+    contexts: {  }
+visibility: {  }

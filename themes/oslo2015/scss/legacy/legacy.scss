@@ -2068,7 +2068,7 @@ opacity:1;
 }
 
 #fancybox-loading, .fancybox-close, .fancybox-prev span, .fancybox-next span {
-	background-image: url('../../img/fancybox_sprite.png');
+	background-image: url('../../images/fancybox_sprite.png');
 }
 
 #fancybox-loading {
@@ -2086,7 +2086,7 @@ opacity:1;
 #fancybox-loading div {
 	width: 44px;
 	height: 44px;
-	background: url('../../img/fancybox_loading.gif') center center no-repeat;
+	background: url('../../images/fancybox_loading.gif') center center no-repeat;
 }
 
 .fancybox-close {
@@ -2106,7 +2106,7 @@ opacity:1;
 	height: 100%;
 	cursor: pointer;
 	text-decoration: none;
-	background: transparent url('../../img/blank.gif'); /* helps IE */
+	background: transparent url('../../images/blank.gif'); /* helps IE */
 	-webkit-tap-highlight-color: rgba(0,0,0,0);
 	z-index: 8040;
 }
@@ -2176,7 +2176,7 @@ opacity:1;
 	overflow: hidden;
 	display: none;
 	z-index: 8010;
-	background: url('../../img/fancybox_overlay.png');
+	background: url('../../images/fancybox_overlay.png');
 }
 
 .fancybox-overlay-fixed {
@@ -2255,12 +2255,12 @@ opacity:1;
 	   only screen and (min-device-pixel-ratio: 1.5){
 
 	#fancybox-loading, .fancybox-close, .fancybox-prev span, .fancybox-next span {
-		background-image: url('../../img/fancybox_sprite@2x.png');
+		background-image: url('../../images/fancybox_sprite@2x.png');
 		background-size: 44px 152px; /*The size of the normal image, half the size of the hi-res image*/
 	}
 
 	#fancybox-loading div {
-		background-image: url('../../img/fancybox_loading@2x.gif');
+		background-image: url('../../images/fancybox_loading@2x.gif');
 		background-size: 24px 24px; /*The size of the normal image, half the size of the hi-res image*/
 	}
 }
@@ -3422,20 +3422,25 @@ margin-right: 0.5em;
 padding: 0 1em;
 text-decoration: none;
 }
+#home .go:hover,
+#home-down .go:hover {
+  border:5px solid #7987d5; color: #7987d5; }
 .tabs ul.primary li.active a {
-background-color: #fff;
-border: 1px solid #bbb;
-border-bottom: 1px solid #fff;
+  background-color: #fff;
+  border: 1px solid #bbb;
+  border-bottom: 1px solid #fff;
 }
-
-#home .go:hover, #home-down .go:hover {border:5px solid #7987d5; color: #7987d5; }
-#home .go:hover i {color: #7987d5 !important; }
+#home .go:hover i {
+  color: #7987d5 !important; }
 .loader1 {border: 2px solid #7987d5; }
 .loader2 {border: 2px solid #7987d5; }
 .loader3 {border: 2px solid #7987d5; }
-.loader4 {border: 2px solid #7987d5; background: #7987d5; }
-.owl-fade-in .item-container h4 {color: #7987d5; }
-.pane h3  span:hover {background: #7987d5; }
+.loader4 {
+  border: 2px solid #7987d5; background: #7987d5; }
+.owl-fade-in .item-container h4 {
+  color: #7987d5; }
+.pane h3  span:hover {
+  background: #7987d5; }
 .aboutintro-nav li.active a {background: #7987d5; }
 #teamgrid .team .text a {background: none repeat scroll 0 0 #7987d5; }
 .service .btn {border: 1px solid #7987d5; color: #7987d5; }
@@ -3457,7 +3462,12 @@ border-bottom: 1px solid #fff;
 #twitter-box a { color: #7987d5; }
 .theme_btn { border: 3px solid #7987d5; background-color: #7987d5; }
 #mds-portfolio-content .cbp-caption-zoom .cbp-caption-activeWrap {  background-color: rgba(121,135,213, 0.9); }
-.bg-image {background-image : url("http://oslo2015.drupalcamp.no/sites/default/files/media/oslo-1600x1000.jpg") !important;}.bg-parallax1 {background-image : url("http://oslo2015.drupalcamp.no/sites/default/files/media/kode-1.jpg") !important;}.bg-parallax2 {background-image : url("http://oslo2015.drupalcamp.no/sites/default/files/media/bg-img-contact.jpg") !important;}        body {}
+.bg-image {
+  background-image : url("../../media/oslo-1600x1000.jpg") !important;
+}
+.bg-parallax1 {
+  background-image : url("../../media/kode-1.jpg") !important;}
+  .bg-parallax2 {background-image : url("../../media/bg-img-contact.jpg") !important;}        body {}
 a:link, #node-title a {}
 a:hover, #node-title a:hover {}
 a:visited, #node-title a:visited {}

@@ -1,0 +1,23 @@
+uuid: 2ae09854-7acb-40d6-9f45-69329a64825c
+langcode: en
+status: true
+dependencies:
+  module:
+    - system
+  theme:
+    - oslo2015
+id: oslo2015_powered
+theme: oslo2015
+region: messages
+weight: -6
+provider: null
+plugin: system_powered_by_block
+settings:
+  id: system_powered_by_block
+  label: 'Powered by Drupal'
+  provider: system
+  label_display: '0'
+  cache:
+    max_age: 0
+    contexts: {  }
+visibility: {  }

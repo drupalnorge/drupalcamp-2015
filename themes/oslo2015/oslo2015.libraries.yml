@@ -1,0 +1,16 @@
+base:
+  version: 1.0.0
+  css:
+    theme:
+      build/css/style.css: {}
+  js:
+    js/owl.carousel.min.js: {}
+    js/jquery.flexslider.js: {}
+    js/bootstrap.min.js: {}
+    js/appear.js: {}
+    js/skrollr.js: {}
+    js/custom.js: {}
+    js/theme.js: {}
+    js/jquery.fancybox.pack.js: {}
+  dependencies:
+    - core/jquery
