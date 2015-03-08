@@ -78,34 +78,44 @@
     view_mode ? 'node--view-mode-' ~ view_mode|clean_class,
   ]
 %}
-<article{{ attributes.addClass(classes) }}>
+<section id="aboutWrapper">
+  <article{{ attributes.addClass(classes) }}>
 
-  {{ title_prefix }}
-  {% if not page %}
-    <h2{{ title_attributes }}>
-      <a href="{{ url }}" rel="bookmark">{{ label }}</a>
-    </h2>
-  {% endif %}
-  {{ title_suffix }}
+    <section id="aboutWrapper">
+      <div class="row text-center">
+        <div class="section-heading">
+          {{ title_prefix }}
+          <h2 class="title">
+            {{ label }}
+          </h2>
+          {{ title_suffix }}
 
-  {% if display_submitted %}
-    <footer class="node__meta">
-      {{ author_picture }}
-      <div{{ author_attributes.addClass('node__submitted') }}>
-        {% trans %}Submitted by {{ author_name|passthrough }} on {{ date|passthrough }}{% endtrans %}
-        {{ metadata }}
+          <p class="subtitle">
+            {% if display_submitted %}
+              {% trans %}{{ date|passthrough }} | {{ author_name|passthrough }} {% endtrans %}
+              {{ metadata }}
+            {% endif %}
+          </p>
+        </div>
       </div>
-    </footer>
-  {% endif %}
+    </section>
 
-  <div{{ content_attributes.addClass('node__content') }}>
-    {{ content|without('links') }}
-  </div>
+    <section id="blog-detail">
+      <div class="container">
+        <div class="col-md-10 col-md-offset-1">
+          <div{{ content_attributes.addClass('node__content') }}>
+            {{ content|without('links') }}
+          </div>
+        </div>
+      </div>
+    </section>
 
-  {% if content.links %}
-    <div class="node__links">
-      {{ content.links }}
-    </div>
-  {% endif %}
+    {% if content.links %}
+      <div class="node__links">
+        {{ content.links }}
+      </div>
+    {% endif %}
 
-</article>
+
+  </article>
+</section>

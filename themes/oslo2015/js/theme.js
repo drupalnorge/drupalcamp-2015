@@ -235,7 +235,7 @@ jQuery(document).ready(function() {
 		touchDrag:false
 	});
 
-	$("#blog-slider").owlCarousel({
+	$(".view-id-frontpage").owlCarousel({
         navigation: false,
         pagination: false,
         items: 2,
@@ -474,5 +474,3 @@ function fadeNavitems() {
 		$('#nav').css({'height': 'auto'});
 	});
 }
-
-
