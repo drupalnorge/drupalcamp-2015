@@ -1,6 +1,6 @@
 uuid: 5d7ec48a-b27c-4108-8843-67b2331e302d
-name: Site-Install
-mail: admin@example.com
+name: 'Drupalcamp Oslo 2015'
+mail: eirik@morland.no
 slogan: ''
 page:
   403: ''
