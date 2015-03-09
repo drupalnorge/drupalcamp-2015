@@ -91,7 +91,7 @@
 <!-- Header -->
 <div id="header" class="">
     <div class="header-inner">
-        <a href="#home" class="nav-logo"><img src="http://oslo2015.drupalcamp.no/sites/all/themes/md_arista/logo.png" alt="brand" /></a>
+        <a href="/#home" class="nav-logo"><img src="http://oslo2015.drupalcamp.no/sites/all/themes/md_arista/logo.png" alt="brand" /></a>
         <div class="navicon"></div>
     </div>
 </div>
@@ -125,10 +125,28 @@
 <!-- End Home section -->
 <div class="page-content">
 	  <div class="region region-content">
-    {{ messages }}
+    <div class="container">
+      {% if title %}
+        <div class="row text-center">
+          <div class="section-heading">
+            <h2 class="title" id="page-title">
+              {{ title }}
+            </h2>
+          </div>
+        </div>
+      {% endif %}
+      {% if tabs %}
+        <nav class="tabs" role="navigation" aria-label="{{ 'Tabs'|t }}">
+          {{ tabs }}
+        </nav>
+      {% endif %}
+      {{ messages }}
+      {{ page.messages }}
 
-    <div class="content">
-      {{ page.content }}
+
+      <div class="content">
+        {{ page.content }}
+      </div>
     </div>
    </div>
 </div>

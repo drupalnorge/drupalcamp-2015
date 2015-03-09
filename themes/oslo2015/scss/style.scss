@@ -1,1 +1,14 @@
 @import "legacy/legacy";
+
+.page-content {
+  background: #fff;
+}
+.tabs ul.primary li a {
+  display: inline;
+}
+.node--type-article #page-title {
+  display: none;
+}
+table {
+  width: 100%;
+}

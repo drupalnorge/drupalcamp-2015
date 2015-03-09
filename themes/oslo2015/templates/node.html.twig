@@ -78,35 +78,27 @@
     view_mode ? 'node--view-mode-' ~ view_mode|clean_class,
   ]
 %}
-<section id="aboutWrapper">
+
   <article{{ attributes.addClass(classes) }}>
-
-    <section id="aboutWrapper">
-      <div class="row text-center">
-        <div class="section-heading">
-          {{ title_prefix }}
-          <h2 class="title">
-            {{ label }}
-          </h2>
-          {{ title_suffix }}
-
-          <p class="subtitle">
-            {% if display_submitted %}
-              {% trans %}{{ date|passthrough }} | {{ author_name|passthrough }} {% endtrans %}
-              {{ metadata }}
-            {% endif %}
-          </p>
+    {% if display_submitted %}
+      <section id="aboutWrapper">
+        <div class="row text-center">
+            <div class="section-heading">
+              <h2 class="title">
+                {{ label }}
+              </h2>
+              <p class="subtitle">
+                {% trans %}{{ date|passthrough }} | {{ author_name|passthrough }} {% endtrans %}
+                {{ metadata }}
+              </p>
+            </div>
         </div>
-      </div>
-    </section>
+      </section>
+    {% endif %}
 
     <section id="blog-detail">
-      <div class="container">
-        <div class="col-md-10 col-md-offset-1">
-          <div{{ content_attributes.addClass('node__content') }}>
-            {{ content|without('links') }}
-          </div>
-        </div>
+      <div{{ content_attributes.addClass('node__content') }}>
+        {{ content|without('links') }}
       </div>
     </section>
 
@@ -118,4 +110,3 @@
 
 
   </article>
-</section>
