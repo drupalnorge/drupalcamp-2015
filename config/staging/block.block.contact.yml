@@ -6,15 +6,13 @@ dependencies:
     - 'block_content:basic:50de37b4-0512-4046-8100-f9f18b252601'
   module:
     - block_content
-    - node
     - system
-    - user
   theme:
     - oslo2015
 id: contact
 theme: oslo2015
 region: content
-weight: null
+weight: -7
 provider: null
 plugin: 'block_content:50de37b4-0512-4046-8100-f9f18b252601'
 settings:

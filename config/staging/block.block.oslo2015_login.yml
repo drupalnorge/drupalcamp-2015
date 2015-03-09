@@ -1,6 +1,6 @@
 uuid: 03f014d7-ca69-4a1c-bb08-8d3c664a4817
 langcode: en
-status: true
+status: false
 dependencies:
   module:
     - user
@@ -8,7 +8,7 @@ dependencies:
     - oslo2015
 id: oslo2015_login
 theme: oslo2015
-region: messages
+region: '-1'
 weight: 0
 provider: null
 plugin: user_login_block

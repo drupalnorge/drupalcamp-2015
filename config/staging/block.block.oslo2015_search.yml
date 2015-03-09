@@ -1,6 +1,6 @@
 uuid: e3addef3-51d0-4c42-8400-e09d69cf67f5
 langcode: en
-status: true
+status: false
 dependencies:
   module:
     - search
@@ -8,7 +8,7 @@ dependencies:
     - oslo2015
 id: oslo2015_search
 theme: oslo2015
-region: messages
+region: '-1'
 weight: -1
 provider: null
 plugin: search_form_block

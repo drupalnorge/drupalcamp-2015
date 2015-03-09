@@ -2,7 +2,10 @@ uuid: b2806a09-a002-471d-9212-18faab5b5fae
 langcode: und
 status: true
 dependencies:
+  config:
+    - field.field.user.user.user_picture
   module:
+    - image
     - user
 id: user.user.default
 targetEntityType: user

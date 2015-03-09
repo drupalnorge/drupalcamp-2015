@@ -4,7 +4,9 @@ status: true
 dependencies:
   config:
     - core.entity_view_mode.user.compact
+    - field.field.user.user.user_picture
   module:
+    - image
     - user
 id: user.user.compact
 targetEntityType: user

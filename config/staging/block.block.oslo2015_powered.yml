@@ -8,7 +8,7 @@ dependencies:
     - oslo2015
 id: oslo2015_powered
 theme: oslo2015
-region: messages
+region: footer
 weight: -6
 provider: null
 plugin: system_powered_by_block

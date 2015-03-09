@@ -1,6 +1,6 @@
 uuid: b0ea0302-ea53-4240-9756-867c69e7a092
 langcode: en
-status: true
+status: false
 dependencies:
   module:
     - system
@@ -8,7 +8,7 @@ dependencies:
     - oslo2015
 id: oslo2015_breadcrumbs
 theme: oslo2015
-region: messages
+region: '-1'
 weight: 0
 provider: null
 plugin: system_breadcrumb_block

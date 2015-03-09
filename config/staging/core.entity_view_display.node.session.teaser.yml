@@ -1,0 +1,33 @@
+uuid: 475b5c2d-c298-4fca-9450-8022504c7f5c
+langcode: en
+status: true
+dependencies:
+  config:
+    - core.entity_view_mode.node.teaser
+    - field.field.node.session.body
+    - field.field.node.session.field_presenter
+    - field.field.node.session.field_slides
+    - field.field.node.session.field_time
+    - node.type.session
+  module:
+    - text
+    - user
+id: node.session.teaser
+targetEntityType: node
+bundle: session
+mode: teaser
+content:
+  body:
+    label: hidden
+    type: text_summary_or_trimmed
+    weight: 101
+    settings:
+      trim_length: 600
+    third_party_settings: {  }
+  links:
+    weight: 100
+hidden:
+  field_presenter: true
+  field_slides: true
+  field_time: true
+  langcode: true

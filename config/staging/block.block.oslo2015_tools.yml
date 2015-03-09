@@ -1,6 +1,6 @@
 uuid: e61cae97-d576-49b5-8600-d9a6dfa31bf2
 langcode: en
-status: true
+status: false
 dependencies:
   config:
     - system.menu.tools
@@ -10,7 +10,7 @@ dependencies:
     - oslo2015
 id: oslo2015_tools
 theme: oslo2015
-region: messages
+region: '-1'
 weight: 0
 provider: null
 plugin: 'system_menu_block:tools'

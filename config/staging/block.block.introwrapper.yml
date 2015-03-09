@@ -6,9 +6,7 @@ dependencies:
     - 'block_content:basic:f7d81459-3a04-4d5d-aa2d-457048db62b8'
   module:
     - block_content
-    - node
     - system
-    - user
   theme:
     - oslo2015
 id: introwrapper

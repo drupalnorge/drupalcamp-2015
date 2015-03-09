@@ -1,0 +1,23 @@
+uuid: 7cb6de8c-571e-41b9-ab00-bbe60696c88f
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_slides
+    - node.type.session
+  module:
+    - link
+id: node.session.field_slides
+field_name: field_slides
+entity_type: node
+bundle: session
+label: Slides
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  link_type: 17
+  title: 1
+field_type: link

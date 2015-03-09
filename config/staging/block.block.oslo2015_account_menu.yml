@@ -1,6 +1,6 @@
 uuid: bf768442-c0d2-465e-b01b-273dfbab64dc
 langcode: en
-status: true
+status: false
 dependencies:
   config:
     - system.menu.account
@@ -10,7 +10,7 @@ dependencies:
     - oslo2015
 id: oslo2015_account_menu
 theme: oslo2015
-region: messages
+region: '-1'
 weight: 0
 provider: null
 plugin: 'system_menu_block:account'

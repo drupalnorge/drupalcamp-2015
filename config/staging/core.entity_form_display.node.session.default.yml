@@ -1,16 +1,21 @@
-uuid: b0046ba5-561a-47b5-8201-01f6c8ba9d6f
+uuid: b4e9e2e3-f974-4847-ab00-ed9a9205f30f
 langcode: en
 status: true
 dependencies:
   config:
-    - field.field.node.page.body
-    - node.type.page
+    - field.field.node.session.body
+    - field.field.node.session.field_presenter
+    - field.field.node.session.field_slides
+    - field.field.node.session.field_time
+    - node.type.session
   module:
+    - datetime
+    - link
     - path
     - text
-id: node.page.default
+id: node.session.default
 targetEntityType: node
-bundle: page
+bundle: session
 mode: default
 content:
   body:
@@ -26,6 +31,26 @@ content:
     weight: 10
     settings: {  }
     third_party_settings: {  }
+  field_presenter:
+    weight: 34
+    settings:
+      match_operator: CONTAINS
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+    type: entity_reference_autocomplete
+  field_slides:
+    weight: 32
+    settings:
+      placeholder_url: ''
+      placeholder_title: ''
+    third_party_settings: {  }
+    type: link_default
+  field_time:
+    weight: 33
+    settings: {  }
+    third_party_settings: {  }
+    type: datetime_default
   langcode:
     type: language_select
     weight: 2
