@@ -1,6 +1,6 @@
 uuid: 62e4939d-110c-4000-8254-84fccfa6b7ff
 langcode: en
-status: true
+status: false
 dependencies:
   content:
     - 'block_content:basic:d88b3671-5280-4ecf-b85f-9504f3bf935d'
@@ -11,7 +11,7 @@ dependencies:
     - oslo2015
 id: aboutwrapper
 theme: oslo2015
-region: content
+region: '-1'
 weight: -6
 provider: null
 plugin: 'block_content:d88b3671-5280-4ecf-b85f-9504f3bf935d'

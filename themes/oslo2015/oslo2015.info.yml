@@ -10,4 +10,5 @@ libraries:
 regions:
   messages: Messages
   content: Content
+  content_bottom: Content bottom
   footer: Footer

@@ -1,0 +1,12 @@
+display:
+  default:
+    display_title: Hoved
+    display_options:
+      exposed_form:
+        options:
+          submit_button: Bruk
+          reset_button_label: Nullstill
+          exposed_sorts_label: 'Sortér på'
+  block_1:
+    display_options:
+      block_category: Bruker

@@ -1,0 +1,9 @@
+uuid: bb5a1d58-ccbc-4875-ad3a-58ad60bd45d2
+langcode: en
+status: true
+dependencies: {  }
+id: nb
+label: 'Norsk (bokmål)'
+direction: ltr
+weight: -10
+locked: false

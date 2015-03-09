@@ -1,0 +1,10 @@
+display:
+  default:
+    display_options:
+      fields:
+        title:
+          label: Tittel
+        field_time:
+          label: Tidspunkt
+        field_presenter:
+          label: Foredragsholder

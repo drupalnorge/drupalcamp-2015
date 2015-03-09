@@ -125,7 +125,9 @@
 <!-- End Home section -->
 <div class="page-content">
 	  <div class="region region-content">
+    {% if not is_front %}
     <div class="container">
+    {% endif %}
       {% if title %}
         <div class="row text-center">
           <div class="section-heading">
@@ -147,7 +149,10 @@
       <div class="content">
         {{ page.content }}
       </div>
+    {% if not is_front %}
     </div>
+    {% endif %}
+    {{ page.content_bottom }}
    </div>
 </div>
 

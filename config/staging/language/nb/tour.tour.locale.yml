@@ -1,0 +1,8 @@
+label: Oversettelse
+tips:
+  locale-overview:
+    label: 'Oversett brukergrensesnittet'
+  locale-search:
+    label: Søk
+  locale-translate:
+    label: Oversett

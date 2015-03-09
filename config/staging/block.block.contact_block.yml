@@ -1,0 +1,23 @@
+uuid: 9cb5c707-57f7-49f7-8a0a-1054c29d630d
+langcode: nb
+status: true
+dependencies:
+  module:
+    - camposlo
+  theme:
+    - oslo2015
+id: contact_block
+theme: oslo2015
+region: content_bottom
+weight: -7
+provider: null
+plugin: contact_block
+settings:
+  id: contact_block
+  label: Contact
+  provider: camposlo
+  label_display: '0'
+  cache:
+    max_age: 0
+    contexts: {  }
+visibility: {  }

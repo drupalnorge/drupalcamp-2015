@@ -1,6 +1,6 @@
 uuid: bad70340-46fc-415e-b242-66525d6fda2c
 langcode: en
-status: true
+status: false
 dependencies:
   content:
     - 'block_content:basic:f7d81459-3a04-4d5d-aa2d-457048db62b8'
@@ -11,8 +11,8 @@ dependencies:
     - oslo2015
 id: introwrapper
 theme: oslo2015
-region: content
-weight: -5
+region: '-1'
+weight: -7
 provider: null
 plugin: 'block_content:f7d81459-3a04-4d5d-aa2d-457048db62b8'
 settings:

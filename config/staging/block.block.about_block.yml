@@ -1,0 +1,32 @@
+uuid: b7582ff1-a84c-458f-a81a-261dcb7d1996
+langcode: nb
+status: true
+dependencies:
+  module:
+    - camposlo
+    - language
+    - node
+    - system
+    - user
+  theme:
+    - oslo2015
+id: about_block
+theme: oslo2015
+region: content
+weight: -8
+provider: null
+plugin: about_block
+settings:
+  id: about_block
+  label: about_block
+  provider: camposlo
+  label_display: '0'
+  cache:
+    max_age: 0
+    contexts: {  }
+visibility:
+  request_path:
+    id: request_path
+    pages: '<front>'
+    negate: false
+    context_mapping: {  }

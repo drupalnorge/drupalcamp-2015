@@ -1,0 +1,29 @@
+uuid: 307d0147-69db-48fc-a816-22df33d0cd35
+langcode: nb
+status: true
+dependencies:
+  module:
+    - camposlo
+    - system
+  theme:
+    - oslo2015
+id: intro_block
+theme: oslo2015
+region: content
+weight: -6
+provider: null
+plugin: intro_block
+settings:
+  id: intro_block
+  label: intro_block
+  provider: camposlo
+  label_display: '0'
+  cache:
+    max_age: 0
+    contexts: {  }
+visibility:
+  request_path:
+    id: request_path
+    pages: '<front>'
+    negate: false
+    context_mapping: {  }
