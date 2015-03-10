@@ -8,6 +8,7 @@ libraries:
   - oslo2015/base
 
 regions:
+  primary_menu: Primary menu
   messages: Messages
   content: Content
   content_bottom: Content bottom

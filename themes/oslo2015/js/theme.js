@@ -372,7 +372,7 @@ jQuery(window).load(function() {
 	Smooth scroll for menu links
 	===================================================================*/
 
-	jQuery('#menu-main-nav a[href^="#"], #home a[href^="#"], .modal a[href^="#"],.nav-logo').on('click', function(e) {
+  jQuery('#menu-main-nav a[href^="#"], #home a[href^="#"], .modal a[href^="#"], body.path-frontpage .nav-logo').on('click', function(e) {
     e.preventDefault();
     jQuery('html,body').animate({scrollTop:jQuery(this.hash).offset().top-40}, 1200);
 	$('#nav').animate({'top':-380 +'px'}, 500, 'swing');

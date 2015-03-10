@@ -65,7 +65,7 @@
         <div class="loader2"></div>
         <div class="loader3"></div>
         <div class="loader4"></div>
-        <p>Loading...</p>
+        <p>{% trans %}Loading{% endtrans %}...</p>
     </div>
 </div>
 <!-- END PRELOADER -->
@@ -76,13 +76,7 @@
             <a href="#home" class="nav-logo hidden-con"><img src="{{logo_image}}" /></a>
             <div class="close"></div>
             <div class="menunav-container">
-                <!-- START NAVIGATION MENU ITEMS -->
-				  <ul class="menu clearfix"><li class="first leaf"><a href="/#home" title="Velkommen til camp!" class="active">Hjem<br /><span class="sub">Velkommen til camp!</span></a></li>
-<li class="leaf"><a href="/program" title="Se hva vi har å by på!">Program<br /><span class="sub">Se hva vi har å by på!</span></a></li>
-<li class="leaf"><a href="/#blog-post" title="Siste nytt fra campbloggen" class="active">Nyheter<br /><span class="sub">Siste nytt fra campbloggen</span></a></li>
-<li class="leaf"><a href="/#aboutWrapper" title="Litt om godbitene" class="active">Om Drupal<br /><span class="sub">Litt om godbitene</span></a></li>
-<li class="last leaf"><a href="/#team-block" title="Våre sponsorer" class="active">Sponsorer<br /><span class="sub">Våre sponsorer</span></a></li>
-</ul>                <!-- END NAVIGATION MENU ITEMS -->
+              {{ page.primary_menu }}
             </div>
         </div>
     </div>
@@ -96,6 +90,7 @@
     </div>
 </div>
 <!-- End Header -->
+{% if is_front %}
 <!-- Home section -->
 <div id="home" class="parallax bg-image" data-20="opacity:1;" data-700="opacity:0;" style="background:none">
 	 <div class="bg-overlay" ></div>
@@ -123,6 +118,7 @@
     </div>
 </div>
 <!-- End Home section -->
+{% endif %}
 <div class="page-content">
 	  <div class="region region-content">
     {% if not is_front %}
