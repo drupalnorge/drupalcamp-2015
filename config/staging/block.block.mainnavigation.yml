@@ -1,0 +1,27 @@
+uuid: 69cfea18-4a35-417d-ae55-854d83e36732
+langcode: nb
+status: true
+dependencies:
+  config:
+    - system.menu.main
+  module:
+    - system
+  theme:
+    - oslo2015
+id: mainnavigation
+theme: oslo2015
+region: primary_menu
+weight: -8
+provider: null
+plugin: 'system_menu_block:main'
+settings:
+  id: 'system_menu_block:main'
+  label: 'Main navigation'
+  provider: system
+  label_display: '0'
+  cache:
+    max_age: -1
+    contexts: {  }
+  level: 1
+  depth: 0
+visibility: {  }
