@@ -1,0 +1,10 @@
+<?php
+
+/**
+ * Implements hook_preprocess_page().
+ */
+function oslo2015_preprocess_page(&$variables) {
+  // Hm. This is probably something new and fancy in Drupal 8?
+  global $base_path;
+  $variables['logo_image'] = $base_path . drupal_get_path('theme', 'oslo2015') . '/logo.png';
+}
