@@ -380,6 +380,15 @@ jQuery(window).load(function() {
 		$('#nav').css({'height': 'auto'});
 
 	});
+  $('#menu-main-nav a[href^="/#"]').on('click', function(e) {
+    if (window.location.pathname === '/') {
+      $('html,body').animate({scrollTop:jQuery(this.hash).offset().top-40}, 1200);
+      $('#nav').animate({'top':-380 +'px'}, 500, 'swing');
+      $('#nav ul li, #nav .nav-logo, #nav .close').hide();
+      $('#nav').css({'height': 'auto'});
+      e.preventDefault();
+    }
+  });
 
 	// Smooth scroll for menu links
 	jQuery('.go a[href^="#"]').on('click', function(e) {
