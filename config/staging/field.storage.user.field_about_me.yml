@@ -1,0 +1,18 @@
+uuid: a665fbad-b622-4b29-b500-a6a433c91526
+langcode: nb
+status: true
+dependencies:
+  module:
+    - text
+    - user
+id: user.field_about_me
+field_name: field_about_me
+entity_type: user
+type: text_long
+settings: {  }
+module: text
+locked: false
+cardinality: 1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false

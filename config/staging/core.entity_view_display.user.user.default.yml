@@ -3,17 +3,60 @@ langcode: und
 status: true
 dependencies:
   config:
+    - field.field.user.user.field_about_me
+    - field.field.user.user.field_drupal_org_profile
+    - field.field.user.user.field_homepage
+    - field.field.user.user.field_twitter
     - field.field.user.user.user_picture
   module:
     - image
+    - link
+    - text
     - user
 id: user.user.default
 targetEntityType: user
 bundle: user
 mode: default
 content:
-  member_for:
-    weight: 5
+  field_about_me:
+    weight: 1
+    label: above
+    settings: {  }
+    third_party_settings: {  }
+    type: text_default
+  field_drupal_org_profile:
+    weight: 3
+    label: above
+    settings:
+      trim_length: 80
+      url_only: false
+      url_plain: false
+      rel: ''
+      target: ''
+    third_party_settings: {  }
+    type: link
+  field_homepage:
+    weight: 2
+    label: above
+    settings:
+      trim_length: 80
+      url_only: false
+      url_plain: false
+      rel: ''
+      target: ''
+    third_party_settings: {  }
+    type: link
+  field_twitter:
+    weight: 4
+    label: above
+    settings:
+      trim_length: 80
+      url_only: false
+      url_plain: false
+      rel: ''
+      target: ''
+    third_party_settings: {  }
+    type: link
   user_picture:
     type: image
     weight: 0
@@ -22,4 +65,5 @@ content:
       image_link: content
     third_party_settings: {  }
     label: hidden
-hidden: {  }
+hidden:
+  member_for: true

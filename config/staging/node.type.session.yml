@@ -11,7 +11,7 @@ third_party_settings:
     parent: 'main:'
 name: session
 type: session
-description: ''
+description: 'Used for creating sessions for the camp.'
 help: ''
 new_revision: false
 preview_mode: 1

@@ -14,3 +14,6 @@ permissions:
   - 'skip comment approval'
   - 'access site-wide contact form'
   - 'access shortcuts'
+  - 'edit own session content'
+  - 'change own username'
+  - 'access user profiles'

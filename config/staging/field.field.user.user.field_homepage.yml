@@ -1,0 +1,22 @@
+uuid: 845b0900-38eb-4fff-a218-240b333306e0
+langcode: nb
+status: true
+dependencies:
+  config:
+    - field.storage.user.field_homepage
+  module:
+    - link
+id: user.user.field_homepage
+field_name: field_homepage
+entity_type: user
+bundle: user
+label: Homepage
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  link_type: 17
+  title: 0
+field_type: link

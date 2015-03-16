@@ -5,7 +5,14 @@ dependencies:
   config:
     - field.storage.user.user_picture
   module:
+    - content_translation
     - image
+third_party_settings:
+  content_translation:
+    translation_sync:
+      alt: alt
+      title: title
+      file: '0'
 id: user.user.user_picture
 field_name: user_picture
 entity_type: user
@@ -17,20 +24,20 @@ translatable: true
 default_value: {  }
 default_value_callback: ''
 settings:
-  file_extensions: 'png gif jpg jpeg'
   file_directory: pictures
-  max_filesize: '30 KB'
-  alt_field: false
-  title_field: false
-  max_resolution: 85x85
+  file_extensions: 'png gif jpg jpeg'
+  max_filesize: ''
+  max_resolution: ''
   min_resolution: ''
+  alt_field: false
+  alt_field_required: false
+  title_field: false
+  title_field_required: false
   default_image:
-    uuid: null
+    uuid: ''
     alt: ''
     title: ''
     width: null
     height: null
-  alt_field_required: false
-  title_field_required: false
   handler: default
 field_type: image
