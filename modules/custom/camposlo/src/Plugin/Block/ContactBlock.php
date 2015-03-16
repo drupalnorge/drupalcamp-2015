@@ -57,7 +57,7 @@ class ContactBlock extends BlockBase {
 
                       <h2>+47 98 04 24 06</h2>
 
-                      <ul><li><a href="https://twitter.com/drupalnorge"><i class="fa fa-twitter"></i></a></li><li><a href="https://www.facebook.com/drupalnorge"><i class="fa fa-facebook"></i></a></li>          </ul></div>
+                      <ul><li><a href="https://twitter.com/drupal_norge"><i class="fa fa-twitter"></i></a></li><li><a href="https://www.facebook.com/drupalnorge"><i class="fa fa-facebook"></i></a></li>          </ul></div>
                       </div>
                       </div>
                       </div>
