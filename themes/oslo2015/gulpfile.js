@@ -1,6 +1,7 @@
 var gulp = require('gulp');
 var sass = require('gulp-sass');
 var prefix = require('gulp-autoprefixer');
+var livereload = require('gulp-livereload');
 
 gulp.task('scss', function() {
   gulp.src('scss/style.scss')
@@ -17,7 +18,13 @@ gulp.task('scss', function() {
 
 // Watch
 gulp.task('watch', function() {
-
+  livereload.listen();
+  gulp.watch(['build/**/*']).on('change', function() {
+    var args = arguments;
+    setTimeout(function() {
+      livereload.changed.apply(this, args);
+    }, 200);
+  });
   // Watch .scss files
   gulp.watch(['scss/**/*.scss'], ['default']);
 
