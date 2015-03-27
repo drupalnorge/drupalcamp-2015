@@ -462,23 +462,23 @@ function contactForm(){
 function fadeNavitems() {
    var lis = $('#nav ul li').hide();
 	$('.navicon').click(function() {
-		$('#nav').animate({'top':0 +'px'}, 500, 'swing');
+		$('#nav').animate({'top':0 +'px'}, 50, 'swing');
 		var winH = $(document).height();
 
 		    var i = 0;
 		setTimeout(function() {
 		(function displayImages() {
-			$('#nav .nav-logo, #nav .close').fadeIn('slow');
-		        lis.eq(i++).fadeIn(200, displayImages);
+			$('#nav .nav-logo, #nav .close').show();
+		        lis.eq(i++).fadeIn(20, displayImages);
 		     })();
-		}, 500);
+		});
 		if ($(window).width() < 1000) {
 			$('#nav').css({'height': winH});
 		}
 	});
 
 	$('#nav .close').click(function() {
-		$('#nav').animate({'top':-380 +'px'}, 500, 'swing');
+		$('#nav').animate({'top':-380 +'px'}, 50, 'swing');
 		$('#nav ul li, #nav .nav-logo, #nav .close').hide();
 		$('#nav').css({'height': 'auto'});
 	});
