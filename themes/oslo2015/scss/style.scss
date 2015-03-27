@@ -1,5 +1,9 @@
 @import "legacy/legacy";
 
+@import "modules/button";
+@import "modules/forms";
+@import "modules/menu";
+
 .page-content {
   background: #fff;
 }
@@ -15,7 +19,6 @@ table {
 #header {
   background: #000;
   padding: 20px 0;
-  display: none;
 }
 body.path-frontpage #header {
   background: none;

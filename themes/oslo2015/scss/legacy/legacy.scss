@@ -2493,7 +2493,7 @@ transition: all 0.35s ease-in-out;
 
 /* 3. NAVIGATION
 -------------------------*/
-#header {padding: 35px 0;position: fixed;top: 0;width: 100%;z-index:2;transition: all 0.5s ease 0s;-webkit-transition: all 0.5s ease 0s;-moz-transition: all 0.5s ease 0s;-o-transition: all 0.5s ease 0s;-ms-transition: all 0.5s ease 0s;}
+#header {padding: 35px 0;position: fixed;top: 0;width: 100%;z-index:2;}
 .header-inner {margin: auto;position: relative; width: 85%;}
 .nav-logo {height: 17px;margin-top: -5px;width: 172px;float: left;}
 #header .navicon {background: url("../../images/navicon-icon.png") no-repeat scroll 0 -28px transparent;height: 27px;width: 36px;cursor: pointer;float: right;}
