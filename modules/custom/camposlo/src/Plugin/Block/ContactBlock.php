@@ -30,9 +30,9 @@ class ContactBlock extends BlockBase {
                       <div class="container">
                       <div class="row text-center">
                       <div class="section-heading">
-                      <h2 class="title"><span>Meld deg på!</span></h2>
+                      <h2 class="title"><span>' . $this->t('Sign up!') . '</span></h2>
 
-                      <p class="subtitle"><a class="theme_btn" href="/user/register">Registrer deg</a></p>
+                      <p class="subtitle"><a class="theme_btn" href="/user/register">' . $this->t('Register') . '</a></p>
                       </div>
                       </div>
                       </div>
@@ -43,15 +43,15 @@ class ContactBlock extends BlockBase {
                       <div class="row">
                       <div class="col-md-6">
                       <div class="address-wrap clearfix">
-                      <h5>Get in touch</h5>
+                      <h5>' . $this->t('Get in touch') . '</h5>
 
                       <h2>Oslo</h2>
-                      <a class="loc fancybox" href="#">View Location</a></div>
+                      <a class="loc fancybox" href="#">' . $this->t('View Location') . '</a></div>
                       </div>
 
                       <div class="col-md-6">
                       <div class="address-wrap clearfix">
-                      <h5>Email us at</h5>
+                      <h5>' . $this->t('Email us at') . '</h5>
 
                       <h2>post@drupalnorge.no</h2>
 
