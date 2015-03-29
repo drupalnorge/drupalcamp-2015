@@ -1,0 +1,24 @@
+uuid: 66fcde15-5da9-4aa0-8b45-699df7cc4b49
+langcode: nb
+status: true
+dependencies:
+  config:
+    - comment.type.comment
+  module:
+    - entity_reference
+id: comment.comment.uid
+field_name: uid
+entity_type: comment
+bundle: comment
+label: Bruker-ID
+description: 'Kommentarforfatterens bruker ID.'
+required: false
+translatable: false
+default_value:
+  -
+    target_id: '0'
+default_value_callback: ''
+settings:
+  handler_settings: {  }
+  handler: default
+field_type: entity_reference

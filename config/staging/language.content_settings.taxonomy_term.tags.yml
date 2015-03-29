@@ -1,16 +1,16 @@
-uuid: 7c366dc5-3de5-4d0c-b403-3cd50fcb2a58
+uuid: cef0ea91-358e-45b2-a136-54a8fad11084
 langcode: nb
 status: true
 dependencies:
   config:
-    - node.type.session
+    - taxonomy.vocabulary.tags
   module:
     - content_translation
 third_party_settings:
   content_translation:
     enabled: false
-id: node.session
-target_entity_type_id: node
-target_bundle: session
+id: taxonomy_term.tags
+target_entity_type_id: taxonomy_term
+target_bundle: tags
 default_langcode: site_default
 language_alterable: false

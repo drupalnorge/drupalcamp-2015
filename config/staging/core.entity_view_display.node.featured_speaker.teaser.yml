@@ -15,4 +15,5 @@ content:
   links:
     weight: 100
 hidden:
+  field_session: true
   langcode: true

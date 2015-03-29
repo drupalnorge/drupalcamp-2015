@@ -1,0 +1,18 @@
+uuid: 22c25b8a-94cb-48dd-b445-69b56e8dc6c1
+langcode: nb
+status: true
+dependencies:
+  config:
+    - comment.type.comment
+id: comment.comment.created
+field_name: created
+entity_type: comment
+bundle: comment
+label: Opprettet
+description: 'Tidspunkt for når kommentar ble skrevet.'
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: created

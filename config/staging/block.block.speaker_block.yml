@@ -4,7 +4,10 @@ status: true
 dependencies:
   module:
     - camposlo
+    - language
+    - node
     - system
+    - user
   theme:
     - oslo2015
 id: speaker_block
@@ -15,7 +18,7 @@ provider: null
 plugin: speaker_block
 settings:
   id: speaker_block
-  label: 'Featured speakers'
+  label: Foredragsholdere
   provider: camposlo
   label_display: visible
   cache:

@@ -1,16 +1,16 @@
-uuid: 7c366dc5-3de5-4d0c-b403-3cd50fcb2a58
+uuid: 91d0038d-1f09-4031-a20f-15f2505e3ae6
 langcode: nb
 status: true
 dependencies:
   config:
-    - node.type.session
+    - block_content.type.basic
   module:
     - content_translation
 third_party_settings:
   content_translation:
     enabled: false
-id: node.session
-target_entity_type_id: node
-target_bundle: session
+id: block_content.basic
+target_entity_type_id: block_content
+target_bundle: basic
 default_langcode: site_default
 language_alterable: false

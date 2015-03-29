@@ -1,20 +1,20 @@
-uuid: 53672b26-7abb-4c65-8500-ac39b5d4388e
-langcode: en
+uuid: a8280f80-9dce-438a-9800-b3cf13bceef1
+langcode: nb
 status: true
 dependencies:
   config:
     - node.type.page
-id: node.page.promote
-field_name: promote
+  module:
+    - path
+id: node.page.path
+field_name: path
 entity_type: node
 bundle: page
-label: 'Promoted to front page'
+label: URL-alias
 description: ''
 required: false
 translatable: false
-default_value:
-  -
-    value: 0
+default_value: {  }
 default_value_callback: ''
 settings: {  }
-field_type: boolean
+field_type: path

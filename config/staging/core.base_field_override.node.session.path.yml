@@ -1,20 +1,20 @@
-uuid: 747a5082-e218-4b52-a700-fb3bde2b0203
-langcode: en
+uuid: 141b075f-bcea-480f-8e07-7d5d29d30d91
+langcode: nb
 status: true
 dependencies:
   config:
     - node.type.session
-id: node.session.promote
-field_name: promote
+  module:
+    - path
+id: node.session.path
+field_name: path
 entity_type: node
 bundle: session
-label: 'Promoted to front page'
+label: URL-alias
 description: ''
 required: false
 translatable: false
-default_value:
-  -
-    value: 0
+default_value: {  }
 default_value_callback: ''
 settings: {  }
-field_type: boolean
+field_type: path

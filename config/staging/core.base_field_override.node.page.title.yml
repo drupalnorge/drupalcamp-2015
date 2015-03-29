@@ -1,0 +1,20 @@
+uuid: 970dd4c2-8b9c-485c-8726-388d479fbe34
+langcode: nb
+status: true
+dependencies:
+  config:
+    - node.type.page
+id: node.page.title
+field_name: title
+entity_type: node
+bundle: page
+label: Title
+description: 'The title of this node, always treated as non-markup plain text.'
+required: true
+translatable: false
+default_value:
+  -
+    value: ''
+default_value_callback: ''
+settings: {  }
+field_type: string

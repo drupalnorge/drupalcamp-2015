@@ -1,14 +1,14 @@
-uuid: 747a5082-e218-4b52-a700-fb3bde2b0203
-langcode: en
+uuid: db08faef-e30f-4792-ad54-841e5984b8da
+langcode: nb
 status: true
 dependencies:
   config:
     - node.type.session
-id: node.session.promote
-field_name: promote
+id: node.session.sticky
+field_name: sticky
 entity_type: node
 bundle: session
-label: 'Promoted to front page'
+label: 'Klistret på toppen av lister'
 description: ''
 required: false
 translatable: false

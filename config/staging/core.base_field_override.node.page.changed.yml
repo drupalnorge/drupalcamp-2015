@@ -1,0 +1,18 @@
+uuid: f85c36ba-ef0c-47db-9d3e-6251be252436
+langcode: nb
+status: true
+dependencies:
+  config:
+    - node.type.page
+id: node.page.changed
+field_name: changed
+entity_type: node
+bundle: page
+label: Endret
+description: 'The time that the node was last edited.'
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: changed

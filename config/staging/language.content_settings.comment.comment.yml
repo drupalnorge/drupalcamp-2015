@@ -1,16 +1,16 @@
-uuid: 7c366dc5-3de5-4d0c-b403-3cd50fcb2a58
+uuid: f11248f4-437a-4015-ac06-6cd28c357684
 langcode: nb
 status: true
 dependencies:
   config:
-    - node.type.session
+    - comment.type.comment
   module:
     - content_translation
 third_party_settings:
   content_translation:
     enabled: false
-id: node.session
-target_entity_type_id: node
-target_bundle: session
+id: comment.comment
+target_entity_type_id: comment
+target_bundle: comment
 default_langcode: site_default
 language_alterable: false

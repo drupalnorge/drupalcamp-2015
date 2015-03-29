@@ -1,0 +1,18 @@
+uuid: 500ae4ff-e17c-4e86-bb00-a0eb23921ccf
+langcode: nb
+status: true
+dependencies:
+  config:
+    - comment.type.comment
+id: comment.comment.changed
+field_name: changed
+entity_type: comment
+bundle: comment
+label: Endret
+description: 'Tidspunkt for når kommentar ble sist endret.'
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: changed
