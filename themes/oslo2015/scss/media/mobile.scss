@@ -1,0 +1,14 @@
+@media only screen and (max-width: 600px) {
+  .tabs ul.tabs.primary {
+    padding: 0 5px;
+    li.active,
+    li {
+      display: block;
+      a {
+        display: block;
+        padding: 5px;
+        margin: 0;
+      }
+    }
+  }
+}

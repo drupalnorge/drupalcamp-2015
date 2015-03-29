@@ -39,3 +39,14 @@ function oslo2015_preprocess_menu(&$variables) {
     }
   }
 }
+
+/**
+ * Implements theme_preprocess_input().
+ */
+function oslo2015_preprocess_input(&$vars) {
+  if ($vars['element']['#type'] == 'submit') {
+    return;
+  }
+  $vars['attributes']['class'] = !empty($vars['#attributes']['class']) ? $vars['#attributes']['class'] : [];
+  $vars['attributes']['class'][] = 'form-control';
+}
