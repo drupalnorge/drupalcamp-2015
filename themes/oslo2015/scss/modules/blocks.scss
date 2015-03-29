@@ -1,0 +1,21 @@
+#block-speaker-block {
+  h2 {
+    text-align: center;
+    padding: 30px 0;
+    margin: 0 auto;
+    font-size: 4.5em;
+    font-weight: 900;
+    letter-spacing: -3px;
+    font-family: open sans;
+    line-height: 1;
+    color: #000;
+  }
+}
+@media (max-width: 480px) {
+  #block-speaker-block {
+    h2 {
+      font-size: 2em;
+      letter-spacing: -2px;
+    }
+  }
+}
