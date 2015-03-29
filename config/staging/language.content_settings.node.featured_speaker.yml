@@ -1,0 +1,16 @@
+uuid: 71f34f8e-3fcd-46a3-a304-041388095453
+langcode: nb
+status: true
+dependencies:
+  config:
+    - node.type.featured_speaker
+  module:
+    - content_translation
+third_party_settings:
+  content_translation:
+    enabled: true
+id: node.featured_speaker
+target_entity_type_id: node
+target_bundle: featured_speaker
+default_langcode: site_default
+language_alterable: true

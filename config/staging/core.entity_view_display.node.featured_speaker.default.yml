@@ -1,0 +1,25 @@
+uuid: 169f6249-517d-4c1a-a400-0e439aa373b1
+langcode: nb
+status: true
+dependencies:
+  config:
+    - field.field.node.featured_speaker.field_session
+    - node.type.featured_speaker
+  module:
+    - user
+id: node.featured_speaker.default
+targetEntityType: node
+bundle: featured_speaker
+mode: default
+content:
+  field_session:
+    weight: 101
+    label: above
+    settings:
+      link: true
+    third_party_settings: {  }
+    type: entity_reference_label
+  links:
+    weight: 100
+hidden:
+  langcode: true

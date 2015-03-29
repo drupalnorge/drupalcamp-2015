@@ -1,0 +1,18 @@
+uuid: b9c39e35-d02e-4448-8c00-fc791664e3c8
+langcode: nb
+status: true
+dependencies:
+  config:
+    - core.entity_view_mode.node.teaser
+    - node.type.featured_speaker
+  module:
+    - user
+id: node.featured_speaker.teaser
+targetEntityType: node
+bundle: featured_speaker
+mode: teaser
+content:
+  links:
+    weight: 100
+hidden:
+  langcode: true

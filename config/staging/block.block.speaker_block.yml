@@ -1,4 +1,4 @@
-uuid: b7582ff1-a84c-458f-a81a-261dcb7d1996
+uuid: 045f14c7-a3b3-4519-a001-1ad5975c8c19
 langcode: nb
 status: true
 dependencies:
@@ -7,17 +7,17 @@ dependencies:
     - system
   theme:
     - oslo2015
-id: about_block
+id: speaker_block
 theme: oslo2015
 region: content
-weight: -7
+weight: -8
 provider: null
-plugin: about_block
+plugin: speaker_block
 settings:
-  id: about_block
-  label: about_block
+  id: speaker_block
+  label: 'Featured speakers'
   provider: camposlo
-  label_display: '0'
+  label_display: visible
   cache:
     max_age: 0
     contexts: {  }
