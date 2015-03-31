@@ -1,6 +1,6 @@
 uuid: 2ae09854-7acb-40d6-9f45-69329a64825c
 langcode: en
-status: true
+status: false
 dependencies:
   module:
     - system
@@ -8,7 +8,7 @@ dependencies:
     - oslo2015
 id: oslo2015_powered
 theme: oslo2015
-region: footer
+region: '-1'
 weight: -6
 provider: null
 plugin: system_powered_by_block

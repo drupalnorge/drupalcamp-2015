@@ -4,10 +4,7 @@ status: true
 dependencies:
   module:
     - camposlo
-    - language
-    - node
     - system
-    - user
   theme:
     - oslo2015
 id: speaker_block
