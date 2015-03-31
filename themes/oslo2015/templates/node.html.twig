@@ -81,17 +81,15 @@
 
   <article{{ attributes.addClass(classes) }}>
     {% if display_submitted %}
-      <section id="aboutWrapper">
-        <div class="row text-center">
-            <div class="section-heading">
-              <h2 class="title">
-                {{ label }}
-              </h2>
-              <p class="subtitle">
-                {% trans %}{{ date|passthrough }} | {{ author_name|passthrough }} {% endtrans %}
-                {{ metadata }}
-              </p>
-            </div>
+      <section>
+        <div class="section-heading">
+          <h2 class="title">
+            {{ label }}
+          </h2>
+          <p class="subtitle">
+            {% trans %}{{ date|passthrough }} | {{ author_name|passthrough }} {% endtrans %}
+            {{ metadata }}
+          </p>
         </div>
       </section>
     {% endif %}
