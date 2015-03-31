@@ -9,6 +9,15 @@ var $ = jQuery.noConflict();
 jQuery(document).ready(function() {
 
 	"use strict";
+ // @todo. Go through this file. it's a mess. Legacy... :(
+
+ // Hack for adding english link on english menu item.
+ // See bug report at https://www.drupal.org/node/2462279
+  $('#menu-main-nav li a').each(function(i, n) {
+    if ($(this).text() === 'English') {
+      $(this).attr('href', '/en');
+    }
+  });
 
 	/*=================================================================
 		set home section height to fullscreen
