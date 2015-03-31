@@ -30,7 +30,10 @@ class AboutBlock extends BlockBase {
 <div class="section-heading">
 <h2 class="title"><span>Drupal Camp Oslo 2015</span></h2>
 
-<p class="subtitle">Lær mer om Drupal. Se hvordan bedriftene gjør Drupal. Bli oppdatert på de siste trendene. Bli kjent med andre som deg!</p>
+<p class="subtitle">' . $this->t('Learn more about Drupal.') . ' ' .
+$this->t('See how companies are doing Drupal.') . ' ' .
+$this->t('Get updated on the latest trends.') . ' ' .
+$this->t('Meet other people like you!') . '</p>
 </div>
 </div>
 </div>
