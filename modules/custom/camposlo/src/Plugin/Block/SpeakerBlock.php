@@ -70,7 +70,7 @@ class SpeakerBlock extends BlockBase {
                         <div class="active-wrapper">
                           <div class="text-wrapper">
                             <div class="text-inner">
-                              <a class="btn left btn-primary" href="/node/' . $nid . '">' . $this->t('View Session') . '</a>
+                              <a class="btn left btn-primary" href="/node/' . $nid . '">' . $this->t('View session') . '</a>
                               <a class="right btn btn-primary" href="/user/' . $uid . '">' . $this->t('View speaker') . '</a>
                             </div>
                           </div>
