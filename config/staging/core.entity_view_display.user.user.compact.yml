@@ -4,6 +4,10 @@ status: true
 dependencies:
   config:
     - core.entity_view_mode.user.compact
+    - field.field.user.user.field_about_me
+    - field.field.user.user.field_drupal_org_profile
+    - field.field.user.user.field_homepage
+    - field.field.user.user.field_twitter
     - field.field.user.user.user_picture
   module:
     - image
@@ -22,4 +26,8 @@ content:
     third_party_settings: {  }
     label: hidden
 hidden:
+  field_about_me: true
+  field_drupal_org_profile: true
+  field_homepage: true
+  field_twitter: true
   member_for: true

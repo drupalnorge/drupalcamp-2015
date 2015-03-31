@@ -19,14 +19,14 @@ bundle: user
 mode: default
 content:
   field_about_me:
+    type: text_default
     weight: 1
-    label: above
     settings: {  }
     third_party_settings: {  }
-    type: text_default
+    label: above
   field_drupal_org_profile:
+    type: link
     weight: 3
-    label: above
     settings:
       trim_length: 80
       url_only: false
@@ -34,10 +34,10 @@ content:
       rel: ''
       target: ''
     third_party_settings: {  }
-    type: link
+    label: above
   field_homepage:
+    type: link
     weight: 2
-    label: above
     settings:
       trim_length: 80
       url_only: false
@@ -45,10 +45,10 @@ content:
       rel: ''
       target: ''
     third_party_settings: {  }
-    type: link
+    label: above
   field_twitter:
+    type: link
     weight: 4
-    label: above
     settings:
       trim_length: 80
       url_only: false
@@ -56,12 +56,12 @@ content:
       rel: ''
       target: ''
     third_party_settings: {  }
-    type: link
+    label: above
   user_picture:
     type: image
     weight: 0
     settings:
-      image_style: thumbnail
+      image_style: large
       image_link: content
     third_party_settings: {  }
     label: hidden
