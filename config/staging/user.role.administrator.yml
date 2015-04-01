@@ -129,3 +129,4 @@ permissions:
   - 'delete any featured_speaker content'
   - 'delete own featured_speaker content'
   - 'view featured_speaker revisions'
+  - 'ban IP addresses'

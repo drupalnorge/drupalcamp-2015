@@ -1,5 +1,8 @@
 .region-content {
-  padding: 2em 0;
+  padding: 2em 0 0;
+  .content {
+    padding-bottom: 2em;
+  }
 }
 .page-content {
   background: #fff;
