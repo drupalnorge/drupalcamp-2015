@@ -4,6 +4,7 @@ status: true
 dependencies:
   config:
     - field.field.node.session.body
+    - field.field.node.session.field_experience_level
     - field.field.node.session.field_presenter
     - field.field.node.session.field_slides
     - field.field.node.session.field_time
@@ -24,6 +25,13 @@ content:
     weight: 101
     settings: {  }
     third_party_settings: {  }
+  field_experience_level:
+    weight: 105
+    label: above
+    settings:
+      link: true
+    third_party_settings: {  }
+    type: entity_reference_label
   field_presenter:
     weight: 104
     label: above

@@ -1,0 +1,19 @@
+uuid: 81d5ff93-d978-4bc3-a75c-92ae2fb3ee35
+langcode: nb
+status: true
+dependencies:
+  module:
+    - entity_reference
+    - node
+id: node.field_experience_level
+field_name: field_experience_level
+entity_type: node
+type: entity_reference
+settings:
+  target_type: taxonomy_term
+module: entity_reference
+locked: false
+cardinality: 1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false

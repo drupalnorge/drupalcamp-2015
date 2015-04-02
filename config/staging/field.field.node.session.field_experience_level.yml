@@ -1,0 +1,28 @@
+uuid: 8caeaa65-82ec-4abf-a502-2c1bbc929494
+langcode: nb
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_experience_level
+    - node.type.session
+  module:
+    - entity_reference
+id: node.session.field_experience_level
+field_name: field_experience_level
+entity_type: node
+bundle: session
+label: 'Experience level'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: default
+  handler_settings:
+    target_bundles:
+      experience_level: experience_level
+    sort:
+      field: _none
+    auto_create: false
+field_type: entity_reference

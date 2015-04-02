@@ -4,6 +4,7 @@ status: true
 dependencies:
   config:
     - field.field.node.session.body
+    - field.field.node.session.field_experience_level
     - field.field.node.session.field_presenter
     - field.field.node.session.field_slides
     - field.field.node.session.field_time
@@ -31,6 +32,14 @@ content:
     weight: 10
     settings: {  }
     third_party_settings: {  }
+  field_experience_level:
+    weight: 35
+    settings:
+      match_operator: CONTAINS
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+    type: entity_reference_autocomplete
   field_presenter:
     weight: 34
     settings:
