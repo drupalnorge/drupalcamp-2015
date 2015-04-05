@@ -11,7 +11,7 @@ third_party_settings:
     parent: 'main:'
 name: 'Featured speaker'
 type: featured_speaker
-description: ''
+description: 'Used for putting featured speakers on the front page.'
 help: ''
 new_revision: false
 preview_mode: 1

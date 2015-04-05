@@ -1,14 +1,14 @@
-uuid: 26a0d2bc-ccb3-43e4-891f-3155bfa592a4
-langcode: en
+uuid: 4f7fe07a-126b-402f-9e2f-47eae60b3d7e
+langcode: nb
 status: true
 dependencies:
   config:
     - node.type.page
-id: node.page.promote
-field_name: promote
+id: node.page.sticky
+field_name: sticky
 entity_type: node
 bundle: page
-label: 'Vis på forsiden'
+label: 'Klistret på toppen av lister'
 description: ''
 required: false
 translatable: false
@@ -17,6 +17,6 @@ default_value:
     value: 0
 default_value_callback: ''
 settings:
-  on_label: 'On'
-  off_label: 'Off'
+  on_label: På
+  off_label: Av
 field_type: boolean

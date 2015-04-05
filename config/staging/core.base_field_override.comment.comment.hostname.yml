@@ -1,0 +1,18 @@
+uuid: 00d4b299-8ae7-4282-8d00-c5b4107e2ede
+langcode: nb
+status: true
+dependencies:
+  config:
+    - comment.type.comment
+id: comment.comment.hostname
+field_name: hostname
+entity_type: comment
+bundle: comment
+label: Vertsnavn
+description: 'Kommentarforfatterens vertsnavn.'
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: string

@@ -1,22 +1,22 @@
-uuid: 26a0d2bc-ccb3-43e4-891f-3155bfa592a4
-langcode: en
+uuid: 6d022d4f-6333-4139-9047-714a9a45c465
+langcode: nb
 status: true
 dependencies:
   config:
-    - node.type.page
-id: node.page.promote
+    - node.type.article
+id: node.article.promote
 field_name: promote
 entity_type: node
-bundle: page
+bundle: article
 label: 'Vis på forsiden'
 description: ''
 required: false
 translatable: false
 default_value:
   -
-    value: 0
+    value: 1
 default_value_callback: ''
 settings:
-  on_label: 'On'
-  off_label: 'Off'
+  on_label: På
+  off_label: Av
 field_type: boolean

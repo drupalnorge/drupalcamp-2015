@@ -11,10 +11,10 @@ id: node.article.field_image
 field_name: field_image
 entity_type: node
 bundle: article
-label: Image
+label: Bilde
 description: ''
 required: false
-translatable: true
+translatable: false
 default_value: {  }
 default_value_callback: ''
 settings:

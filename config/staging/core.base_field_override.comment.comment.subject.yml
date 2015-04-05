@@ -1,0 +1,18 @@
+uuid: 1281bd67-9a01-40e6-9802-2fa5da2c13e7
+langcode: nb
+status: true
+dependencies:
+  config:
+    - comment.type.comment
+id: comment.comment.subject
+field_name: subject
+entity_type: comment
+bundle: comment
+label: Emne
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: string

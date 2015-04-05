@@ -1,0 +1,20 @@
+uuid: 0be9ade8-aec3-49be-9c00-d568f4b42494
+langcode: nb
+status: true
+dependencies:
+  config:
+    - node.type.session
+  module:
+    - path
+id: node.session.path
+field_name: path
+entity_type: node
+bundle: session
+label: URL-alias
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: path

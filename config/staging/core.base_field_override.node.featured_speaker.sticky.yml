@@ -1,0 +1,22 @@
+uuid: d3833f79-9883-4824-9041-6528180def40
+langcode: nb
+status: true
+dependencies:
+  config:
+    - node.type.featured_speaker
+id: node.featured_speaker.sticky
+field_name: sticky
+entity_type: node
+bundle: featured_speaker
+label: 'Klistret på toppen av lister'
+description: ''
+required: false
+translatable: false
+default_value:
+  -
+    value: 0
+default_value_callback: ''
+settings:
+  on_label: På
+  off_label: Av
+field_type: boolean

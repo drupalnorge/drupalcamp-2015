@@ -1,0 +1,22 @@
+uuid: 2e0324b2-a392-490e-9716-22abc83b0dee
+langcode: nb
+status: true
+dependencies:
+  config:
+    - comment.type.comment
+id: comment.comment.status
+field_name: status
+entity_type: comment
+bundle: comment
+label: Publiseringsstatus
+description: 'A boolean indicating whether the comment is published.'
+required: false
+translatable: false
+default_value:
+  -
+    value: 1
+default_value_callback: ''
+settings:
+  on_label: På
+  off_label: Av
+field_type: boolean

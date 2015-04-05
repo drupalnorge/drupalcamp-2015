@@ -1,0 +1,18 @@
+uuid: e9ef9e52-b15b-42d5-ae00-e15c52f2fa92
+langcode: nb
+status: true
+dependencies:
+  config:
+    - node.type.page
+id: node.page.revision_log
+field_name: revision_log
+entity_type: node
+bundle: page
+label: 'Meldinger for versjonsloggen'
+description: 'Briefly describe the changes you have made.'
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: string_long
