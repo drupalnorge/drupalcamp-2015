@@ -50,3 +50,23 @@ function oslo2015_preprocess_input(&$vars) {
   $vars['attributes']['class'] = !empty($vars['#attributes']['class']) ? $vars['#attributes']['class'] : [];
   $vars['attributes']['class'][] = 'form-control';
 }
+
+/**
+ * Implements theme_preprocess_node().
+ */
+function oslo2015_preprocess_node(&$vars) {
+  $session_owner = $vars['node']->getOwner();
+  $picture_value = $session_owner->get('user_picture')->getValue();
+  if (!$picture_value) {
+    return;
+  }
+  $file = file_load($picture_value[0]['target_id']);
+  $uri = $file->get('uri')->getValue();
+  $img_vars = array(
+    '#theme' => 'image_style',
+    '#uri' => $uri[0]['value'],
+    '#style_name' => 'original',
+  );
+  $img_output = drupal_render($img_vars);
+  $vars['user_picture'] = $img_output;
+}

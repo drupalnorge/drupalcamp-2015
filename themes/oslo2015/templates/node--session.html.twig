@@ -96,9 +96,48 @@
 
     <section id="blog-detail">
       <div class="row">
-        <div class="col-sm-12">
+        <div class="col-sm-9 col-sm-push-3">
           <div{{ content_attributes.addClass('node__content') }}>
-            {{ content|without('links') }}
+            {{ content.body }}
+          </div>
+        </div>
+        <div class="session-meta col-sm-3 col-sm-pull-9">
+          <div class="row">
+            <div class="col-sm-12 col-xs-6">
+              {{user_picture}}
+            </div>
+            <div class="col-sm-12 col-xs-6">
+              <div class="field-wrapper first">
+                <label class="speaker">{%trans%}Speaker{%endtrans%}</label>
+                <div>{{content.field_presenter}}</div>
+              </div>
+              <div class="field-wrapper">
+                <label class="level">{%trans%}Experience level{%endtrans%}</label>
+                <div>
+                  {%if content.field_experience_level['#field_name']%}
+                    {{content.field_experience_level}}
+                  {%else%}
+                    {%trans%}No info{%endtrans%}
+                  {%endif%}
+                </div>
+              </div>
+              <div class="field-wrapper">
+                <label class="time">{%trans%}Session time{%endtrans%}</label>
+                <div>
+                  {%if content.field_time and content.field_time['#field_name']%}
+                    {{content.field_time}}
+                  {%else%}
+                    {%trans%}To be decided{%endtrans%}
+                  {%endif%}
+                </div>
+              </div>
+              <div class="field-wrapper">
+                {%if content.field_slides['#field_name']%}
+                  <label>{%trans%}Slides{%endtrans%}</label>
+                  <div>{{content.field_slides}}</div>
+                {%endif%}
+              </div>
+            </div>
           </div>
         </div>
       </div>
