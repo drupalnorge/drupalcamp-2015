@@ -7,6 +7,7 @@
 
 namespace Drupal\camposlo\Plugin\Block;
 
+use Drupal\Core\Url;
 use Drupal\Core\Block\BlockBase;
 
 /**
@@ -70,8 +71,8 @@ class SpeakerBlock extends BlockBase {
                         <div class="active-wrapper">
                           <div class="text-wrapper">
                             <div class="text-inner">
-                              <a class="btn left btn-primary" href="/node/' . $nid . '">' . $this->t('View session') . '</a>
-                              <a class="right btn btn-primary" href="/user/' . $uid . '">' . $this->t('View speaker') . '</a>
+                              <a class="btn left btn-primary" href="' . Url::fromUri('entity:node/' . $nid)->toString() . '">' . $this->t('View session') . '</a>
+                              <a class="right btn btn-primary" href="' . Url::fromUri('entity:user/' . $uid)->toString() . '">' . $this->t('View speaker') . '</a>
                             </div>
                           </div>
                         </div>

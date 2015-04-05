@@ -85,7 +85,7 @@ class SignupBlock extends BlockBase implements ContainerFactoryPluginInterface {
                           <div class="section-heading">
                             <h2 class="title"><span>' . $this->t('Sign up!') . '</span></h2>
 
-                            <p class="subtitle"><a class="btn btn-lg btn-primary" href="/user/register">' . $this->t('Register') . '</a></p>
+                            <p class="subtitle"><a class="btn btn-lg btn-primary" href="' . Url::fromRoute('user.register')->toString() . '">' . $this->t('Register') . '</a></p>
                           </div>
                         </div>
                       </div>
