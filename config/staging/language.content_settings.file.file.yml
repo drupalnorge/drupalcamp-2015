@@ -1,9 +1,0 @@
-uuid: 0d9ca005-df3c-4a34-8c54-84a7c0e90502
-langcode: nb
-status: true
-dependencies: {  }
-id: file.file
-target_entity_type_id: file
-target_bundle: file
-default_langcode: site_default
-language_alterable: false

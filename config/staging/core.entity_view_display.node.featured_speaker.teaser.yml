@@ -1,9 +1,10 @@
-uuid: b9c39e35-d02e-4448-8c00-fc791664e3c8
+uuid: c7bf4866-b626-4d6c-9500-be8c66e83ef4
 langcode: nb
 status: true
 dependencies:
   config:
     - core.entity_view_mode.node.teaser
+    - field.field.node.featured_speaker.field_session
     - node.type.featured_speaker
   module:
     - user

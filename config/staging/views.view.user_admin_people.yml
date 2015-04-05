@@ -1,4 +1,4 @@
-uuid: ff57fe55-bb41-4193-af34-5211176728cf
+uuid: c75cd2f3-38dc-46b1-b646-7051a8461b7b
 langcode: en
 status: true
 dependencies:
@@ -9,7 +9,7 @@ label: People
 module: user
 description: 'Find and manage people interacting with your site.'
 tag: default
-base_table: users
+base_table: users_field_data
 base_field: uid
 core: 8.x
 display:
@@ -293,11 +293,12 @@ display:
           hide_empty: false
           empty_zero: false
           hide_alter_empty: true
-          type: active-blocked
-          type_custom_true: ''
-          type_custom_false: ''
-          not: false
-          plugin_id: boolean
+          plugin_id: field
+          type: boolean
+          settings:
+            format: custom
+            format_custom_true: Active
+            format_custom_false: Blocked
           entity_type: user
           entity_field: status
         roles_target_id:
@@ -734,7 +735,7 @@ display:
           entity_field: status
         uid_raw:
           id: uid_raw
-          table: users
+          table: users_field_data
           field: uid_raw
           relationship: none
           group_type: group
@@ -817,6 +818,12 @@ display:
         groups:
           1: AND
       display_extenders: {  }
+    cache_metadata:
+      contexts:
+        - languages
+        - url
+        - user
+      cacheable: false
   page_1:
     display_plugin: page
     id: page_1
@@ -841,3 +848,9 @@ display:
       defaults:
         show_admin_links: false
       display_extenders: {  }
+    cache_metadata:
+      contexts:
+        - languages
+        - url
+        - user
+      cacheable: false

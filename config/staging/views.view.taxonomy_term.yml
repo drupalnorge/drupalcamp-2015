@@ -1,4 +1,4 @@
-uuid: ffe8dc45-8589-4d92-9a00-ae937dcf4198
+uuid: a9884d59-f70d-4811-ba27-395eab00b092
 langcode: en
 status: true
 dependencies:
@@ -13,7 +13,7 @@ label: 'Taxonomy term'
 module: taxonomy
 description: 'Content belonging to a certain taxonomy term.'
 tag: default
-base_table: node
+base_table: node_field_data
 base_field: nid
 core: '8'
 display:
@@ -241,6 +241,12 @@ display:
       relationships: {  }
       fields: {  }
       display_extenders: {  }
+    cache_metadata:
+      contexts:
+        - languages
+        - url
+        - 'user.node_grants:view'
+      cacheable: false
   feed_1:
     id: feed_1
     display_title: Feed
@@ -287,6 +293,12 @@ display:
           relationship: none
           view_mode: default
       display_extenders: {  }
+    cache_metadata:
+      contexts:
+        - languages
+        - url
+        - 'user.node_grants:view'
+      cacheable: false
   page_1:
     id: page_1
     display_title: Page
@@ -298,3 +310,9 @@ display:
         options: {  }
       path: taxonomy/term/%
       display_extenders: {  }
+    cache_metadata:
+      contexts:
+        - languages
+        - url
+        - 'user.node_grants:view'
+      cacheable: false

@@ -1,4 +1,4 @@
-uuid: 1eb3c884-a0b4-45f9-9200-e6810129acfe
+uuid: f141aba0-0a8d-43d5-af05-5eeafe65af5c
 langcode: nb
 status: true
 dependencies:
@@ -9,7 +9,7 @@ dependencies:
 id: signup_block
 theme: oslo2015
 region: content_bottom
-weight: -9
+weight: -4
 provider: null
 plugin: signup_block
 settings:

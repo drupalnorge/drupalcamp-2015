@@ -1,9 +1,0 @@
-uuid: d71150a5-bfa9-4226-9800-ce82add22729
-langcode: en
-status: true
-dependencies: {  }
-name: 'Experience level'
-vid: experience_level
-description: 'Used to describe experience level of sessions'
-hierarchy: 0
-weight: 0

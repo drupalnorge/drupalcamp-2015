@@ -1,16 +1,17 @@
-uuid: 30e89613-9b68-4ca2-9700-0bd42a8561c8
+uuid: 58cc29da-f502-4777-9700-e499c83e4164
 langcode: en
 status: true
 dependencies:
   module:
     - comment
+    - node
     - user
 id: comments_recent
 label: 'Recent comments'
 module: views
 description: 'Recent comments.'
 tag: default
-base_table: comment
+base_table: comment_field_data
 base_field: cid
 core: 8.x
 display:
@@ -209,7 +210,7 @@ display:
           entity_field: created
         cid:
           id: cid
-          table: comment
+          table: comment_field_data
           field: cid
           relationship: none
           group_type: group
@@ -236,6 +237,10 @@ display:
           tokenize: false
           plugin_id: text_custom
       display_extenders: {  }
+    cache_metadata:
+      contexts:
+        - languages
+      cacheable: false
   block_1:
     display_plugin: block
     id: block_1
@@ -247,3 +252,7 @@ display:
       allow:
         items_per_page: true
       display_extenders: {  }
+    cache_metadata:
+      contexts:
+        - languages
+      cacheable: false

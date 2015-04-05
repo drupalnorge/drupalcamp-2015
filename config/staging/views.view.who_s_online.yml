@@ -1,4 +1,4 @@
-uuid: f275c4b2-3c24-40d0-ba3a-5895c5f189c1
+uuid: 68ec3f7d-4ee8-444c-9246-703d22f81267
 langcode: en
 status: true
 dependencies:
@@ -9,7 +9,7 @@ label: 'Who''s online block'
 module: user
 description: 'Shows the user names of the most recently active users, and the total number of active users.'
 tag: default
-base_table: users
+base_table: users_field_data
 base_field: uid
 core: 8.x
 display:
@@ -198,6 +198,10 @@ display:
       relationships: {  }
       arguments: {  }
       display_extenders: {  }
+    cache_metadata:
+      contexts:
+        - languages
+      cacheable: false
   who_s_online_block:
     display_plugin: block
     id: who_s_online_block
@@ -207,3 +211,7 @@ display:
       block_description: 'Who''s online'
       display_description: 'A list of users that are currently logged in.'
       display_extenders: {  }
+    cache_metadata:
+      contexts:
+        - languages
+      cacheable: false

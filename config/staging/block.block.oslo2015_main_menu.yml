@@ -1,6 +1,6 @@
-uuid: bac5b39a-ae08-432f-9000-f6141af63c99
+uuid: 1b74d647-d141-40ef-be4f-79ae0c7d2c3b
 langcode: en
-status: false
+status: true
 dependencies:
   config:
     - system.menu.main
@@ -10,7 +10,7 @@ dependencies:
     - oslo2015
 id: oslo2015_main_menu
 theme: oslo2015
-region: '-1'
+region: primary_menu
 weight: 0
 provider: null
 plugin: 'system_menu_block:main'

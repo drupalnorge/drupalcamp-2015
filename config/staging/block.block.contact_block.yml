@@ -1,4 +1,4 @@
-uuid: 9cb5c707-57f7-49f7-8a0a-1054c29d630d
+uuid: e73d4b99-1e3d-4296-9500-ba8cb1469fb8
 langcode: nb
 status: true
 dependencies:
@@ -9,7 +9,7 @@ dependencies:
 id: contact_block
 theme: oslo2015
 region: content_bottom
-weight: -8
+weight: -3
 provider: null
 plugin: contact_block
 settings:

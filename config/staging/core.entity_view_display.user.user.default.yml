@@ -1,5 +1,5 @@
-uuid: 87c21eab-c1bc-4184-be00-ba7a63a75944
-langcode: und
+uuid: f50269a1-9336-47a7-ac3f-63434c9bbae5
+langcode: en
 status: true
 dependencies:
   config:
@@ -19,9 +19,10 @@ bundle: user
 mode: default
 content:
   field_about_me:
-    type: text_default
-    weight: 1
-    settings: {  }
+    type: text_trimmed
+    weight: 4
+    settings:
+      trim_length: 600
     third_party_settings: {  }
     label: above
   field_drupal_org_profile:
@@ -48,7 +49,7 @@ content:
     label: above
   field_twitter:
     type: link
-    weight: 4
+    weight: 1
     settings:
       trim_length: 80
       url_only: false
@@ -61,7 +62,7 @@ content:
     type: image
     weight: 0
     settings:
-      image_style: large
+      image_style: original
       image_link: content
     third_party_settings: {  }
     label: hidden

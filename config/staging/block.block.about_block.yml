@@ -1,4 +1,4 @@
-uuid: b7582ff1-a84c-458f-a81a-261dcb7d1996
+uuid: 298ea599-0f73-4fd3-9800-dcef9fff8aed
 langcode: nb
 status: true
 dependencies:
@@ -10,7 +10,7 @@ dependencies:
 id: about_block
 theme: oslo2015
 region: content
-weight: -7
+weight: -4
 provider: null
 plugin: about_block
 settings:

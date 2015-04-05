@@ -1,10 +1,11 @@
-uuid: 66d1b871-a4ca-4833-a500-0d8182eb40d9
+uuid: 3a9e667a-b267-4ecf-be06-064c6b4153df
 langcode: en
 status: true
 dependencies: {  }
 id: authenticated
 label: 'Authenticated user'
 weight: 1
+is_admin: false
 permissions:
   - 'use text format plain_text'
   - 'access content'

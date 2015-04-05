@@ -1,4 +1,4 @@
-uuid: 19546a85-064f-4469-8e5b-91aea86abf6c
+uuid: a62f8069-d7cd-46ec-b008-8b8a0dcc4152
 langcode: en
 status: true
 dependencies:
@@ -9,7 +9,7 @@ label: 'Who''s new'
 module: user
 description: 'Shows a list of the newest user accounts on the site.'
 tag: default
-base_table: users
+base_table: users_field_data
 base_field: uid
 core: 8.x
 display:
@@ -168,6 +168,10 @@ display:
       relationships: {  }
       arguments: {  }
       display_extenders: {  }
+    cache_metadata:
+      contexts:
+        - languages
+      cacheable: false
   block_1:
     display_plugin: block
     id: block_1
@@ -178,3 +182,7 @@ display:
       block_description: 'Who''s new'
       block_category: User
       display_extenders: {  }
+    cache_metadata:
+      contexts:
+        - languages
+      cacheable: false

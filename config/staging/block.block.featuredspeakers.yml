@@ -1,0 +1,29 @@
+uuid: b87da505-a651-4fd9-8a00-b1182c7eb522
+langcode: nb
+status: true
+dependencies:
+  module:
+    - camposlo
+    - system
+  theme:
+    - oslo2015
+id: featuredspeakers
+theme: oslo2015
+region: content
+weight: -4
+provider: null
+plugin: speaker_block
+settings:
+  id: speaker_block
+  label: Foredragsholdere
+  provider: camposlo
+  label_display: visible
+  cache:
+    max_age: 0
+    contexts: {  }
+visibility:
+  request_path:
+    id: request_path
+    pages: '<front>'
+    negate: false
+    context_mapping: {  }

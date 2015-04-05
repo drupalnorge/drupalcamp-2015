@@ -1,9 +1,9 @@
-uuid: 3f62d385-eb1d-4d05-8a13-19b607bd04cc
+uuid: 018da8fa-39d3-464d-ae08-08f340c31064
 langcode: en
 status: true
 dependencies: {  }
 id: en
-label: Engelsk
+label: English
 direction: ltr
 weight: -9
 locked: false

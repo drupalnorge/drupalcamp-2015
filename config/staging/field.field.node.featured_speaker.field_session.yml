@@ -1,4 +1,4 @@
-uuid: de04cb62-7edb-4ac6-9703-3c03587d721c
+uuid: 0e8ef7d0-3dbc-4981-9100-af219ec2db9f
 langcode: nb
 status: true
 dependencies:
@@ -18,7 +18,7 @@ translatable: false
 default_value: {  }
 default_value_callback: ''
 settings:
-  handler: default
+  handler: 'default:node'
   handler_settings:
     target_bundles:
       session: session

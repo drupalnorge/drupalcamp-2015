@@ -1,4 +1,4 @@
-uuid: fd3f1bca-97ac-4b09-9700-b6c088eadcf0
+uuid: 2f62b648-fab7-4ee1-9017-2343efd96b88
 langcode: en
 status: false
 dependencies:
@@ -12,7 +12,7 @@ label: Glossary
 module: node
 description: 'All content, by letter.'
 tag: default
-base_table: node
+base_table: node_field_data
 base_field: nid
 core: '8'
 display:
@@ -71,8 +71,7 @@ display:
           id: title
           table: node_field_data
           field: title
-          link_to_node: true
-          plugin_id: node
+          plugin_id: field
           relationship: none
           group_type: group
           admin_label: ''
@@ -352,6 +351,13 @@ display:
           entity_type: node
           entity_field: langcode
       display_extenders: {  }
+    cache_metadata:
+      contexts:
+        - languages
+        - url
+        - user
+        - 'user.node_grants:view'
+      cacheable: false
   attachment_1:
     id: attachment_1
     display_title: Attachment
@@ -410,6 +416,13 @@ display:
         page_1: page_1
       inherit_arguments: false
       display_extenders: {  }
+    cache_metadata:
+      contexts:
+        - languages
+        - url
+        - user
+        - 'user.node_grants:view'
+      cacheable: false
   page_1:
     id: page_1
     display_title: Page
@@ -427,3 +440,10 @@ display:
         menu_name: main
         parent: ''
       display_extenders: {  }
+    cache_metadata:
+      contexts:
+        - languages
+        - url
+        - user
+        - 'user.node_grants:view'
+      cacheable: false

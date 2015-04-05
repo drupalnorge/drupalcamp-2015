@@ -1,4 +1,4 @@
-uuid: 2c16bf2f-bc8c-4a71-a000-a1dc4ec071eb
+uuid: eea91a84-c0c7-4f81-a204-4d0249e0b978
 langcode: en
 status: true
 dependencies:
@@ -10,7 +10,7 @@ label: 'Recent content'
 module: node
 description: 'Recent content.'
 tag: default
-base_table: node
+base_table: node_field_data
 base_field: nid
 core: 8.x
 display:
@@ -119,8 +119,6 @@ display:
             html: false
           hide_empty: false
           empty_zero: false
-          link_to_node: true
-          plugin_id: node
           relationship: none
           group_type: group
           admin_label: ''
@@ -134,6 +132,10 @@ display:
           element_default_classes: true
           empty: ''
           hide_alter_empty: true
+          type: string
+          settings:
+            link_to_entity: true
+          plugin_id: field
         name:
           id: name
           table: users_field_data
@@ -419,6 +421,12 @@ display:
       use_more_text: More
       link_url: admin/content
       link_display: custom_url
+    cache_metadata:
+      contexts:
+        - languages
+        - user
+        - 'user.node_grants:view'
+      cacheable: false
   block_1:
     display_plugin: block
     id: block_1
@@ -426,3 +434,9 @@ display:
     position: 1
     display_options:
       display_extenders: {  }
+    cache_metadata:
+      contexts:
+        - languages
+        - user
+        - 'user.node_grants:view'
+      cacheable: false

@@ -1,13 +1,15 @@
-uuid: 3793ff0e-a56c-451d-bd18-24f2f835eb60
+uuid: 1fb20f8d-2194-484b-b900-0c9afc1ae028
 langcode: en
 status: true
 dependencies:
   config:
     - field.field.node.article.body
+    - field.field.node.article.comment
     - field.field.node.article.field_image
     - field.field.node.article.field_tags
     - node.type.article
   module:
+    - comment
     - image
     - taxonomy
     - text
@@ -23,6 +25,13 @@ content:
     settings: {  }
     third_party_settings: {  }
     label: hidden
+  comment:
+    label: above
+    type: comment_default
+    weight: 20
+    settings:
+      pager_id: 0
+    third_party_settings: {  }
   field_image:
     type: image
     weight: -1

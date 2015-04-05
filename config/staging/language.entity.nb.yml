@@ -1,9 +1,9 @@
-uuid: bb5a1d58-ccbc-4875-ad3a-58ad60bd45d2
+uuid: ce336be8-b1d5-46b1-a248-72a33c44cce4
 langcode: en
 status: true
 dependencies: {  }
 id: nb
-label: 'Norsk (bokmål)'
+label: 'Norwegian Bokmål'
 direction: ltr
 weight: -10
 locked: false

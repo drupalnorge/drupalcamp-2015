@@ -1,4 +1,4 @@
-uuid: 75e022ba-6816-4ee3-9c01-014b9e05f393
+uuid: 31ffb9f3-568c-483e-9e19-2545625f689c
 langcode: en
 status: true
 dependencies:
@@ -18,7 +18,7 @@ translatable: false
 default_value: {  }
 default_value_callback: ''
 settings:
-  handler: default
+  handler: 'default:user'
   handler_settings:
     filter:
       type: _none

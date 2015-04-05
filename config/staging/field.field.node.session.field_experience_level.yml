@@ -1,4 +1,4 @@
-uuid: 8caeaa65-82ec-4abf-a502-2c1bbc929494
+uuid: fec9ab07-85ad-4a45-8101-1d86bc6cc215
 langcode: nb
 status: true
 dependencies:
@@ -18,7 +18,7 @@ translatable: false
 default_value: {  }
 default_value_callback: ''
 settings:
-  handler: default
+  handler: 'default:taxonomy_term'
   handler_settings:
     target_bundles:
       experience_level: experience_level

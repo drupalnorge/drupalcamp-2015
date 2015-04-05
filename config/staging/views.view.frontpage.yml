@@ -1,4 +1,4 @@
-uuid: b9dcccf4-659a-418f-a863-998c0b3d5dc2
+uuid: e5093c35-a190-49b1-a304-4b1fe390b7df
 langcode: en
 status: true
 dependencies:
@@ -14,7 +14,7 @@ label: Frontpage
 module: node
 description: 'All content promoted to the front page.'
 tag: default
-base_table: node
+base_table: node_field_data
 base_field: nid
 core: 8.x
 display:
@@ -65,10 +65,10 @@ display:
       exposed_form:
         type: basic
         options:
-          submit_button: Bruk
+          submit_button: Apply
           reset_button: false
-          reset_button_label: Nullstill
-          exposed_sorts_label: 'Sortér på'
+          reset_button_label: Reset
+          exposed_sorts_label: 'Sort by'
           expose_sort_order: true
           sort_asc_label: Asc
           sort_desc_label: Desc
@@ -131,12 +131,12 @@ display:
           total_pages: 0
           expose:
             items_per_page: false
-            items_per_page_label: 'Elementer per side'
+            items_per_page_label: 'Items per page'
             items_per_page_options: '5, 10, 25, 50'
             items_per_page_options_all: false
-            items_per_page_options_all_label: '- Alle -'
+            items_per_page_options_all_label: '- All -'
             offset: false
-            offset_label: Forskyving
+            offset_label: Offset
           tags:
             previous: '‹ previous'
             next: 'next ›'
@@ -248,8 +248,8 @@ display:
           hide_empty: false
           empty_zero: false
           hide_alter_empty: true
-          date_format: custom
-          custom_date_format: d-M-Y
+          date_format: fallback
+          custom_date_format: ''
           timezone: ''
           entity_type: node
           entity_field: created
@@ -302,10 +302,23 @@ display:
           hide_empty: false
           empty_zero: false
           hide_alter_empty: true
-          link_to_node: false
+          click_sort_column: value
+          type: string
+          settings:
+            link_to_entity: false
+          group_column: value
+          group_columns: {  }
+          group_rows: true
+          delta_limit: 0
+          delta_offset: 0
+          delta_reversed: false
+          delta_first_last: false
+          multi_type: separator
+          separator: ', '
+          field_api_classes: false
           entity_type: node
           entity_field: title
-          plugin_id: node
+          plugin_id: field
         body:
           id: body
           table: node__body
@@ -355,9 +368,8 @@ display:
           empty_zero: false
           hide_alter_empty: true
           click_sort_column: value
-          type: text_summary_or_trimmed
-          settings:
-            trim_length: 100
+          type: text_default
+          settings: {  }
           group_column: value
           group_columns: {  }
           group_rows: true
@@ -417,19 +429,25 @@ display:
           hide_empty: false
           empty_zero: false
           hide_alter_empty: true
-          text: 'Read more'
+          text: ''
           entity_type: node
           plugin_id: node_link
       arguments: {  }
       display_extenders: {  }
     display_plugin: default
-    display_title: Hoved
+    display_title: Master
     id: default
     position: 0
+    cache_metadata:
+      contexts:
+        - languages
+        - user
+        - 'user.node_grants:view'
+      cacheable: false
   feed_1:
     display_plugin: feed
     id: feed_1
-    display_title: Strøm
+    display_title: Feed
     position: 2
     display_options:
       sitename_title: true
@@ -454,11 +472,23 @@ display:
           relationship: none
           view_mode: rss
       display_extenders: {  }
+    cache_metadata:
+      contexts:
+        - languages
+        - user
+        - 'user.node_grants:view'
+      cacheable: false
   page_1:
     display_options:
       path: node
       display_extenders: {  }
     display_plugin: page
-    display_title: Side
+    display_title: Page
     id: page_1
     position: 1
+    cache_metadata:
+      contexts:
+        - languages
+        - user
+        - 'user.node_grants:view'
+      cacheable: false

@@ -19,6 +19,7 @@ regions:
   help: Help
   page_top: 'Page top'
   page_bottom: 'Page bottom'
+  messages: Messages
   featured_top: 'Featured top'
   breadcrumb: Breadcrumb
   content: Content
@@ -34,8 +35,8 @@ regions:
   footer_fifth: 'Footer fifth'
 
 
-# Information added by Drupal.org packaging script on 2015-02-25
-version: '8.0.0-beta7'
+# Information added by Drupal.org packaging script on 2015-03-25
+version: '8.0.0-beta9'
 core: '8.x'
 project: 'drupal'
-datestamp: 1424875577
+datestamp: 1427300653

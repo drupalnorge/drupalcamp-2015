@@ -46,6 +46,5 @@ module:
   standard: 1000
 theme:
   classy: 0
-  bartik: 0
   seven: 0
   oslo2015: 0

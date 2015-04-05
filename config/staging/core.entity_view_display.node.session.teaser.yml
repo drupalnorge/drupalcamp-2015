@@ -1,10 +1,11 @@
-uuid: 475b5c2d-c298-4fca-9450-8022504c7f5c
+uuid: 1121a9d4-2cb2-43da-8d00-e023e8bb3fd6
 langcode: en
 status: true
 dependencies:
   config:
     - core.entity_view_mode.node.teaser
     - field.field.node.session.body
+    - field.field.node.session.field_experience_level
     - field.field.node.session.field_presenter
     - field.field.node.session.field_slides
     - field.field.node.session.field_time
@@ -27,6 +28,7 @@ content:
   links:
     weight: 100
 hidden:
+  field_experience_level: true
   field_presenter: true
   field_slides: true
   field_time: true
