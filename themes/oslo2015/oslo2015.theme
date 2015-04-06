@@ -6,7 +6,7 @@ use Drupal\Core\Template\Attribute;
  * Implements hook_preprocess_page().
  */
 function oslo2015_preprocess_page(&$variables) {
-  // Hm. This is probably something new and fancy in Drupal 8?
+  // Hm. $base_path is probably something new and fancy in Drupal 8?
   global $base_path;
   $variables['logo_image'] = $base_path . drupal_get_path('theme', 'oslo2015') . '/logo.png';
 }
@@ -69,4 +69,18 @@ function oslo2015_preprocess_node(&$vars) {
   );
   $img_output = drupal_render($img_vars);
   $vars['user_picture'] = $img_output;
+}
+
+/**
+ * Implements hook_preprocess_links().
+ */
+function oslo2015_preprocess_links(&$vars) {
+  // Add that fancy bootstrap button class to read more links.
+  if (!empty($vars['links']) && !empty($vars['links']['node-readmore'])) {
+    if (empty($vars['links']['node-readmore']['link']['#options']['attributes']['class'])) {
+      $vars['links']['node-readmore']['link']['#options']['attributes']['class'] = [];
+    }
+    $vars['links']['node-readmore']['link']['#options']['attributes']['class'][] = 'btn';
+    $vars['links']['node-readmore']['link']['#options']['attributes']['class'][] = 'btn-primary';
+  }
 }

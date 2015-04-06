@@ -1,0 +1,24 @@
+// Program view.
+.view-program {
+  .views-row {
+    padding: 1em 0;
+    &.views-odd {
+      background-color: #f9f9f9;
+    }
+  }
+  #blog-detail {
+    background: none;
+  }
+  h2.title {
+    margin: 0 0 .5em;
+  }
+  label {
+    margin: 0;
+  }
+  .field-wrapper {
+    margin-bottom: 1em;
+  }
+  ul.inline li {
+    padding: 0;
+  }
+}
