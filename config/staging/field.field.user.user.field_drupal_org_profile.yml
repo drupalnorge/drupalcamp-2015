@@ -10,8 +10,8 @@ id: user.user.field_drupal_org_profile
 field_name: field_drupal_org_profile
 entity_type: user
 bundle: user
-label: 'Drupal.org profile'
-description: 'Link to your profile on Drupal.org'
+label: 'Drupal.org profil'
+description: 'Lenke til din profil på Drupal.org'
 required: false
 translatable: false
 default_value: {  }

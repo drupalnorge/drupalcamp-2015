@@ -10,7 +10,7 @@ id: user.user.field_about_me
 field_name: field_about_me
 entity_type: user
 bundle: user
-label: 'About me'
+label: 'Om meg'
 description: ''
 required: false
 translatable: false
