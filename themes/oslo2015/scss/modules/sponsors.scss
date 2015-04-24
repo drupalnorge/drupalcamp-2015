@@ -1,0 +1,44 @@
+.view-id-sponsor_list {
+  position: relative;
+  padding:100px 0 0px !important;
+  .view-content {
+    display: block;
+    position: relative;
+  }
+  .views-row {
+    display: inline-block;
+    height: 538px;
+    overflow: hidden;
+    position: relative;
+    text-align: center;
+    width: 25%;
+    .views-field-title {
+      line-height: 1;
+      margin: 0 0 5px;
+      font-size: 2.4em;
+      font-weight: 900;
+      letter-spacing: -1px;
+      text-transform: uppercase;
+      width: 100%;
+      padding-top: 150px;
+    }
+    .views-field-field-sponsor-logo {
+      position: absolute;
+      top: 0px;
+      text-align: center;
+    }
+
+    .views-field {
+      transition: all 0.3s ease-in-out 0s;
+    }
+    &:hover {
+      .views-field-title {
+        padding-top: 10px;
+      }
+      .views-field-field-sponsor-logo {
+        opacity: .1;
+        top: 140px;
+      }
+    }
+  }
+}

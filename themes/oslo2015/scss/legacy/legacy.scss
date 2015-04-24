@@ -2748,27 +2748,6 @@ section#introWrapper .intro-nav{background:rgba(255,255,255,1)}
     line-height: 1;}
 .counterblock p{text-transform:uppercase;font-weight:300;margin:0;font-size:20px;}
 
-/* 8. TEAM SECTION */
-
-#team-block{background:#fff;position:relative;padding:100px 0 0px !important;}
-#teamgrid {display: block;position: relative;}
-#teamgrid .team {display: block;float: left;height: 538px;position: relative;text-align: center;width: 25%;}
-.teamimg1{background-image: url(../../images/team/01.jpg);}
-.teamimg2{background-image: url(../../images/team/02.jpg);}
-.teamimg3{background-image: url(../../images/team/03.jpg);}
-.teamimg4{background-image: url(../../images/team/04.jpg);}
-#teamgrid .team .image {background-position: center bottom;background-repeat: no-repeat;bottom: 0;display: block;height: 538px;opacity: 1;position: absolute;width: 100%;transition: all 0.3s ease-in-out 0s;-webkit-transition: all 0.3s ease-in-out 0s;-ms-transition: all 0.3s ease-in-out 0s;-o-transition: all 0.3s ease-in-out 0s;-moz-transition: all 0.3s ease-in-out 0s;}
-#teamgrid .team:hover .image{opacity:.1;bottom:-140px}
-#teamgrid .team .text {color: #3A4046;opacity: 0;padding: 0 20%;position: absolute;text-align: left;top: 170px;transition: all 0.3s ease-in-out 0s;-webkit-transition: all 0.3s ease-in-out 0s;-moz-transition: all 0.3s ease-in-out 0s;-o-transition: all 0.3s ease-in-out 0s;-ms-transition: all 0.3s ease-in-out 0s;}
-#teamgrid .team .text {padding: 0 10%;}
-#teamgrid .team .text h3 {line-height: 1;margin: 0 0 5px;font-family: open sans;font-size: 2.4em;font-weight: 900;letter-spacing: -1px;}
-#teamgrid .team .text p.title {font-size: 18px;font-style: normal;font-weight: 400;line-height: 22px;text-transform: uppercase;}
-#teamgrid .team .text p {font-size: 14px;line-height: 24px;}
-#teamgrid .team .text a {background: none repeat scroll 0 0 #FFC229;border-radius: 50%;-webkit-border-radius: 50%;color: #000000;font-size: 1.4em;height: 40px;line-height: 40px;margin-right: 2px;width: 40px;display: inline-block;text-align: center;transition: all 0.3s ease-in-out 0s;-webkit-transition: all 0.3s ease-in-out 0s;-o-transition: all 0.3s ease-in-out 0s;-moz-transition: all 0.3s ease-in-out 0s;-ms-transition: all 0.3s ease-in-out 0s;}
-#teamgrid .team .text a:hover{background:#000;color:#fff;}
-#teamgrid .team:hover .text {opacity:1;top:90px;}
-
-
 /* 9. CLIENT SECTION
 -------------------------*/
 #clients:after{background:rgba(255,255,255,.2);position:absolute;width:100%;height:100%;top:0;}
