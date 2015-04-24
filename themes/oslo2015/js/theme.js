@@ -27,7 +27,7 @@ jQuery(document).ready(function() {
 	fadeNavitems();
 
  $(".fancybox").fancybox({
-			'content': '<iframe src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d2000.1523789188125!2d10.7367122!3d59.9130184!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x46416e7d8781deb5%3A0x3a44a012fc299fb7!2sTordenskiolds+gate+3%2C+0160+Oslo!5e0!3m2!1sno!2sno!4v1415891358921" width="600" height="450" frameborder="0" style="border:0"></iframe>'
+      'content': '<iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d500.0751891045925!2d10.747759327587268!3d59.91055580124179!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x46416e89eaabad49%3A0x13c2f8cb291dc0e9!2sSkippergata+26%2C+0154+Oslo!5e0!3m2!1sen!2sno!4v1429882788260" width="600" height="450" frameborder="0" style="border:0"></iframe>'
 		});
 	if (isMobile == false) {
   var s = skrollr.init({
