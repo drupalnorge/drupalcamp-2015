@@ -1,0 +1,25 @@
+uuid: 21f11c50-3ee4-4038-b109-9d01dcb4a17b
+langcode: nb
+status: true
+dependencies:
+  module:
+    - node
+    - taxonomy
+id: node.field_sponsor_level
+field_name: field_sponsor_level
+entity_type: node
+type: taxonomy_term_reference
+settings:
+  allowed_values:
+    -
+      vocabulary: sponsor_level
+      parent: 0
+  target_type: taxonomy_term
+  options_list_callback: null
+  target_bundle: null
+module: taxonomy
+locked: false
+cardinality: 1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false

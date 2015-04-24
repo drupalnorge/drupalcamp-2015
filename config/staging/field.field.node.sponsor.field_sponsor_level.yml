@@ -1,0 +1,23 @@
+uuid: 5bc83cec-5a3f-4607-9007-7c43078678e0
+langcode: nb
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_sponsor_level
+    - node.type.sponsor
+  module:
+    - taxonomy
+id: node.sponsor.field_sponsor_level
+field_name: field_sponsor_level
+entity_type: node
+bundle: sponsor
+label: 'Sponsor level'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:taxonomy_term'
+  handler_settings: {  }
+field_type: taxonomy_term_reference

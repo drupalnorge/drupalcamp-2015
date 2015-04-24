@@ -9,7 +9,7 @@ dependencies:
 id: contact_block
 theme: oslo2015
 region: content_bottom
-weight: -3
+weight: -2
 provider: null
 plugin: contact_block
 settings:
