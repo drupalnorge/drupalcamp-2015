@@ -28,6 +28,10 @@
       text-align: center;
       width: 100%;
       background: #fff;
+      img {
+        width: 100%;
+        height: auto;
+      }
     }
     .views-field {
       transition: all 0.3s ease-in-out 0s;
@@ -40,6 +44,21 @@
         opacity: .1;
         top: 140px;
       }
+    }
+  }
+}
+@media (max-width: 480px) {
+  .view-id-sponsor_list .views-row {
+    width: 100%;
+    height: auto;
+    .views-field-field-sponsor-logo {
+      position: static;
+    }
+    .views-field {
+      transition: none;
+      top: inherit;
+      padding-top: inherit;
+      opacity: inherit;
     }
   }
 }
