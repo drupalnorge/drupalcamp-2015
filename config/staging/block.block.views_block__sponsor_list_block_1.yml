@@ -5,6 +5,10 @@ dependencies:
   config:
     - views.view.sponsor_list
   module:
+    - language
+    - node
+    - system
+    - user
     - views
   theme:
     - oslo2015
@@ -16,12 +20,12 @@ provider: null
 plugin: 'views_block:sponsor_list-block_1'
 settings:
   id: 'views_block:sponsor_list-block_1'
-  label: ''
+  label: Sponsorer
   provider: views
-  label_display: '0'
+  label_display: visible
   cache:
     max_age: 0
     contexts: {  }
-  views_label: ''
+  views_label: Sponsorer
   items_per_page: none
 visibility: {  }
