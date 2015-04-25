@@ -2497,13 +2497,11 @@ transition: all 0.35s ease-in-out;
 .header-inner {margin: auto;position: relative; width: 85%;}
 .nav-logo {height: 17px;margin-top: -5px;width: 172px;float: left;}
 #header .navicon {background: url("../../images/navicon-icon.png") no-repeat scroll 0 -28px transparent;height: 27px;width: 36px;cursor: pointer;float: right;}
-#header.scrolled {background:#000; padding:20px 0;}
-#header.scrolled .logo {margin-top:4px;}
 #nav {background:#000;padding: 40px 0 0;position: fixed;top: -380px;width: 100%;z-index: 3;}
 .hidden-con{display: none;}
 #nav .close {background: url("../../images/nav-close.png") no-repeat scroll 0 0 rgba(0, 0, 0, 0);height: 28px;width: 29px;cursor: pointer;float: right;opacity:1;}
 #nav .menunav-container{float: left;position: relative;width: 100%;text-align: center;}
-#menu-main-nav {height: 255px;padding: 85px 0 0;width: 100%;list-style: none outside none;margin: 0;border: medium none;display: inline-block;}
+
 #nav li {float: left;width: 14%;}
 #nav li a {color: #fff;font-size: 16px;padding-bottom: 10px;text-transform: uppercase;font-style: normal;font-weight: 600;letter-spacing: 2px;outline: 0 none;
     text-decoration: none;}
@@ -3326,46 +3324,6 @@ footer p{ font-size: 12px;margin: 0;line-height: 40px;}
 	.address-wrap h2{font-size:1.6em;}
 	.address-wrap a.loc{width:100%;margin-bottom:40px;}
 
-}
-/*-------------- COMMENTS -------------------*/
-#comment-region { background: #fff; }
-.content-area {margin-bottom: 20px;}
-.comments-area {margin: 43px 0 40px; padding-top: 20px;}
-.comments-title {font-size: 30px; margin-bottom: 0;}
-.comments-area ol {list-style: none; padding-left: 0; margin-bottom: 0;}
-.comments-area li {padding: 26px 0 5px;}
-.comments-area ol.children li{padding: 10px 0 0 70px;}
-.comments-area ol.children ol ol li{padding-left: 0;}
-.comment-meta {position: relative;}
-.comment-metadata {
-    border-top: 1px dotted #e5e5e5;
-    border-bottom: 1px dotted #e5e5e5;
-    margin: 8px 0 16px 100px;
-    padding:15px 0;
-}
-.comment-author img {max-width: 70px; margin-right: 28px; float: left;}
-.reply {position: absolute; right: 0; top:-1px; }
-.comments-area .reply li, .page-comment-reply .reply li { padding: 0; display: inline; padding-left: 10px; }
-.comment-content {padding: 0 0 9px 100px;}
-.comment-respond {margin-top: 0px;}
-.comment-reply-title {margin: 10px 0 22px; font-size: 30px;}
-.comment-respond label, .contact-form label {display: none;}
-.comment-form-author, .comment-form-email, .comment-form-url {
-margin-bottom: 10px;
-}
-.comment-form-comment:before, .contact-form-message:before {
-display: table; content: " ";
-}
-.comment-respond p.form-submit {margin-top: 24px;}
-.comments-link {float: right;}
-body.page-comment-reply ol.comment-list { padding-left: 0; }
-body.page-comment-reply ol.comment-list li { list-style: none; }
-@media (max-width: 570px) {
-    .comments-area ol.children li{padding: 30px 0 0 30px;}
-
-    .comment-form-author, .comment-form-email, .comment-form-url {
-        float: none; padding: 0 0px 0 0; width: 100%;
-    }
 }
 
 /*-------------------- TABS -----------------*/

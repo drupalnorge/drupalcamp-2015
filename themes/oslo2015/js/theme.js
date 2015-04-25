@@ -24,8 +24,6 @@ jQuery(document).ready(function() {
 	===================================================================*/
 	jQuery('#home').css('height', windowHeight);
 
-	fadeNavitems();
-
  $(".fancybox").fancybox({
       'content': '<iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d500.0751891045925!2d10.747759327587268!3d59.91055580124179!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x46416e89eaabad49%3A0x13c2f8cb291dc0e9!2sSkippergata+26%2C+0154+Oslo!5e0!3m2!1sen!2sno!4v1429882788260" width="600" height="450" frameborder="0" style="border:0"></iframe>'
 		});
@@ -112,56 +110,6 @@ jQuery(document).ready(function() {
 
 
 
-	/*=================================================================
-	show-hide navigation
-	===================================================================
-	var windowOffsetHeight = windowHeight - 1;
-	if (!jQuery('header.navbar').hasClass('show')) {
-		jQuery(window).scroll(function() {
-			if ( jQuery(this).scrollTop() > bheight - 10 ) {
-				jQuery('header.navbar').removeClass('show');
-			}
-			else {
-				jQuery('header.navbar').addClass('show');
-			}
-		});
-	};*/
-
-	$(window).scroll(function() {
-
-			var sT = $(this).scrollTop();
-
-			if (sT >= 10) {
-				$('#header').addClass('scrolled');
-				//$('#header .logo').css({'background-position':'0 -18px'});
-				$('#header .navicon').css({'background-position':'0 -28px'});
-				//$('#cat-cont').css({'position': 'fixed', 'top': 77});
-				//$(".bg-overlay").animate({opacity: "1"}, 1200);
-
-
-			}else {
-				$('#header').removeClass('scrolled');
-				//$(".bg-overlay").animate({opacity: "0"}, 200);
-				//$('#header .logo, #header .hamburger').css({'background-position':'0 0'});
-				//$('#cat-cont').css({'position': 'relative', 'top': 0});
-			}
-
-	});
-
-	/*=================================================================
-	Bootstrap Plugins : Navigation - Collapse (for mobile)
-	===================================================================*/
-	jQuery('.navbar .collapse').collapse();
-	jQuery(".navbar-nav li a").click(function() {
-		jQuery(".collapse").toggleClass("in");
-	});
-
-
-	/*=================================================================
-	Contact form
-	===================================================================*/
-
-	contentEditable();//contactForm();
 
 	/*=================================================================
 	Team section flexslider
@@ -433,62 +381,4 @@ function contentEditable(){
 	$("[contenteditable=true]").focus(function(){
 		$(this).removeClass("js-error")
 	})
-}
-
-function contactForm(){
-
-	function e(e){
-		var t=/^([a-zA-Z0-9_.+-])+\@(([a-zA-Z0-9-])+\.)+([a-zA-Z0-9]{2,4})+$/;
-		return t.test(e)
-	}
-	$(".js-contact-form").submit(function(){
-		var i=$(".js-contact-email"),
-			s=$(".js-contact-name"),
-			o=$(".js-contact-subject"),
-			u=$(".js-contact-brief"),
-			a=1;
-
-			i.removeClass("js-error");s.removeClass("js-error");o.removeClass("js-error");u.removeClass("js-error");
-			if(i.text()===i.data("placeholder")){i.addClass("js-error");a=0}else if(!e(i.text())){i.addClass("js-error");a=0}if(s.text()===s.data("placeholder")){s.addClass("js-error");a=0}if(o.text()===o.data("placeholder")){o.addClass("js-error");a=0}if(u.text()===u.data("placeholder")){u.addClass("js-error");a=0}if(!a)return!1
-
-			//send the ajax request
-			$.post('email.php',{name:$(".js-contact-name").text(),
-							  email:$(".js-contact-email").text().replace(/(\r\n|\n|\r)/gm,"").replace(/\s+/g," "),
-							  subject:$(".js-contact-subject").text(),
-							  message:$(".js-contact-brief").text().replace(/(\r\n|\n|\r)/gm,"").replace(/\s+/g," ")},
-
-			//return the data
-			function(data){
-			  $(".js-mail-message").addClass("js-hidden");
-				$(".js-contact-submit").addClass("js-hidden");
-				$(".js-mail-success").removeClass("js-hidden")
-			});
-			//stay on the page
-			return false;
-	})
-}
-
-function fadeNavitems() {
-   var lis = $('#nav ul li').hide();
-	$('.navicon').click(function() {
-		$('#nav').animate({'top':0 +'px'}, 50, 'swing');
-		var winH = $(document).height();
-
-		    var i = 0;
-		setTimeout(function() {
-		(function displayImages() {
-			$('#nav .nav-logo, #nav .close').show();
-		        lis.eq(i++).fadeIn(20, displayImages);
-		     })();
-		});
-		if ($(window).width() < 1000) {
-			$('#nav').css({'height': winH});
-		}
-	});
-
-	$('#nav .close').click(function() {
-		$('#nav').animate({'top':-380 +'px'}, 50, 'swing');
-		$('#nav ul li, #nav .nav-logo, #nav .close').hide();
-		$('#nav').css({'height': 'auto'});
-	});
 }

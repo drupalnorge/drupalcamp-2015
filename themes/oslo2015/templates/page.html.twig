@@ -69,31 +69,32 @@
     </div>
 </div>
 <!-- END PRELOADER -->
-<!-- Header navigation -->
-<nav>
-    <div id="nav">
-        <div class="header-inner">
-            <a href="#home" class="nav-logo hidden-con"><img src="{{logo_image}}" /></a>
-            <div class="close"></div>
-            <div class="menunav-container">
-              {{ page.primary_menu }}
-            </div>
-        </div>
-    </div>
-</nav>
-<!-- End Header navigation -->
+
 <!-- Header -->
 <div id="header" class="">
     <div class="header-inner">
-        <a href="/#home" class="nav-logo"><img src="{{logo_image}}" /></a>
-        <div class="navicon"></div>
+        <nav class="navbar navbar-default navbar-fixed-top">
+            <div class="container">
+                <div class="navbar-header">
+                    <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#menu-main-nav-container">
+                        <span class="sr-only">Toggle navigation</span>
+                        <div class="navicon"></div>
+                        <div class="close"></div>
+                    </button>
+                    <a href="/#home" class="navbar-brand"><img src="{{logo_image}}" /></a>
+                </div>
+                <div id="menu-main-nav-container" class="collapse navbar-collapse">
+                    {{ page.primary_menu }}
+                </div>
+            </div>
+        </nav>
     </div>
 </div>
 <!-- End Header -->
 {% if is_front %}
 <!-- Home section -->
 <div id="home" class="parallax bg-image" data-20="opacity:1;" data-700="opacity:0;" style="background:none">
-	 <div class="bg-overlay" ></div>
+  <div class="bg-overlay" ></div>
   <div class="slideshow-home">
     <div class="wrapper">
       <!-- header slider -->
@@ -119,7 +120,7 @@
 <!-- End Home section -->
 {% endif %}
 <div class="page-content">
-	  <div class="region region-content">
+   <div class="region region-content">
     {% if not is_front %}
     <div class="container"><div class="row"><div class="col-lg-12">
     {% endif %}
@@ -152,7 +153,7 @@
 
 <!-- Footer -->
 <footer>
-		<p>Drupal Norge</p>
+  <p>Drupal Norge</p>
   <p>{%trans%}Made in Norway with <a href="https://www.drupal.org">Drupal</a> 8{%endtrans%}</p>
   {{ page.footer }}
 </footer>

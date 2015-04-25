@@ -16,7 +16,7 @@ function oslo2015_preprocess_page(&$variables) {
  */
 function oslo2015_preprocess_menu(&$variables) {
   if ($variables['theme_hook_original'] == 'menu__main') {
-    $class = array('class' => array('clearfix'), 'id' => array('menu-main-nav'));
+    $class = array('class' => array('nav navbar-nav'), 'id' => array('menu-main-nav'));
     $variables['attributes'] = new Attribute($class);
     $delta = 0;
     foreach ($variables['items'] as &$item) {
@@ -31,11 +31,6 @@ function oslo2015_preprocess_menu(&$variables) {
       }
       $item['title'] = $item['title'];
       $item['url']->setOption('html', TRUE);
-      // See if we should add some extra markup.
-      $link_attributes = $item['url']->getOption('attributes');
-      if (!empty($link_attributes) && !empty($link_attributes['title'])) {
-        $item['title'] .= '<br><span class="sub">' . $link_attributes['title'] . '</span>';
-      }
     }
   }
 }
