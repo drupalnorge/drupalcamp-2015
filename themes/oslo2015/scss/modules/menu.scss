@@ -1,3 +1,14 @@
+body.toolbar-horizontal {
+  nav.navbar-default {
+    top: 39px;
+  }
+  &.toolbar-tray-open {
+    nav.navbar-default {
+      top: 79px;
+    }
+  }
+}
+
 nav.navbar-default {
   background: #000;
   border: none;
@@ -17,6 +28,10 @@ nav.navbar-default {
         border-bottom: 2px solid #fff;
         color: #fff;
       }
+      &.btn {
+        @extend .btn-primary;
+        border-bottom: inherit;
+      }
     }
   }
   .navbar-toggle,
@@ -30,13 +45,16 @@ nav.navbar-default {
     background: none;
     border: none;
   }
-  #menu-main-nav {
+  .nav.navbar-nav {
     padding: 0;
     text-align: center;
     margin: 0;
-    @media (min-width: 767px) {
+    @media (min-width: 992px) {
       margin-left: 3em;
     }
+  }
+  #menu-main-nav {
+    padding: 0;
   }
   .navbar-collapse.in {
     height: 100%;

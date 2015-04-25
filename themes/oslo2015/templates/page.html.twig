@@ -85,6 +85,15 @@
                 </div>
                 <div id="menu-main-nav-container" class="collapse navbar-collapse">
                     {{ page.primary_menu }}
+                    <ul class="nav navbar-nav navbar-right">
+                      <li>
+                        {% if not logged_in %}
+                          <a class="btn btn-primary" href="/user">Sign in</a>
+                        {%else%}
+                          <a class="btn btn-primary" href="/user/logout">Sign out</a>
+                        {%endif%}
+                      </li>
+                    </ul>
                 </div>
             </div>
         </nav>
@@ -105,6 +114,7 @@
                 <hr />
                 <p>14. november 2015</p>
               </div>
+              <a class="btn btn-lg btn-primary" href="/user/register">{%trans%}Sign up!{%endtrans%}</a>
             </div>
         </div>
         <!-- end header slider -->
