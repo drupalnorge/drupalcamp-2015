@@ -88,9 +88,9 @@
                     <ul class="nav navbar-nav navbar-right">
                       <li>
                         {% if not logged_in %}
-                          <a class="btn btn-primary" href="/user">Sign in</a>
+                          <a class="btn btn-primary" href="/user">{%trans%}Log in{%endtrans%}</a>
                         {%else%}
-                          <a class="btn btn-primary" href="/user/logout">Sign out</a>
+                          <a class="btn btn-primary" href="/user/logout">{%trans%}Log out{%endtrans%}</a>
                         {%endif%}
                       </li>
                     </ul>
