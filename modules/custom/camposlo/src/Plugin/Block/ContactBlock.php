@@ -25,32 +25,7 @@ class ContactBlock extends BlockBase {
   public function build() {
 
     return array(
-      '#markup' => '<div class="section" id="map-inner"><!-- heading -->
-                      <div class="contact-address clearfix bg-parallax2">
-                      <div class="container">
-                      <div class="row">
-                      <div class="col-md-6">
-                      <div class="address-wrap clearfix">
-                      <h5>' . $this->t('Get in touch') . '</h5>
-
-                      <h2>Oslo</h2>
-                      <a class="loc fancybox" href="#">' . $this->t('View Location') . '</a></div>
-                      </div>
-
-                      <div class="col-md-6">
-                      <div class="address-wrap clearfix">
-                      <h5>' . $this->t('Email us at') . '</h5>
-
-                      <h2>post@drupalnorge.no</h2>
-
-                      <h2>+47 98 04 24 06</h2>
-
-                      <ul><li><a href="https://twitter.com/drupal_norge"><i class="fa fa-twitter"></i></a></li><li><a href="https://www.facebook.com/drupalnorge"><i class="fa fa-facebook"></i></a></li>          </ul></div>
-                      </div>
-                      </div>
-                      </div>
-                      </div>
-                      </div>'
+      '#theme' => 'camposlo-contact-block',
     );
   }
 

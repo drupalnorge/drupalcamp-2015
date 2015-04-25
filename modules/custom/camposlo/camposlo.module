@@ -27,7 +27,14 @@ function camposlo_help($route_name, RouteMatchInterface $route_match) {
  * Implements hook_theme().
  */
 function camposlo_theme() {
-  $theme = [];
+  $theme = [
+    'camposlo-price-block' => [
+      'variables' => ['prices' => []],
+    ],
+    'camposlo-contact-block' => [
+      'variables' => [],
+    ],
+  ];
 
   return $theme;
 }
