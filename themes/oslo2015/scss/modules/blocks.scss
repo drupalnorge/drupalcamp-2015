@@ -1,6 +1,4 @@
-#block-views-block-sponsor-list-block-1,
-#block-featuredspeakers,
-#block-speaker-block {
+.path-frontpage .block {
   h2 {
     text-align: center;
     padding: 30px 0;
@@ -59,5 +57,42 @@ footer {
   a {
     color: #fff;
     border-bottom: 1px solid #eee;
+  }
+}
+.address-wrap {
+  h3 {
+    text-transform: none;
+    color: #000;
+    font-family: open sans;
+    font-size: 30px;
+    font-weight: 700;
+    letter-spacing: -1px;
+    line-height: 1;
+    margin: 0 0 0px;
+  }
+}
+.price-wrap {
+  background: $primary;
+  display: table;
+  width: 100%;
+  border: 1px solid $primary;
+  h5 {
+    display: table-cell;
+    width: 80%;
+    height: 100%;
+    padding: .6em;
+    color: #fff;
+    &.price {
+      width: 20%;
+      background: #fff;
+      color: #000;
+      text-align: center;
+    }
+  }
+}
+.price-col {
+  margin-top: 1em;
+  .row {
+    margin: .4em 0;
   }
 }
