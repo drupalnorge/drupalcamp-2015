@@ -9,7 +9,7 @@ dependencies:
 id: signup_block
 theme: oslo2015
 region: content_bottom
-weight: -3
+weight: -4
 provider: null
 plugin: signup_block
 settings:

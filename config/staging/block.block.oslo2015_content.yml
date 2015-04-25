@@ -9,7 +9,7 @@ dependencies:
 id: oslo2015_content
 theme: oslo2015
 region: content
-weight: 0
+weight: -3
 provider: null
 plugin: system_main_block
 settings:
