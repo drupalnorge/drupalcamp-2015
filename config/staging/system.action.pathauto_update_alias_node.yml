@@ -1,0 +1,11 @@
+uuid: 5c143288-d18f-4f80-8c18-248532022e8b
+langcode: en
+status: true
+dependencies:
+  module:
+    - pathauto
+id: pathauto_update_alias_node
+label: 'Update URL-Alias'
+type: node
+plugin: pathauto_update_alias
+configuration: {  }
