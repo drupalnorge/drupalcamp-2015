@@ -12,6 +12,7 @@ use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Routing\UrlGeneratorTrait;
 use Drupal\Core\Url;
 use Drupal\Core\Session\AccountInterface;
+use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Block\BlockBase;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 /**
@@ -71,7 +72,10 @@ class SignupBlock extends BlockBase implements ContainerFactoryPluginInterface {
    */
   protected function blockAccess(AccountInterface $account) {
     $route_name = $this->routeMatch->getRouteName();
-    return ($account->isAnonymous() && !in_array($route_name, array('user.register', 'user.login')));
+    if ($account->isAnonymous() && !in_array($route_name, array('user.register', 'user.login'))) {
+      return AccessResult::allowed();
+    }
+    return AccessResult::forbidden();
   }
 
   /**
