@@ -1,5 +1,5 @@
 uuid: 8a38f045-cc7b-495e-b100-f37cc6ebf2ee
-langcode: en
+langcode: nb
 status: true
 dependencies: {  }
 id: html_datetime

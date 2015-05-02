@@ -1,5 +1,5 @@
 uuid: 1f6fc7cc-3dbf-49e4-b30e-14d9d98bc374
-langcode: en
+langcode: nb
 status: true
 dependencies: {  }
 name: 'Basic page'

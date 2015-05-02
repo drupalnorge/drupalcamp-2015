@@ -9,3 +9,4 @@ notification:
   emails:
     - eirik@morland.no
   threshold: all
+langcode: nb

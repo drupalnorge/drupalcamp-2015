@@ -1,2 +1,3 @@
 interface:
   default: camposlo_mandrill_override
+langcode: nb

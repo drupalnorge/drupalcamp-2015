@@ -1,5 +1,5 @@
 uuid: acf4132e-fc40-4548-9300-fbe5986e5626
-langcode: en
+langcode: nb
 status: true
 dependencies:
   config:

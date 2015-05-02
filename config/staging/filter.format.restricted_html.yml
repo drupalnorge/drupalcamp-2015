@@ -1,5 +1,5 @@
 uuid: b21139d1-ac00-4084-a100-ba26ed6f27e8
-langcode: en
+langcode: nb
 status: true
 dependencies: {  }
 name: 'Restricted HTML'

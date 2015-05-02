@@ -25,3 +25,4 @@ patterns:
     default: '[term:vocabulary]/[term:name]'
   user:
     default: 'users/[user:name]'
+langcode: nb

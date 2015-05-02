@@ -12,3 +12,4 @@ protocols:
   - sftp
   - webcal
   - rtsp
+langcode: nb

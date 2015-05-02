@@ -1,5 +1,5 @@
 uuid: db673ab0-3b48-4b42-ab00-0f6ab89b54e4
-langcode: en
+langcode: nb
 status: true
 dependencies: {  }
 name: 'Plain text'

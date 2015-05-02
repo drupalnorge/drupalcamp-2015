@@ -9,3 +9,4 @@ reduce_ascii: false
 ignore_words: ', in, is,that, the  , this, with, '
 case: true
 update_action: 2
+langcode: nb
