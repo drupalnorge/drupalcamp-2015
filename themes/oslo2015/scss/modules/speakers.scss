@@ -31,6 +31,14 @@
     vertical-align: middle;
     text-align: center;
   }
+  .image-wrap {
+    text-align: center;
+    img {
+      width: 100%;
+      max-width: 260px;
+      margin: 0 auto;
+    }
+  }
 }
 .speaker-list-item {
   overflow: hidden;
