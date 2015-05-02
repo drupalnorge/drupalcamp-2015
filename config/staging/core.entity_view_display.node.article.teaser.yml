@@ -6,11 +6,9 @@ dependencies:
     - core.entity_view_mode.node.teaser
     - field.field.node.article.body
     - field.field.node.article.field_image
-    - field.field.node.article.field_tags
     - node.type.article
   module:
     - image
-    - taxonomy
     - text
     - user
 id: node.article.teaser
@@ -33,15 +31,8 @@ content:
       image_link: content
     third_party_settings: {  }
     label: hidden
-  field_tags:
-    type: taxonomy_term_reference_link
-    weight: 10
-    settings: {  }
-    third_party_settings: {  }
-    label: above
   links:
     weight: 100
 hidden:
   field_image: true
-  field_tags: true
   langcode: true
