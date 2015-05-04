@@ -1,23 +1,17 @@
-uuid: 21f11c50-3ee4-4038-b109-9d01dcb4a17b
+uuid: fd47d35d-6147-4321-a200-a55fa9decd73
 langcode: nb
 status: true
 dependencies:
   module:
+    - entity_reference
     - node
-    - taxonomy
 id: node.field_sponsor_level
 field_name: field_sponsor_level
 entity_type: node
-type: taxonomy_term_reference
+type: entity_reference
 settings:
-  allowed_values:
-    -
-      vocabulary: sponsor_level
-      parent: 0
   target_type: taxonomy_term
-  options_list_callback: null
-  target_bundle: null
-module: taxonomy
+module: entity_reference
 locked: false
 cardinality: 1
 translatable: true

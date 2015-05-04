@@ -11,7 +11,6 @@ dependencies:
   module:
     - image
     - link
-    - taxonomy
     - user
 id: node.sponsor.default
 targetEntityType: node
@@ -37,11 +36,12 @@ content:
     third_party_settings: {  }
     type: string
   field_sponsor_level:
-    weight: 102
+    weight: 105
     label: above
-    settings: {  }
+    settings:
+      link: true
     third_party_settings: {  }
-    type: taxonomy_term_reference_link
+    type: entity_reference_label
   field_sponsor_logo:
     weight: 101
     label: above

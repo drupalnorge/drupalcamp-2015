@@ -37,10 +37,13 @@ content:
     third_party_settings: {  }
     type: string_textfield
   field_sponsor_level:
-    weight: 32
-    settings: {  }
+    weight: 35
+    settings:
+      match_operator: CONTAINS
+      size: 60
+      placeholder: ''
     third_party_settings: {  }
-    type: options_select
+    type: entity_reference_autocomplete
   field_sponsor_logo:
     weight: 31
     settings:
