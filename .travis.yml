@@ -1,0 +1,45 @@
+language: php
+php:
+  - 5.4
+  - 5.5
+  - 5.6
+  - 7.0
+  - nightly
+  - hhvm
+  - hhvm-nightly
+
+matrix:
+  fast_finish: true
+  allow_failures:
+    - php: 7.0
+    - php: nightly
+    - php: hhvm
+    - php: hhvm-nightly
+
+env:
+  global:
+    - DATABASE='drupal'
+    - DB_USERNAME='root'
+    - DB_ENCODE='utf8'
+    - TEST_URL="http://localhost"
+
+mysql:
+  database: $DATABASE
+  username: $DB_USERNAME
+  encoding: $DB_ENCODE
+
+before_install:
+  - sudo apt-get update > /dev/null
+
+install:
+  - sudo apt-get install -y --force-yes php5-cgi php5-mysql apache2 libapache2-mod-fastcgi
+  - export PATH="$HOME/.composer/vendor/bin:$PATH"
+  - composer global require drush/drush:dev-master
+
+before_script:
+  - /bin/bash ci/travis.sh
+
+script:
+  - cd $TRAVIS_BUILD_DIR
+  - npm i casperjs
+  - ./node_modules/.bin/casperjs test tests/*
