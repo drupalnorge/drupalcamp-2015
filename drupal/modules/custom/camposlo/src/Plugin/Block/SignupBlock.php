@@ -83,18 +83,17 @@ class SignupBlock extends BlockBase implements ContainerFactoryPluginInterface {
    */
   public function build() {
     return array(
-      '#markup' => '<div class="section" id="contact"><!-- heading -->
-                      <div class="container">
-                        <div class="row text-center">
-                          <div class="section-heading">
-                            <h2 class="title"><span>' . $this->t('Sign up!') . '</span></h2>
-
-                            <p class="subtitle"><a class="btn btn-lg btn-primary" href="' . Url::fromRoute('user.register')->toString() . '">' . $this->t('Register') . '</a></p>
-                          </div>
-                        </div>
-                      </div>
-                      <!-- End heading --><!-- Contact detail -->
-                    </div>',
+      '#theme' => 'camposlo-register-block',
+      '#register_link' => array(
+        '#type' => 'link',
+        '#url' => Url::fromRoute('user.register'),
+        '#title' => $this->t('Register'),
+        '#attributes' => [
+          'class' => [
+            'btn btn-primary btn-lg',
+          ],
+        ],
+      ),
     );
   }
 
