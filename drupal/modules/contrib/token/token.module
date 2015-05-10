@@ -5,7 +5,7 @@
  * Enhances the token API in core: adds a browseable UI, missing tokens, etc.
  */
 
-use Drupal\Component\Utility\String;
+use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Component\Utility\Unicode;
 use Drupal\Component\Utility\Xss;
 use Drupal\Core\Block\BlockPluginInterface;
@@ -27,7 +27,7 @@ define('TOKEN_MAX_DEPTH', 9);
 function token_help($route_name, RouteMatchInterface $route_match) {
   if ($route_name == 'help.page.token') {
     $current_url = Url::fromRoute('<current>');
-    if ($current_url->toString() != 'admin/help/token') {
+    if ($current_url->toString() != '/admin/help/token') {
       // Because system_modules() executes hook_help() for each module to 'test'
       // if they will return anything, but not actually display it, we want to
       // return a TRUE value if this is not actually the help page.
@@ -986,7 +986,7 @@ function token_render_array(array $array, array $options = array()) {
     $rendered[] = is_array($value) ? render($value) : (string) $value;
   }
   if (!empty($options['sanitize'])) {
-    $rendered = array_map('\Drupal\Component\Utility\String::checkPlain', $rendered);
+    $rendered = array_map('\Drupal\Component\Utility\SafeMarkup::checkPlain', $rendered);
   }
   $join = isset($options['join']) ? $options['join'] : ', ';
   return implode($join, $rendered);
@@ -998,7 +998,7 @@ function token_render_array(array $array, array $options = array()) {
 function token_render_array_value($value, array $options = array()) {
   $rendered = is_array($value) ? render($value) : (string) $value;
   if (!empty($options['sanitize'])) {
-    $rendered = String::checkPlain($rendered);
+    $rendered = SafeMarkup::checkPlain($rendered);
   }
   return $rendered;
 }
