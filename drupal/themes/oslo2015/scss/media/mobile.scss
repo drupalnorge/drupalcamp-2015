@@ -1,15 +1,12 @@
 @media only screen and (max-width: 767px) {
-  .tabs ul.tabs.primary {
-    padding: 0 5px;
-    li.active,
-    li {
-      display: block;
-      a {
-        display: block;
-        padding: 5px;
-        margin: 0;
-      }
+  #block-views-block-sponsor-list-block-1,
+  .path-frontpage .block {
+    h2 {
+      font-size: 2em;
     }
+  }
+  ul.tabs.nav-tabs {
+    font-size: .8em;
   }
   .session-meta {
     .field-wrapper.first {
