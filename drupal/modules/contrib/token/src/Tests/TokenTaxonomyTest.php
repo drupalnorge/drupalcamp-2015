@@ -7,7 +7,7 @@
 
 namespace Drupal\token\Tests;
 
-use Drupal\Component\Utility\String;
+use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Component\Utility\Unicode;
 use Drupal\taxonomy\Entity\Vocabulary;
 
@@ -75,7 +75,7 @@ class TokenTaxonomyTest extends TokenKernelTestBase {
       'parents' => 'Root term',
       'parents:count' => 1,
       'parents:keys' => $root_term->id(),
-      'root' => String::checkPlain($root_term->label()),
+      'root' => SafeMarkup::checkPlain($root_term->label()),
       'root:tid' => $root_term->id(),
       // Deprecated tokens
       'url:alias' => "taxonomy/term/{$parent_term->id()}",
