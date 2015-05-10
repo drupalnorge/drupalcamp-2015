@@ -39,3 +39,5 @@ script:
 notifications:
   slack:
     secure: rKHAVtaIDF8N/R1I9P+2RJNTElSDTYmXqy83sYg6MHkTzhmMb2J3lyVHSNUhcPNdG2orvLeSAN9Fb5GNORmKwCPX84DoWeIXqezh0xhQEA79aarU1btRgowGwH5YES28xSyHRQg99BRmUkuc+XJa48YPD2zwgNJP7HhH9k4jf1M=
+    on_success: :change
+    on_failure: :change
