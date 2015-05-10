@@ -38,3 +38,24 @@ function camposlo_theme() {
 
   return $theme;
 }
+
+/**
+ * Implements hook_menu_local_tasks_alter().
+ *
+ * Make the user tabs shorter, so they can fit a mobile screen.
+ */
+function camposlo_menu_local_tasks_alter(&$data, $route_name) {
+  $alter_routes = [
+    'user.pass' => 'Reset password',
+    'user.register' => 'Register',
+    'user.login' => 'Login',
+  ];
+  if (in_array($route_name, array_keys($alter_routes))) {
+    $tabs = $data['tabs'][0];
+    foreach ($tabs as $route => $tab) {
+      if (!empty($alter_routes[$route])) {
+        $data['tabs'][0][$route]['#link']['title'] = t($alter_routes[$route]);
+      }
+    }
+  }
+}
