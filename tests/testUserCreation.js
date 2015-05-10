@@ -9,7 +9,7 @@ casper.test.begin('It is possible to register an account', function(test) {
   casper.start(system.env.TEST_URL, function() {
     // Click the big sign up button.
     casper.then(function() {
-      this.click('#home .btn-primary')
+      this.click('#block-signup-block .btn-primary')
     });
     // Wait for the form to appear.
     casper.waitForSelector('#user-register-form', function() {
@@ -25,8 +25,12 @@ casper.test.begin('It is possible to register an account', function(test) {
     // info via mail.
     casper.waitWhileSelector('#user-register-form', function() {
       test.assertExists('.messages');
-      test.assertSelectorHasText('.messages', 'sent to your');
+      test.assertSelectorHasText('.messages', 'has been sent to your email', 'User is told to check email');
+      // But the person should not be logged in yet, though. We do require
+      // verification.
+      test.assertSelectorHasText('ul.navbar-right a', 'Log in', 'User is still not logged in');
     });
+
   }).run(function() {
     test.done();
   });
