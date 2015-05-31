@@ -94,6 +94,16 @@ class SignupBlock extends BlockBase implements ContainerFactoryPluginInterface {
           ],
         ],
       ),
+      '#session_link' => array(
+        '#type' => 'link',
+        '#url' => Url::fromRoute('camposlo.submit_session_controller_index'),
+        '#title' => $this->t('Submit session'),
+        '#attributes' => [
+          'class' => [
+            'btn btn-primary btn-lg',
+          ],
+        ],
+      ),
     );
   }
 
