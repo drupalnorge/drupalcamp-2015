@@ -35,7 +35,7 @@ function camposlo_theme() {
       'variables' => [],
     ],
     'camposlo-register-block' => [
-      'variables' => ['register_link' => []],
+      'variables' => ['register_link' => [], 'session_link' => []],
     ],
   ];
 
