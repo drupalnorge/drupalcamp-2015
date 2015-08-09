@@ -91,13 +91,7 @@ function theme_tree_table($variables) {
  */
 function theme_token_tree($variables) {
   if (!empty($variables['dialog'])) {
-    $output = [
-      '#theme' => 'token_tree_link',
-      '#variables' => $variables,
-    ];
-    /** @var \Drupal\Core\Render\RendererInterface $renderer */
-    $renderer = \Drupal::service('renderer');
-    return $renderer->render($output);
+    return \Drupal::theme()->render('token_tree_link', $variables);
   }
 
   $token_types = $variables['token_types'];

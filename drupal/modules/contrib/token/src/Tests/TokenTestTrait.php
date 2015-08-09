@@ -9,6 +9,7 @@ namespace Drupal\token\Tests;
 
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Language\Language;
+use Drupal\Core\Render\BubbleableMetadata;
 
 /**
  * Helper test trait with some added functions for testing.
@@ -21,7 +22,8 @@ trait TokenTestTrait {
 
   function assertTokens($type, array $data, array $tokens, array $options = array()) {
     $input = $this->mapTokenNames($type, array_keys($tokens));
-    $replacements = \Drupal::token()->generate($type, $input, $data, $options);
+    $bubbleable_metadata = new BubbleableMetadata();
+    $replacements = \Drupal::token()->generate($type, $input, $data, $options, $bubbleable_metadata);
     foreach ($tokens as $name => $expected) {
       $token = $input[$name];
       if (!isset($expected)) {
@@ -51,12 +53,12 @@ trait TokenTestTrait {
 
   function assertNoTokens($type, array $data, array $tokens, array $options = array()) {
     $input = $this->mapTokenNames($type, $tokens);
-    $replacements = \Drupal::token()->generate($type, $input, $data, $options);
+    $bubbleable_metadata = new BubbleableMetadata();
+    $replacements = \Drupal::token()->generate($type, $input, $data, $options, $bubbleable_metadata);
     foreach ($tokens as $name) {
       $token = $input[$name];
       $this->assertTrue(!isset($replacements[$token]), t("Token value for @token was not generated.", array('@type' => $type, '@token' => $token)));
     }
-    return $values;
   }
 
   function saveAlias($source, $alias, $language = Language::LANGCODE_NOT_SPECIFIED) {

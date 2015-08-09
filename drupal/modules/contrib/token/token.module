@@ -562,7 +562,7 @@ function token_get_invalid_tokens($type, $tokens) {
  * );
  * @endcode
  */
-function token_element_validate(&$element, FormStateInterface $form_state) {
+function token_element_validate($element, FormStateInterface $form_state) {
   $value = isset($element['#value']) ? $element['#value'] : $element['#default_value'];
 
   if (!Unicode::strlen($value)) {
@@ -981,9 +981,13 @@ function token_clean_token_name($name) {
  */
 function token_render_array(array $array, array $options = array()) {
   $rendered = array();
+
+  /** @var \Drupal\Core\Render\RendererInterface $renderer */
+  $renderer = \Drupal::service('renderer');
+
   foreach (token_element_children($array) as $key) {
     $value = $array[$key];
-    $rendered[] = is_array($value) ? render($value) : (string) $value;
+    $rendered[] = is_array($value) ? $renderer->renderPlain($value) : (string) $value;
   }
   if (!empty($options['sanitize'])) {
     $rendered = array_map('\Drupal\Component\Utility\SafeMarkup::checkPlain', $rendered);
@@ -996,7 +1000,10 @@ function token_render_array(array $array, array $options = array()) {
  * Do not use this function yet. Its API has not been finalized.
  */
 function token_render_array_value($value, array $options = array()) {
-  $rendered = is_array($value) ? render($value) : (string) $value;
+  /** @var \Drupal\Core\Render\RendererInterface $renderer */
+  $renderer = \Drupal::service('renderer');
+
+  $rendered = is_array($value) ? $renderer->renderPlain($value) : (string) $value;
   if (!empty($options['sanitize'])) {
     $rendered = SafeMarkup::checkPlain($rendered);
   }
