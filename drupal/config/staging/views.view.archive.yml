@@ -173,9 +173,11 @@ display:
       display_extenders: {  }
     cache_metadata:
       contexts:
-        - languages
+        - 'languages:language_interface'
         - url
+        - url.query_args
         - 'user.node_grants:view'
+        - user.permissions
       cacheable: false
   block_1:
     id: block_1
@@ -209,9 +211,11 @@ display:
       display_extenders: {  }
     cache_metadata:
       contexts:
-        - languages
+        - 'languages:language_interface'
         - url
+        - url.query_args
         - 'user.node_grants:view'
+        - user.permissions
       cacheable: false
   page_1:
     id: page_1
@@ -226,7 +230,9 @@ display:
       display_extenders: {  }
     cache_metadata:
       contexts:
-        - languages
+        - 'languages:language_interface'
         - url
+        - url.query_args
         - 'user.node_grants:view'
+        - user.permissions
       cacheable: false

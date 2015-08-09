@@ -41,10 +41,9 @@ module:
   user: 0
   views_ui: 0
   menu_link_content: 1
-  pathauto: 1
   content_translation: 10
   views: 10
-  standard: 1000
+  minimal: 1000
 theme:
   classy: 0
   seven: 0

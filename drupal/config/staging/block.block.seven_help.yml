@@ -9,12 +9,12 @@ dependencies:
 id: seven_help
 theme: seven
 region: help
-weight: 0
+weight: -2
 provider: null
 plugin: help_block
 settings:
   id: help_block
-  label: Help
+  label: Hjelp
   provider: help
   label_display: '0'
   cache:

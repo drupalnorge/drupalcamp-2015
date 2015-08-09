@@ -8,8 +8,8 @@ dependencies:
     - seven
 id: seven_messages
 theme: seven
-region: messages
-weight: 0
+region: highlighted
+weight: -3
 provider: null
 plugin: system_messages_block
 settings:
