@@ -6,6 +6,7 @@
  */
 
 use Drupal\Component\Utility\SafeMarkup;
+use Drupal\Core\Cache\Cache;
 use Drupal\node\Entity\Node;
 
 /**
@@ -43,7 +44,8 @@ function tracker_page($account = NULL) {
     ->execute()
     ->fetchAllAssoc('nid');
 
-  $rows = array();
+  $cache_tags = [];
+  $rows = [];
   if (!empty($tracker_data)) {
     // Load nodes into an array with the same order as $tracker_data.
     $nodes = Node::loadMultiple(array_keys($tracker_data));
@@ -61,6 +63,13 @@ function tracker_page($account = NULL) {
       else {
         $nodes[$nid]->comment_count += $statistics->comment_count;
       }
+      // Make the last comment timestamp reflect the latest comment.
+      if (!isset($nodes[$nid]->last_comment_timestamp)) {
+        $nodes[$nid]->last_comment_timestamp = $statistics->last_comment_timestamp;
+      }
+      else {
+        $nodes[$nid]->last_comment_timestamp = max($nodes[$nid]->last_comment_timestamp, $statistics->last_comment_timestamp);
+      }
     }
 
     // Display the data.
@@ -73,24 +82,7 @@ function tracker_page($account = NULL) {
       $comments = 0;
       if ($node->comment_count) {
         $comments = $node->comment_count;
-
-        if ($new = \Drupal::service('comment.manager')->getCountNewComments($node)) {
-          $comments = array(
-            '#type' => 'link',
-            '#url' => $node->urlInfo(),
-            '#title' => \Drupal::translation()->formatPlural($new, '1 new', '@count new'),
-            '#options' => array(
-              'fragment' => 'new',
-            ),
-            '#prefix' => $node->comment_count . '<br />',
-          );
-        }
       }
-
-      $mark_build = array(
-        '#theme' => 'mark',
-        '#status' => node_mark($node->id(), $node->getChangedTime()),
-      );
 
       $row = array(
         'type' => SafeMarkup::checkPlain(node_get_type_label($node)),
@@ -99,8 +91,9 @@ function tracker_page($account = NULL) {
             '#type' => 'link',
             '#url' => $node->urlInfo(),
             '#title' => $node->getTitle(),
-            '#suffix' => ' ' . drupal_render($mark_build),
           ),
+          'data-history-node-id' => $node->id(),
+          'data-history-node-timestamp' => $node->getChangedTime(),
         ),
         'author' => array(
           'data' => array(
@@ -111,17 +104,27 @@ function tracker_page($account = NULL) {
         'comments' => array(
           'class' => array('comments'),
           'data' => $comments,
+          'data-history-node-last-comment-timestamp' => $node->last_comment_timestamp,
         ),
         'last updated' => array(
           'data' => t('!time ago', array(
-            '!time' => \Drupal::service('date.formatter')->formatInterval(REQUEST_TIME - $node->last_activity),
+            '!time' => \Drupal::service('date.formatter')->formatTimeDiffSince($node->last_activity),
           )),
         ),
       );
 
       $rows[] = $row;
+
+      // Add node and node owner to cache tags.
+      $cache_tags = Cache::mergeTags($cache_tags, $node->getCacheTags());
+      if ($node->getOwner()) {
+        $cache_tags = Cache::mergeTags($cache_tags, $node->getOwner()->getCacheTags());
+      }
     }
   }
+
+  // Add the list cache tag for nodes.
+  $cache_tags = Cache::mergeTags($cache_tags, \Drupal::entityManager()->getDefinition('node')->getListCacheTags());
 
   $page['tracker'] = array(
     '#rows' => $rows,
@@ -134,6 +137,12 @@ function tracker_page($account = NULL) {
     '#weight' => 10,
   );
   $page['#sorted'] = TRUE;
+  $page['#cache']['tags'] = $cache_tags;
+  $page['#cache']['contexts'][] = 'user.node_grants:view';
+
+  if (Drupal::moduleHandler()->moduleExists('history') && \Drupal::currentUser()->isAuthenticated()) {
+    $page['#attached']['library'][] = 'tracker/history';
+  }
 
   return $page;
 }

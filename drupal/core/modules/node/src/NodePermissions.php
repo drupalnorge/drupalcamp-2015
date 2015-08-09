@@ -20,23 +20,11 @@ class NodePermissions {
   use UrlGeneratorTrait;
 
   /**
-   * Returns an array of content permissions.
+   * Gets an array of node type permissions.
    *
    * @return array
-   */
-  public function contentPermissions() {
-    return array(
-      'access content overview' => array(
-        'title' => $this->t('Access the Content overview page'),
-        'description' => $this->t('Get an overview of <a href="!url">all content</a>.', array('!url' => $this->url('system.admin_content'))),
-      ),
-    );
-  }
-
-  /**
-   * Returns an array of node type permissions.
-   *
-   * @return array
+   *   The node type permissions.
+   *   @see \Drupal\user\PermissionHandlerInterface::getPermissions()
    */
   public function nodeTypePermissions() {
     $perms = array();

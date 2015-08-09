@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\Core\Updater\Theme.
+ * Contains \Drupal\Core\Updater\Theme.
  */
 
 namespace Drupal\Core\Updater;
@@ -51,11 +51,9 @@ class Theme extends Updater implements UpdaterInterface {
    * Implements Drupal\Core\Updater\UpdaterInterface::canUpdateDirectory().
    */
   static function canUpdateDirectory($directory) {
-    // This is a lousy test, but don't know how else to confirm it is a theme.
-    if (file_scan_directory($directory, '/.*\.module$/')) {
-      return FALSE;
-    }
-    return TRUE;
+    $info = static::getExtensionInfo($directory);
+
+    return (isset($info['type']) && $info['type'] == 'theme');
   }
 
   /**

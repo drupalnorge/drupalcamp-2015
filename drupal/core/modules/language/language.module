@@ -29,7 +29,7 @@ function language_help($route_name, RouteMatchInterface $route_match) {
     case 'help.page.language':
       $output = '';
       $output .= '<h3>' . t('About') . '</h3>';
-      $output .= '<p>' . t('The Language module allows you to configure the languages used on your site, and provides information for the for <a href="!content">Content Translation</a>, <a href="!interface">Interface Translation</a>, and <a href="!configuration">Configuration Translation</a> modules, if they are enabled. For more information, see <a href="!doc_url">the online documentation for the Language module</a>.', array('!doc_url' => 'https://drupal.org/documentation/modules/language', '!content' => (\Drupal::moduleHandler()->moduleExists('content_translation')) ? \Drupal::url('help.page', array('name' => 'content_translation')) : '#', '!interface' => (\Drupal::moduleHandler()->moduleExists('locale')) ? \Drupal::url('help.page', array('name' => 'locale')) : '#', '!configuration' => (\Drupal::moduleHandler()->moduleExists('config_translation')) ? \Drupal::url('help.page', array('name' => 'config_translation')) : '#')) . '</p>';
+      $output .= '<p>' . t('The Language module allows you to configure the languages used on your site, and provides information for the for <a href="!content">Content Translation</a>, <a href="!interface">Interface Translation</a>, and <a href="!configuration">Configuration Translation</a> modules, if they are enabled. For more information, see <a href="!doc_url">the online documentation for the Language module</a>.', array('!doc_url' => 'https://www.drupal.org/documentation/modules/language', '!content' => (\Drupal::moduleHandler()->moduleExists('content_translation')) ? \Drupal::url('help.page', array('name' => 'content_translation')) : '#', '!interface' => (\Drupal::moduleHandler()->moduleExists('locale')) ? \Drupal::url('help.page', array('name' => 'locale')) : '#', '!configuration' => (\Drupal::moduleHandler()->moduleExists('config_translation')) ? \Drupal::url('help.page', array('name' => 'config_translation')) : '#')) . '</p>';
       $output .= '<h3>' . t('Uses') . '</h3>';
       $output .= '<dl>';
       $output .= '<dt>' . t('Adding languages') . '</dt>';
@@ -120,6 +120,9 @@ function language_theme() {
 
 /**
  * Implements hook_element_info_alter().
+ *
+ * @see \Drupal\Core\Render\Element\LanguageSelect
+ * @see \Drupal\Core\Render\Element\Select
  */
 function language_element_info_alter(&$type) {
   // Alter the language_select element so that it will be rendered like a select
@@ -277,40 +280,6 @@ function language_get_default_langcode($entity_type, $bundle) {
   // If we still do not have a default value, just return the value stored in
   // the configuration; it has to be an actual language code.
   return $configuration->getDefaultLangcode();
-}
-
-/**
- * Implements hook_language_types_info().
- *
- * Defines the three core language types:
- * - Interface language is the only configurable language type in core. It is
- *   used by t() as the default language if none is specified.
- * - Content language is by default non-configurable and inherits the interface
- *   language negotiated value. It is used by the Field API to determine the
- *   display language for fields if no explicit value is specified.
- * - URL language is by default non-configurable and is determined through the
- *   URL language negotiation method or the URL fallback language negotiation
- *   method if no language can be detected. It is used by l() as the default
- *   language if none is specified.
- */
-function language_language_types_info() {
-  return array(
-    LanguageInterface::TYPE_INTERFACE => array(
-      'name' => t('User interface text'),
-      'description' => t('Order of language detection methods for user interface text. If a translation of user interface text is available in the detected language, it will be displayed.'),
-      'locked' => TRUE,
-    ),
-    LanguageInterface::TYPE_CONTENT => array(
-      'name' => t('Content'),
-      'description' => t('Order of language detection methods for content. If a version of content is available in the detected language, it will be displayed.'),
-      'fixed' => array(LanguageNegotiationUI::METHOD_ID),
-      'locked' => TRUE,
-    ),
-    LanguageInterface::TYPE_URL => array(
-      'fixed' => array(LanguageNegotiationUrl::METHOD_ID, LanguageNegotiationUrlFallback::METHOD_ID),
-      'locked' => TRUE,
-    ),
-  );
 }
 
 /**
@@ -534,4 +503,17 @@ function language_tour_tips_alter(array &$tour_tips, EntityInterface $entity) {
       }
     }
   }
+}
+
+/**
+ * Implements hook_language_types_info_alter().
+ *
+ * We can't set the fixed properties in \Drupal\Core\Language\LanguageManager,
+ * where the rest of the properties for the default language types are defined.
+ * The LanguageNegation classes are only loaded when the language module is
+ * enabled and we can't be sure of that in the LanguageManager.
+ */
+function language_language_types_info_alter(array &$language_types) {
+  $language_types[LanguageInterface::TYPE_CONTENT]['fixed'] = [LanguageNegotiationUI::METHOD_ID];
+  $language_types[LanguageInterface::TYPE_URL]['fixed'] = [LanguageNegotiationUrl::METHOD_ID, LanguageNegotiationUrlFallback::METHOD_ID];
 }

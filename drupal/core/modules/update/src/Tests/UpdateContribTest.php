@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\update\Tests\UpdateContribTest.
+ * Contains \Drupal\update\Tests\UpdateContribTest.
  */
 
 namespace Drupal\update\Tests;
@@ -292,7 +292,7 @@ class UpdateContribTest extends UpdateTestBase {
       ),
     );
     $this->config('update_test.settings')->set('system_info', $system_info)->save();
-    $projects = update_get_projects();
+    $projects = \Drupal::service('update.manager')->getProjects();
     $theme_data = \Drupal::service('theme_handler')->rebuildThemeData();
     $project_info = new ProjectInfo();
     $project_info->processInfoList($projects, $theme_data, 'theme', TRUE);
@@ -341,9 +341,9 @@ class UpdateContribTest extends UpdateTestBase {
     // It should say we failed to get data, not that we're missing an update.
     $this->assertNoText(t('Update available'));
 
-    // We need to check that this string is found as part of a project row,
-    // not just in the "Failed to get available update data for ..." message
-    // at the top of the page.
+    // We need to check that this string is found as part of a project row, not
+    // just in the "Failed to get available update data" message at the top of
+    // the page.
     $this->assertRaw('<div class="project-update__status">' . t('Failed to get available update data'));
 
     // We should see the output messages from fetching manually.

@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\system\Tests\Database\QueryTest.
+ * Contains \Drupal\system\Tests\Database\QueryTest.
  */
 
 namespace Drupal\system\Tests\Database;
@@ -69,7 +69,7 @@ class QueryTest extends DatabaseTestBase {
   /**
    * Tests numeric query parameter expansion in expressions.
    *
-   * @see \Drupal\Core\Database\Driver\sqlite\Connection::expandArguments()
+   * @see \Drupal\Core\Database\Driver\sqlite\Statement::getStatement()
    * @see http://bugs.php.net/bug.php?id=45259
    */
   public function testNumericExpressionSubstitution() {

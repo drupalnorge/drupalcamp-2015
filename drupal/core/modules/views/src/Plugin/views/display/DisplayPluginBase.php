@@ -12,6 +12,7 @@ use Drupal\Component\Utility\Html;
 use Drupal\Component\Utility\Unicode;
 use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Core\Cache\Cache;
+use Drupal\Core\Cache\CacheableMetadata;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\Plugin\PluginDependencyTrait;
@@ -560,7 +561,7 @@ abstract class DisplayPluginBase extends PluginBase implements DisplayPluginInte
       ),
       'cache' => array(
         'contains' => array(
-          'type' => array('default' => 'none'),
+          'type' => array('default' => 'tag'),
           'options' => array('default' => array()),
         ),
         'merge_defaults' => array($this, 'mergePlugin'),
@@ -1454,14 +1455,14 @@ abstract class DisplayPluginBase extends PluginBase implements DisplayPluginInte
         $form['css_class'] = array(
           '#type' => 'textfield',
           '#title' => $this->t('CSS class name(s)'),
-          '#description' => $this->t('Multiples classes should be separated by spaces.'),
+          '#description' => $this->t('Seperate multiples classes by spaces.'),
           '#default_value' => $this->getOption('css_class'),
         );
         break;
       case 'use_ajax':
-        $form['#title'] .= $this->t('Use AJAX when available to load this view');
+        $form['#title'] .= $this->t('AJAX');
         $form['use_ajax'] = array(
-          '#description' => $this->t('When viewing a view, things like paging, table sorting, and exposed filters will not trigger a page refresh.'),
+          '#description' => $this->t('Options such as paging, table sorting, and exposed filters will not initiate a page refresh.'),
           '#type' => 'checkbox',
           '#title' => $this->t('Use AJAX'),
           '#default_value' => $this->getOption('use_ajax') ? 1 : 0,
@@ -1812,7 +1813,7 @@ abstract class DisplayPluginBase extends PluginBase implements DisplayPluginInte
         }
         break;
       case 'pager':
-        $form['#title'] .= $this->t('Select which pager, if any, to use for this view');
+        $form['#title'] .= $this->t('Select pager');
         $form['pager'] = array(
           '#prefix' => '<div class="clearfix">',
           '#suffix' => '</div>',
@@ -2114,13 +2115,6 @@ abstract class DisplayPluginBase extends PluginBase implements DisplayPluginInte
   /**
    * {@inheritdoc}
    */
-  public function getMenuLinks() {
-    return array();
-  }
-
-  /**
-   * {@inheritdoc}
-   */
   public function render() {
     $rows = (!empty($this->view->result) || $this->view->style_plugin->evenEmpty()) ? $this->view->style_plugin->render($this->view->result) : array();
 
@@ -2132,20 +2126,29 @@ abstract class DisplayPluginBase extends PluginBase implements DisplayPluginInte
       // Assigned by reference so anything added in $element['#attached'] will
       // be available on the view.
       '#attached' => &$this->view->element['#attached'],
-      '#cache' => &$this->view->element['#cache'],
-      '#post_render_cache' => &$this->view->element['#post_render_cache'],
     );
 
-    if (!isset($element['#cache'])) {
-      $element['#cache'] = [];
-    }
-    $element['#cache'] += ['tags' => []];
-
-    // If the output is a render array, add cache tags, regardless of whether
-    // caching is enabled or not; cache tags must always be set.
-    $element['#cache']['tags'] = Cache::mergeTags($element['#cache']['tags'], $this->view->getCacheTags());
+    $this->applyDisplayCachablityMetadata($this->view->element);
 
     return $element;
+  }
+
+  /**
+   * Applies the cacheability of the current display to the given render array.
+   *
+   * @param array $element
+   *   The render array with updated cacheability metadata.
+   */
+  protected function applyDisplayCachablityMetadata(array &$element) {
+    /** @var \Drupal\views\Plugin\views\cache\CachePluginBase $cache */
+    $cache = $this->getPlugin('cache');
+
+    (new CacheableMetadata())
+      ->setCacheTags($this->view->getCacheTags())
+      ->setCacheContexts(isset($this->display['cache_metadata']['contexts']) ? $this->display['cache_metadata']['contexts'] : [])
+      ->setCacheMaxAge($cache->getCacheMaxAge())
+      ->merge(CacheableMetadata::createFromRenderArray($element))
+      ->applyTo($element);
   }
 
   /**
@@ -2293,7 +2296,7 @@ abstract class DisplayPluginBase extends PluginBase implements DisplayPluginInte
       $cache_plugin->alterCacheMetadata($is_cacheable, $cache_contexts);
     }
 
-    return [$is_cacheable, $cache_contexts];
+    return [(bool) $is_cacheable, $cache_contexts];
   }
 
   /**
@@ -2301,7 +2304,7 @@ abstract class DisplayPluginBase extends PluginBase implements DisplayPluginInte
    */
   public function getCacheMetadata() {
     if (!isset($this->display['cache_metadata'])) {
-      $this->display['cache_metadata'] = $this->calculateCacheMetadata();
+      list($this->display['cache_metadata']['cacheable'], $this->display['cache_metadata']['contexts']) = $this->calculateCacheMetadata();
     }
     return $this->display['cache_metadata'];
   }
@@ -2314,18 +2317,59 @@ abstract class DisplayPluginBase extends PluginBase implements DisplayPluginInte
   /**
    * {@inheritdoc}
    */
-  public function buildRenderable(array $args = []) {
-    return [
+  public function buildRenderable(array $args = [], $cache = TRUE) {
+    $this->view->element += [
       '#type' => 'view',
       '#name' => $this->view->storage->id(),
       '#display_id' => $this->display['id'],
       '#arguments' => $args,
       '#embed' => FALSE,
       '#view' => $this->view,
+      '#cache_properties' => ['#view_id', '#view_display_show_admin_links', '#view_display_plugin_id'],
+    ];
+
+    if ($cache) {
+      $this->view->element['#cache'] += ['keys' => []];
+      // Places like \Drupal\views\ViewExecutable::setCurrentPage() set up an
+      // additional cache context.
+      $this->view->element['#cache']['keys'] = array_merge(['views', 'display', $this->view->element['#name'], $this->view->element['#display_id']], $this->view->element['#cache']['keys']);
+
+      $this->applyDisplayCachablityMetadata($this->view->element);
+    }
+    else {
+      // Remove the cache keys, to ensure render caching is not triggered. We
+      // don't unset the other #cache values, to allow cacheability metadata to
+      // still be bubbled.
+      unset($this->view->element['#cache']['keys']);
+    }
+
+    return $this->view->element;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function buildBasicRenderable($view_id, $display_id, array $args = []) {
+    $build = [
+      '#type' => 'view',
+      '#name' => $view_id,
+      '#display_id' => $display_id,
+      '#arguments' => $args,
+      '#embed' => FALSE,
       '#cache' => [
-        'contexts' => isset($this->display['cache_metadata']['contexts']) ?  $this->display['cache_metadata']['contexts'] : [],
+        'keys' => ['view', $view_id, 'display', $display_id],
       ],
     ];
+
+    if ($args) {
+      $build['#cache']['keys'][] = 'args';
+      $build['#cache']['keys'][] = implode(',', $args);
+    }
+
+    $build['#cache_properties'] =  ['#view_id', '#view_display_show_admin_links', '#view_display_plugin_id'];
+
+    return $build;
+
   }
 
   /**
@@ -2419,18 +2463,6 @@ abstract class DisplayPluginBase extends PluginBase implements DisplayPluginInte
    * {@inheritdoc}
    */
   public function newDisplay() {
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function remove() {
-    $menu_links = $this->getMenuLinks();
-    /** @var \Drupal\Core\Menu\MenuLinkManagerInterface $menu_link_manager */
-    $menu_link_manager = \Drupal::service('plugin.manager.menu.link');
-    foreach ($menu_links as $menu_link_id => $menu_link) {
-      $menu_link_manager->removeDefinition("views_view:$menu_link_id");
-    }
   }
 
   /**
@@ -2561,6 +2593,13 @@ abstract class DisplayPluginBase extends PluginBase implements DisplayPluginInte
   }
 
   /**
+   * {@inheritdoc}
+   */
+  public function remove() {
+
+  }
+
+  /**
    * Merges plugins default values.
    *
    * @param string $type
@@ -2607,8 +2646,11 @@ abstract class DisplayPluginBase extends PluginBase implements DisplayPluginInte
    *   An array of available entity row renderers keyed by renderer identifiers.
    */
   protected function buildRenderingLanguageOptions() {
-    // @todo Consider making these plugins. See https://drupal.org/node/2173811.
-    return $this->listLanguages(LanguageInterface::STATE_CONFIGURABLE | LanguageInterface::STATE_SITE_DEFAULT | PluginBase::INCLUDE_NEGOTIATED | PluginBase::INCLUDE_ENTITY);
+    // @todo Consider making these plugins. See
+    //   https://www.drupal.org/node/2173811.
+    // Pass the current rendering language (in this case a one element array) so
+    // is not lost when there are language configuration changes.
+    return $this->listLanguages(LanguageInterface::STATE_CONFIGURABLE | LanguageInterface::STATE_SITE_DEFAULT | PluginBase::INCLUDE_NEGOTIATED | PluginBase::INCLUDE_ENTITY, array($this->getOption('rendering_language')));
   }
 
   /**

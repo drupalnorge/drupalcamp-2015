@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\Core\Updater\Updater.
+ * Contains \Drupal\Core\Updater\Updater.
  */
 
 namespace Drupal\Core\Updater;
@@ -109,6 +109,28 @@ class Updater {
     // Otherwise, return the first one.
     $info_file = array_shift($info_files);
     return $info_file->uri;
+  }
+
+  /**
+   * Get Extension information from directory.
+   *
+   * @param string $directory
+   *   Directory to search in.
+   *
+   * @return array
+   *   Extension info.
+   *
+   * @throws \Drupal\Core\Updater\UpdaterException
+   *   If the info parser does not provide any info.
+   */
+  protected static function getExtensionInfo($directory) {
+    $info_file = static::findInfoFile($directory);
+    $info = \Drupal::service('info_parser')->parse($info_file);
+    if (empty($info)) {
+      throw new UpdaterException(t('Unable to parse info file: %info_file.', ['%info_file' => $info_file]));
+    }
+
+    return $info;
   }
 
   /**
@@ -343,7 +365,7 @@ class Updater {
    * Returns the full path to a directory where backups should be written.
    */
   public function getBackupDir() {
-    return file_stream_wrapper_get_instance_by_scheme('temporary')->getDirectoryPath();
+    return \Drupal::service('stream_wrapper_manager')->getViaScheme('temporary')->getDirectoryPath();
   }
 
   /**

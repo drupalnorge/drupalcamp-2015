@@ -7,9 +7,13 @@
 
 namespace Drupal\Tests\Core\Render;
 
+use Drupal\Component\Utility\SafeMarkup;
+use Drupal\Core\Access\AccessResult;
+use Drupal\Core\Access\AccessResultInterface;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Cache\CacheableDependencyInterface;
 use Drupal\Core\Render\Element;
+use Drupal\Core\Render\SafeString;
 use Drupal\Core\Template\Attribute;
 
 /**
@@ -28,7 +32,6 @@ class RendererTest extends RendererTestBase {
       'max-age' => Cache::PERMANENT,
     ],
     '#attached' => [],
-    '#post_render_cache' => [],
     '#children' => '',
   ];
 
@@ -44,7 +47,7 @@ class RendererTest extends RendererTestBase {
       $setup_code();
     }
 
-    $this->assertSame($expected, $this->renderer->render($build));
+    $this->assertSame($expected, (string) $this->renderer->renderRoot($build));
   }
 
   /**
@@ -81,6 +84,14 @@ class RendererTest extends RendererTestBase {
     $data[] = [[
       'child' => ['#markup' => 'bar'],
     ], 'bar'];
+    // XSS filtering test.
+    $data[] = [[
+      'child' => ['#markup' => "This is <script>alert('XSS')</script> test"],
+    ], "This is alert('XSS') test"];
+    // Ensure non-XSS tags are not filtered out.
+    $data[] = [[
+      'child' => ['#markup' => "This is <strong><script>alert('not a giraffe')</script></strong> test"],
+    ], "This is <strong>alert('not a giraffe')</strong> test"];
     // #children set but empty, and renderable children.
     $data[] = [[
       '#children' => '',
@@ -127,7 +138,7 @@ class RendererTest extends RendererTestBase {
         ],
       ],
       '#attributes' => ['id' => 'foo'],
-      '#url' => 'http://drupal.org',
+      '#url' => 'https://www.drupal.org',
       '#title' => 'bar',
     ];
     $setup_code_type_link = function() {
@@ -144,13 +155,13 @@ class RendererTest extends RendererTestBase {
         ->with('link')
         ->willReturn(['#theme' => 'link']);
     };
-    $data[] = [$build, '<div class="baz"><a href="http://drupal.org" id="foo">bar</a></div>' . "\n", $setup_code_type_link];
+    $data[] = [$build, '<div class="baz"><a href="https://www.drupal.org" id="foo">bar</a></div>' . "\n", $setup_code_type_link];
 
     // Tests that #theme_wrappers can disambiguate element attributes when the
     // "base" attribute is not set for #theme.
     $build = [
       '#type' => 'link',
-      '#url' => 'http://drupal.org',
+      '#url' => 'https://www.drupal.org',
       '#title' => 'foo',
       '#theme_wrappers' => [
         'container' => [
@@ -158,7 +169,7 @@ class RendererTest extends RendererTestBase {
         ],
       ],
     ];
-    $data[] = [$build, '<div class="baz"><a href="http://drupal.org">foo</a></div>' . "\n", $setup_code_type_link];
+    $data[] = [$build, '<div class="baz"><a href="https://www.drupal.org">foo</a></div>' . "\n", $setup_code_type_link];
 
     // Tests two 'container' #theme_wrappers, one using the "base" attributes
     // and one using an override.
@@ -315,7 +326,7 @@ class RendererTest extends RendererTestBase {
         '#markup' => $first,
       ],
     ];
-    $output = $this->renderer->render($elements);
+    $output = $this->renderer->renderRoot($elements);
 
     // The lowest weight element should appear last in $output.
     $this->assertTrue(strpos($output, $second) > strpos($output, $first), 'Elements were sorted correctly by weight.');
@@ -350,7 +361,7 @@ class RendererTest extends RendererTestBase {
       ),
       '#sorted' => TRUE,
     );
-    $output = $this->renderer->render($elements);
+    $output = $this->renderer->renderRoot($elements);
 
     // The elements should appear in output in the same order as the array.
     $this->assertTrue(strpos($output, $second) < strpos($output, $first), 'Elements were not sorted.');
@@ -360,7 +371,7 @@ class RendererTest extends RendererTestBase {
    * @covers ::render
    * @covers ::doRender
    *
-   * @dataProvider providerBoolean
+   * @dataProvider providerAccessValues
    */
   public function testRenderWithPresetAccess($access) {
     $build = [
@@ -374,7 +385,7 @@ class RendererTest extends RendererTestBase {
    * @covers ::render
    * @covers ::doRender
    *
-   * @dataProvider providerBoolean
+   * @dataProvider providerAccessValues
    */
   public function testRenderWithAccessCallbackCallable($access) {
     $build = [
@@ -392,7 +403,7 @@ class RendererTest extends RendererTestBase {
    * @covers ::render
    * @covers ::doRender
    *
-   * @dataProvider providerBoolean
+   * @dataProvider providerAccessValues
    */
   public function testRenderWithAccessPropertyAndCallback($access) {
     $build = [
@@ -409,14 +420,47 @@ class RendererTest extends RendererTestBase {
    * @covers ::render
    * @covers ::doRender
    *
-   * @dataProvider providerBoolean
+   * @dataProvider providerAccessValues
    */
   public function testRenderWithAccessControllerResolved($access) {
+
+    switch ($access) {
+      case AccessResult::allowed():
+        $method = 'accessResultAllowed';
+        break;
+
+      case AccessResult::forbidden():
+        $method = 'accessResultForbidden';
+        break;
+
+      case FALSE:
+        $method = 'accessFalse';
+        break;
+
+      case TRUE:
+        $method = 'accessTrue';
+        break;
+    }
+
     $build = [
-      '#access_callback' => 'Drupal\Tests\Core\Render\TestAccessClass::' . ($access ? 'accessTrue' : 'accessFalse'),
+      '#access_callback' => 'Drupal\Tests\Core\Render\TestAccessClass::' . $method,
     ];
 
     $this->assertAccess($build, $access);
+  }
+
+  /**
+   * @covers ::render
+   * @covers ::doRender
+   */
+  public function testRenderAccessCacheablityDependencyInheritance() {
+    $build = [
+      '#access' => AccessResult::allowed()->addCacheContexts(['user']),
+    ];
+
+    $this->renderer->renderPlain($build);
+
+    $this->assertEquals(['languages:language_interface', 'theme', 'user'], $build['#cache']['contexts']);
   }
 
   /**
@@ -432,11 +476,11 @@ class RendererTest extends RendererTestBase {
       '#markup' => 'test',
     ];
 
-    $this->assertEquals('test', $this->renderer->render($build));
+    $this->assertEquals('test', $this->renderer->renderRoot($build));
     $this->assertTrue($build['#printed']);
 
     // We don't want to reprint already printed render arrays.
-    $this->assertEquals('', $this->renderer->render($build));
+    $this->assertEquals('', $this->renderer->renderRoot($build));
   }
 
   /**
@@ -444,10 +488,12 @@ class RendererTest extends RendererTestBase {
    *
    * @return array
    */
-  public function providerBoolean() {
+  public function providerAccessValues() {
     return [
       [FALSE],
-      [TRUE]
+      [TRUE],
+      [AccessResult::forbidden()],
+      [AccessResult::allowed()],
     ];
   }
 
@@ -462,11 +508,11 @@ class RendererTest extends RendererTestBase {
   protected function assertAccess($build, $access) {
     $sensitive_content = $this->randomContextValue();
     $build['#markup'] = $sensitive_content;
-    if ($access) {
-      $this->assertSame($sensitive_content, $this->renderer->render($build));
+    if (($access instanceof AccessResultInterface && $access->isAllowed()) || $access === TRUE) {
+      $this->assertSame($sensitive_content, (string) $this->renderer->renderRoot($build));
     }
     else {
-      $this->assertSame('', $this->renderer->render($build));
+      $this->assertSame('', (string) $this->renderer->renderRoot($build));
     }
   }
 
@@ -558,13 +604,13 @@ class RendererTest extends RendererTestBase {
     // Render the element and confirm that it goes through the rendering
     // process (which will set $element['#printed']).
     $element = $test_element;
-    $this->renderer->render($element);
+    $this->renderer->renderRoot($element);
     $this->assertTrue(isset($element['#printed']), 'No cache hit');
 
     // Render the element again and confirm that it is retrieved from the cache
     // instead (so $element['#printed'] will not be set).
     $element = $test_element;
-    $this->renderer->render($element);
+    $this->renderer->renderRoot($element);
     $this->assertFalse(isset($element['#printed']), 'Cache hit');
 
     // Test that cache tags are correctly collected from the render element,
@@ -601,7 +647,7 @@ class RendererTest extends RendererTestBase {
       ],
       '#markup' => '',
     ];
-    $this->renderer->render($element);
+    $this->renderer->renderRoot($element);
 
     $cache_item = $this->cacheFactory->get('render')->get('render_cache_test:en:stark');
     if (!$is_render_cached) {
@@ -618,6 +664,84 @@ class RendererTest extends RendererTestBase {
       [0, FALSE, NULL],
       [60, TRUE, (int) $_SERVER['REQUEST_TIME'] + 60],
       [Cache::PERMANENT, TRUE, -1],
+    ];
+  }
+
+  /**
+   * Tests that #cache_properties are properly handled.
+   *
+   * @param array $expected_results
+   *   An associative array of expected results keyed by property name.
+   *
+   * @covers ::render
+   * @covers ::doRender
+   * @covers \Drupal\Core\Render\RenderCache::get
+   * @covers \Drupal\Core\Render\RenderCache::set
+   * @covers \Drupal\Core\Render\RenderCache::createCacheID
+   * @covers \Drupal\Core\Render\RenderCache::getCacheableRenderArray
+   *
+   * @dataProvider providerTestRenderCacheProperties
+   */
+  public function testRenderCacheProperties(array $expected_results) {
+    $this->setUpRequest();
+    $this->setupMemoryCache();
+
+    $element = $original = [
+      '#cache' => [
+        'keys' => ['render_cache_test'],
+      ],
+      // Collect expected property names.
+      '#cache_properties' => array_keys(array_filter($expected_results)),
+      'child1' => ['#markup' => SafeString::create('1')],
+      'child2' => ['#markup' => SafeString::create('2')],
+      // Mark the value as safe.
+      '#custom_property' => SafeMarkup::checkPlain('custom_value'),
+      '#custom_property_array' => ['custom value'],
+    ];
+
+    $this->renderer->renderRoot($element);
+
+    $cache = $this->cacheFactory->get('render');
+    $data = $cache->get('render_cache_test:en:stark')->data;
+
+    // Check that parent markup is ignored when caching children's markup.
+    $this->assertEquals($data['#markup'] === '', (bool) Element::children($data));
+
+    // Check that the element properties are cached as specified.
+    foreach ($expected_results as $property => $expected) {
+      $cached = !empty($data[$property]);
+      $this->assertEquals($cached, (bool) $expected);
+      // Check that only the #markup key is preserved for children.
+      if ($cached) {
+        $this->assertEquals($data[$property], $original[$property]);
+      }
+    }
+    // #custom_property_array can not be a safe_cache_property.
+    $safe_cache_properties = array_diff(Element::properties(array_filter($expected_results)), ['#custom_property_array']);
+    foreach ($safe_cache_properties as $cache_property) {
+      $this->assertTrue(SafeMarkup::isSafe($data[$cache_property]), "$cache_property is marked as a safe string");
+    }
+  }
+
+  /**
+   * Data provider for ::testRenderCacheProperties().
+   *
+   * @return array
+   *   An array of associative arrays of expected results keyed by property
+   *   name.
+   */
+  public function providerTestRenderCacheProperties() {
+    return [
+      [[]],
+      [['child1' => 0, 'child2' => 0, '#custom_property' => 0, '#custom_property_array' => 0]],
+      [['child1' => 0, 'child2' => 0, '#custom_property' => 1, '#custom_property_array' => 0]],
+      [['child1' => 0, 'child2' => 1, '#custom_property' => 0, '#custom_property_array' => 0]],
+      [['child1' => 0, 'child2' => 1, '#custom_property' => 1, '#custom_property_array' => 0]],
+      [['child1' => 1, 'child2' => 0, '#custom_property' => 0, '#custom_property_array' => 0]],
+      [['child1' => 1, 'child2' => 0, '#custom_property' => 1, '#custom_property_array' => 0]],
+      [['child1' => 1, 'child2' => 1, '#custom_property' => 0, '#custom_property_array' => 0]],
+      [['child1' => 1, 'child2' => 1, '#custom_property' => 1, '#custom_property_array' => 0]],
+      [['child1' => 1, 'child2' => 1, '#custom_property' => 1, '#custom_property_array' => 1]],
     ];
   }
 
@@ -706,6 +830,14 @@ class TestAccessClass {
 
   public static function accessFalse() {
     return FALSE;
+  }
+
+  public static function accessResultAllowed() {
+    return AccessResult::allowed();
+  }
+
+  public static function accessResultForbidden() {
+    return AccessResult::forbidden();
   }
 
 }

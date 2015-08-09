@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\views\Plugin\views\Field\FieldHandlerInterface
+ * Contains \Drupal\views\Plugin\views\field\FieldHandlerInterface.
  */
 
 namespace Drupal\views\Plugin\views\field;
@@ -172,6 +172,26 @@ interface FieldHandlerInterface extends ViewsHandlerInterface {
    *
    */
   public function render(ResultRow $values);
+
+  /**
+   * Runs after every field has been rendered.
+   *
+   * This is meant to be used mainly to deal with field handlers whose output
+   * cannot be cached at row level but can be cached at display level. The
+   * typical example is the row counter. For completely uncacheable field output
+   * placeholders should be used.
+   *
+   * @param \Drupal\views\ResultRow $row
+   *   An array of all ResultRow objects returned from the query.
+   * @param $output
+   *   The field rendered output.
+   *
+   * @return string[]
+   *   An associative array of post-render token values keyed by placeholder.
+   *
+   * @see \Drupal\views\Plugin\views\field\UncacheableFieldHandlerTrait
+   */
+  public function postRender(ResultRow $row, $output);
 
   /**
    * Renders a field using advanced settings.

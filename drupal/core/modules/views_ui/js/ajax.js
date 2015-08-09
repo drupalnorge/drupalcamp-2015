@@ -2,15 +2,30 @@
  * @file
  * Handles AJAX submission and response in Views UI.
  */
+
 (function ($, Drupal, drupalSettings) {
 
   "use strict";
 
+  /**
+   *
+   * @param {Drupal.Ajax} [ajax]
+   * @param {object} response
+   * @param {string} response.selector
+   * @param {number} [status]
+   */
   Drupal.AjaxCommands.prototype.viewsHighlight = function (ajax, response, status) {
     $('.hilited').removeClass('hilited');
     $(response.selector).addClass('hilited');
   };
 
+  /**
+   *
+   * @param {Drupal.Ajax} [ajax]
+   * @param {object} response
+   * @param {bool} response.changed
+   * @param {number} [status]
+   */
   Drupal.AjaxCommands.prototype.viewsShowButtons = function (ajax, response, status) {
     $('div.views-edit-view div.form-actions').removeClass('js-hide');
     if (response.changed) {
@@ -18,12 +33,26 @@
     }
   };
 
+  /**
+   *
+   * @param {Drupal.Ajax} [ajax]
+   * @param {object} [response]
+   * @param {number} [status]
+   */
   Drupal.AjaxCommands.prototype.viewsTriggerPreview = function (ajax, response, status) {
     if ($('input#edit-displays-live-preview').is(':checked')) {
       $('#preview-submit').trigger('click');
     }
   };
 
+  /**
+   *
+   * @param {Drupal.Ajax} [ajax]
+   * @param {object} response
+   * @param {string} response.siteName
+   * @param {string} response.title
+   * @param {number} [status]
+   */
   Drupal.AjaxCommands.prototype.viewsReplaceTitle = function (ajax, response, status) {
     var doc = document;
     // For the <title> element, make a best-effort attempt to replace the page
@@ -40,7 +69,9 @@
   };
 
   /**
-   * Get rid of irritating tabledrag messages
+   * Get rid of irritating tabledrag messages.
+   *
+   * @return {Array}
    */
   Drupal.theme.tableDragChangedWarning = function () {
     return [];
@@ -48,6 +79,8 @@
 
   /**
    * Trigger preview when the "live preview" checkbox is checked.
+   *
+   * @type {Drupal~behavior}
    */
   Drupal.behaviors.livePreview = {
     attach: function (context) {
@@ -61,6 +94,8 @@
 
   /**
    * Sync preview display.
+   *
+   * @type {Drupal~behavior}
    */
   Drupal.behaviors.syncPreviewDisplay = {
     attach: function (context) {
@@ -74,6 +109,10 @@
     }
   };
 
+  /**
+   *
+   * @type {Drupal~behavior}
+   */
   Drupal.behaviors.viewsAjax = {
     collapseReplaced: false,
     attach: function (context, settings) {
@@ -84,12 +123,14 @@
       // Bind AJAX behaviors to all items showing the class.
       $('a.views-ajax-link', context).once('views-ajax').each(function () {
         var element_settings = base_element_settings;
+        element_settings.base = base;
+        element_settings.element = this;
         // Set the URL to go to the anchor.
         if ($(this).attr('href')) {
           element_settings.url = $(this).attr('href');
         }
         var base = $(this).attr('id');
-        Drupal.ajax[base] = new Drupal.ajax(base, this, element_settings);
+        Drupal.ajax(element_settings);
       });
 
       $('div#views-live-preview a')
@@ -108,8 +149,10 @@
 
           element_settings.wrapper = 'views-preview-wrapper';
           element_settings.method = 'replaceWith';
+          element_settings.base = base;
+          element_settings.element = this;
           var base = $(this).attr('id');
-          Drupal.ajax[base] = new Drupal.ajax(base, this, element_settings);
+          Drupal.ajax(element_settings);
         });
 
       // Within a live preview, make exposed widget form buttons re-trigger the
@@ -132,9 +175,11 @@
           element_settings.wrapper = 'views-preview-wrapper';
           element_settings.method = 'replaceWith';
           element_settings.event = 'click';
+          element_settings.base = base;
+          element_settings.element = this;
 
           var base = $(this).attr('id');
-          Drupal.ajax[base] = new Drupal.ajax(base, this, element_settings);
+          Drupal.ajax(element_settings);
         });
 
     }

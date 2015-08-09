@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\user\Tests\UserLoginTest.
+ * Contains \Drupal\user\Tests\UserLoginTest.
  */
 
 namespace Drupal\user\Tests;
@@ -144,16 +144,21 @@ class UserLoginTest extends WebTestBase {
     $user_storage->resetCache(array($account->id()));
     $account = $user_storage->load($account->id());
     $this->assertIdentical($password_hasher->getCountLog2($account->getPassword()), $overridden_count_log2);
+    $this->assertTrue($password_hasher->check($password, $account->getPassword()));
   }
 
   /**
    * Make an unsuccessful login attempt.
    *
-   * @param $account
+   * @param \Drupal\user\Entity\User $account
    *   A user object with name and pass_raw attributes for the login attempt.
-   * @param $flood_trigger
-   *   Whether or not to expect that the flood control mechanism will be
-   *   triggered.
+   * @param mixed $flood_trigger
+   *   (optional) Whether or not to expect that the flood control mechanism
+   *    will be triggered. Defaults to NULL.
+   *   - Set to 'user' to expect a 'too many failed logins error.
+   *   - Set to any value to expect an error for too many failed logins per IP
+   *   .
+   *   - Set to NULL to expect a failed login.
    */
   function assertFailedLogin($account, $flood_trigger = NULL) {
     $edit = array(

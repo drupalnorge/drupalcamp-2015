@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\Core\DrupalKernelInterface.
+ * Contains \Drupal\Core\DrupalKernelInterface.
  */
 
 namespace Drupal\Core;
@@ -60,8 +60,11 @@ interface DrupalKernelInterface extends HttpKernelInterface {
   /**
    * Set the current site path.
    *
-   * @param $path
+   * @param string $path
    *   The current site path.
+   *
+   * @throws \LogicException
+   *   In case the kernel is already booted.
    */
   public function setSitePath($path);
 
@@ -92,6 +95,18 @@ interface DrupalKernelInterface extends HttpKernelInterface {
    *   List of module filenames, keyed by module name.
    */
   public function updateModules(array $module_list, array $module_filenames = array());
+
+  /**
+   * Force a container rebuild.
+   *
+   * @return \Symfony\Component\DependencyInjection\ContainerInterface
+   */
+  public function rebuildContainer();
+
+  /**
+   * Invalidate the service container for the next request.
+   */
+  public function invalidateContainer();
 
   /**
    * Prepare the kernel for handling a request without handling the request.

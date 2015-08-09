@@ -24,7 +24,7 @@ display:
         options:
           perm: 'access files overview'
       cache:
-        type: none
+        type: tag
         options: {  }
       query:
         type: views_query
@@ -236,7 +236,7 @@ display:
           delta_first_last: false
           multi_type: separator
           separator: ', '
-          field_api_classes: 0
+          field_api_classes: false
           plugin_id: field
           entity_type: file
           entity_field: filename

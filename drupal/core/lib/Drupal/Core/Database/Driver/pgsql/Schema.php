@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\Core\Database\Driver\pgsql\Schema
+ * Contains \Drupal\Core\Database\Driver\pgsql\Schema.
  */
 
 namespace Drupal\Core\Database\Driver\pgsql;
@@ -280,7 +280,7 @@ class Schema extends DatabaseSchema {
       unset($spec['not null']);
     }
 
-    if (in_array($spec['pgsql_type'], array('varchar', 'character', 'text')) && isset($spec['length'])) {
+    if (in_array($spec['pgsql_type'], array('varchar', 'character')) && isset($spec['length'])) {
       $sql .= '(' . $spec['length'] . ')';
     }
     elseif (isset($spec['precision']) && isset($spec['scale'])) {
@@ -329,7 +329,7 @@ class Schema extends DatabaseSchema {
     }
 
     if (!empty($field['unsigned'])) {
-      // Unsigned datatypes are not supported in PostgreSQL 8.3. In MySQL,
+      // Unsigned datatypes are not supported in PostgreSQL 9.1. In MySQL,
       // they are used to ensure a positive number is inserted and it also
       // doubles the maximum integer size that can be stored in a field.
       // The PostgreSQL schema in Drupal creates a check constraint
@@ -363,6 +363,8 @@ class Schema extends DatabaseSchema {
     // database types back into schema types.
     // $map does not use drupal_static as its value never changes.
     static $map = array(
+      'varchar_ascii:normal' => 'varchar',
+
       'varchar:normal' => 'varchar',
       'char:normal' => 'character',
 
@@ -567,7 +569,7 @@ class Schema extends DatabaseSchema {
   }
 
   public function indexExists($table, $name) {
-    // Details http://www.postgresql.org/docs/8.3/interactive/view-pg-indexes.html
+    // Details http://www.postgresql.org/docs/9.1/interactive/view-pg-indexes.html
     $index_name = $this->ensureIdentifiersLength($table, $name, 'idx');
     // Remove leading and trailing quotes because the index name is in a WHERE
     // clause and not used as an identifier.

@@ -16,6 +16,19 @@ use Drupal\simpletest\TestBase;
 abstract class MigrateFullDrupalTestBase extends MigrateDrupalTestBase {
 
   /**
+   * The test class which discovered migration tests must extend in order to be
+   * included in this test run.
+   */
+  const BASE_TEST_CLASS = 'Drupal\migrate_drupal\Tests\MigrateDrupalTestBase';
+
+  /**
+   * A list of fully-qualified test classes which should be ignored.
+   *
+   * @var string[]
+   */
+  protected static $blacklist = [];
+
+  /**
    * Get the dump classes required for this migration test.
    *
    * @return array
@@ -27,9 +40,24 @@ abstract class MigrateFullDrupalTestBase extends MigrateDrupalTestBase {
    * Get the test classes that needs to be run for this test.
    *
    * @return array
-   *   The list of test fully-classified class names.
+   *   The list of fully-classified test class names.
    */
-  protected abstract function getTestClassesList();
+  protected function getTestClassesList() {
+    $classes = [];
+
+    $discovery = \Drupal::getContainer()->get('test_discovery');
+    foreach (static::$modules as $module) {
+      foreach ($discovery->getTestClasses($module) as $group) {
+        foreach (array_keys($group) as $class) {
+          if (is_subclass_of($class, static::BASE_TEST_CLASS)) {
+            $classes[] = $class;
+          }
+        }
+      }
+    }
+    // Exclude blacklisted classes.
+    return array_diff($classes, static::$blacklist);
+  }
 
   /**
    * {@inheritdoc}

@@ -2,13 +2,15 @@
 
 /**
  * @file
- * Definition of Drupal\system\Tests\Common\UrlTest.
+ * Contains \Drupal\system\Tests\Common\UrlTest.
  */
 
 namespace Drupal\system\Tests\Common;
 
 use Drupal\Component\Utility\UrlHelper;
+use Drupal\Core\Cache\Cache;
 use Drupal\Core\Language\Language;
+use Drupal\Core\Render\RenderContext;
 use Drupal\Core\Url;
 use Drupal\simpletest\WebTestBase;
 
@@ -22,7 +24,7 @@ use Drupal\simpletest\WebTestBase;
  */
 class UrlTest extends WebTestBase {
 
-  public static $modules = array('common_test');
+  public static $modules = array('common_test', 'url_alter_test');
 
   /**
    * Confirms that invalid URLs are filtered in link generating functions.
@@ -42,9 +44,41 @@ class UrlTest extends WebTestBase {
   }
 
   /**
+   * Tests that #type=link bubbles outbound route/path processors' metadata.
+   */
+  function testLinkBubbleableMetadata() {
+    $cases = [
+      ['Regular link', 'internal:/user', [], ['contexts' => [], 'tags' => [], 'max-age' => Cache::PERMANENT], []],
+      ['Regular link, absolute', 'internal:/user', ['absolute' => TRUE], ['contexts' => ['url.site'], 'tags' => [], 'max-age' => Cache::PERMANENT], []],
+      ['Route processor link', 'route:system.run_cron', [], ['contexts' => ['session'], 'tags' => [], 'max-age' => Cache::PERMANENT], ['placeholders' => []]],
+      ['Route processor link, absolute', 'route:system.run_cron', ['absolute' => TRUE], ['contexts' => ['url.site', 'session'], 'tags' => [], 'max-age' => Cache::PERMANENT], ['placeholders' => []]],
+      ['Path processor link', 'internal:/user/1', [], ['contexts' => [], 'tags' => ['user:1'], 'max-age' => Cache::PERMANENT], []],
+      ['Path processor link, absolute', 'internal:/user/1', ['absolute' => TRUE], ['contexts' => ['url.site'], 'tags' => ['user:1'], 'max-age' => Cache::PERMANENT], []],
+    ];
+
+    foreach ($cases as $case) {
+      list($title, $uri, $options, $expected_cacheability, $expected_attachments) = $case;
+      $expected_cacheability['contexts'] = Cache::mergeContexts($expected_cacheability['contexts'], ['languages:language_interface', 'theme', 'user.permissions']);
+      $link = [
+        '#type' => 'link',
+        '#title' => $title,
+        '#options' => $options,
+        '#url' => Url::fromUri($uri),
+      ];
+      \Drupal::service('renderer')->renderRoot($link);
+      $this->pass($title);
+      $this->assertEqual($expected_cacheability, $link['#cache']);
+      $this->assertEqual($expected_attachments, $link['#attached']);
+    }
+  }
+
+  /**
    * Tests that default and custom attributes are handled correctly on links.
    */
   function testLinkAttributes() {
+    /** @var \Drupal\Core\Render\RendererInterface $renderer */
+    $renderer = $this->container->get('renderer');
+
     // Test that hreflang is added when a link has a known language.
     $language = new Language(array('id' => 'fr', 'name' => 'French'));
     $hreflang_link = array(
@@ -52,7 +86,7 @@ class UrlTest extends WebTestBase {
       '#options' => array(
         'language' => $language,
       ),
-      '#url' => Url::fromUri('http://drupal.org'),
+      '#url' => Url::fromUri('https://www.drupal.org'),
       '#title' => 'bar',
     );
     $langcode = $language->getId();
@@ -62,10 +96,10 @@ class UrlTest extends WebTestBase {
     $hreflang_override_link = $hreflang_link;
     $hreflang_override_link['#options']['attributes']['hreflang'] = 'foo';
 
-    $rendered = drupal_render($hreflang_link);
+    $rendered = $renderer->renderRoot($hreflang_link);
     $this->assertTrue($this->hasAttribute('hreflang', $rendered, $langcode), format_string('hreflang attribute with value @langcode is present on a rendered link when langcode is provided in the render array.', array('@langcode' => $langcode)));
 
-    $rendered = drupal_render($hreflang_override_link);
+    $rendered = $renderer->renderRoot($hreflang_override_link);
     $this->assertTrue($this->hasAttribute('hreflang', $rendered, 'foo'), format_string('hreflang attribute with value @hreflang is present on a rendered link when @hreflang is provided in the render array.', array('@hreflang' => 'foo')));
 
     // Test the active class in links produced by _l() and #type 'link'.
@@ -121,7 +155,7 @@ class UrlTest extends WebTestBase {
         ),
       ),
     );
-    $link_theme = drupal_render($type_link);
+    $link_theme = $renderer->renderRoot($type_link);
     $this->assertTrue($this->hasAttribute('class', $link_theme, $class_theme), format_string('Custom class @class is present on link when requested by #type', array('@class' => $class_theme)));
   }
 
@@ -129,30 +163,35 @@ class UrlTest extends WebTestBase {
    * Tests that link functions support render arrays as 'text'.
    */
   function testLinkRenderArrayText() {
+    /** @var \Drupal\Core\Render\RendererInterface $renderer */
+    $renderer = $this->container->get('renderer');
+
     // Build a link with _l() for reference.
-    $l = \Drupal::l('foo', Url::fromUri('http://drupal.org'));
+    $l = \Drupal::l('foo', Url::fromUri('https://www.drupal.org'));
 
     // Test a renderable array passed to _l().
-    $renderable_text = array('#markup' => 'foo');
-    $l_renderable_text = \Drupal::l($renderable_text, Url::fromUri('http://drupal.org'));
-    $this->assertEqual($l_renderable_text, $l);
+    $renderer->executeInRenderContext(new RenderContext(), function() use ($renderer, $l) {
+      $renderable_text = array('#markup' => 'foo');
+      $l_renderable_text = \Drupal::l($renderable_text, Url::fromUri('https://www.drupal.org'));
+      $this->assertEqual($l_renderable_text, $l);
+    });
 
     // Test a themed link with plain text 'text'.
     $type_link_plain_array = array(
       '#type' => 'link',
       '#title' => 'foo',
-      '#url' => Url::fromUri('http://drupal.org'),
+      '#url' => Url::fromUri('https://www.drupal.org'),
     );
-    $type_link_plain = drupal_render($type_link_plain_array);
+    $type_link_plain = $renderer->renderRoot($type_link_plain_array);
     $this->assertEqual($type_link_plain, $l);
 
     // Build a themed link with renderable 'text'.
     $type_link_nested_array = array(
       '#type' => 'link',
       '#title' => array('#markup' => 'foo'),
-      '#url' => Url::fromUri('http://drupal.org'),
+      '#url' => Url::fromUri('https://www.drupal.org'),
     );
-    $type_link_nested = drupal_render($type_link_nested_array);
+    $type_link_nested = $renderer->renderRoot($type_link_nested_array);
     $this->assertEqual($type_link_nested, $l);
   }
 
@@ -213,7 +252,7 @@ class UrlTest extends WebTestBase {
   function testDrupalParseUrl() {
     // Relative, absolute, and external URLs, without/with explicit script path,
     // without/with Drupal path.
-    foreach (array('', '/', 'http://drupal.org/') as $absolute) {
+    foreach (array('', '/', 'https://www.drupal.org/') as $absolute) {
       foreach (array('', 'index.php/') as $script) {
         foreach (array('', 'foo/bar') as $path) {
           $url = $absolute . $script . $path . '?foo=bar&bar=baz&baz#foo';
@@ -237,7 +276,7 @@ class UrlTest extends WebTestBase {
     $this->assertEqual(UrlHelper::parse($url), $result, 'Relative URL parsed correctly.');
 
     // Test that drupal can recognize an absolute URL. Used to prevent attack vectors.
-    $url = 'http://drupal.org/foo/bar?foo=bar&bar=baz&baz#foo';
+    $url = 'https://www.drupal.org/foo/bar?foo=bar&bar=baz&baz#foo';
     $this->assertTrue(UrlHelper::isExternal($url), 'Correctly identified an external URL.');
 
     // Test that UrlHelper::parse() does not allow spoofing a URL to force a malicious redirect.
@@ -249,7 +288,7 @@ class UrlTest extends WebTestBase {
    * Tests external URL handling.
    */
   function testExternalUrls() {
-    $test_url = 'http://drupal.org/';
+    $test_url = 'https://www.drupal.org/';
 
     // Verify external URL can contain a fragment.
     $url = $test_url . '#drupal';
@@ -260,7 +299,7 @@ class UrlTest extends WebTestBase {
     $url = $test_url . '#drupal';
     $fragment = $this->randomMachineName(10);
     $result = Url::fromUri($url, array('fragment' => $fragment))->toString();
-    $this->assertEqual($test_url . '#' . $fragment, $result, 'External URL fragment is overidden with a custom fragment in $options.');
+    $this->assertEqual($test_url . '#' . $fragment, $result, 'External URL fragment is overridden with a custom fragment in $options.');
 
     // Verify external URL can contain a query string.
     $url = $test_url . '?drupal=awesome';

@@ -157,7 +157,7 @@ class CommentDefaultFormatter extends FormatterBase implements ContainerFactoryP
       // Unpublished comments are not included in
       // $entity->get($field_name)->comment_count, but unpublished comments
       // should display if the user is an administrator.
-      $elements['#cache']['contexts'][] = 'user.roles';
+      $elements['#cache']['contexts'][] = 'user.permissions';
       if ($this->currentUser->hasPermission('access comments') || $this->currentUser->hasPermission('administer comments')) {
         // This is a listing of Comment entities, so associate its list cache
         // tag for correct invalidation.
@@ -197,24 +197,17 @@ class CommentDefaultFormatter extends FormatterBase implements ContainerFactoryP
             $output['comment_form'] = $this->entityFormBuilder->getForm($comment);
           }
           // All other users need a user-specific form, which would break the
-          // render cache: hence use a #post_render_cache callback.
+          // render cache: hence use a #lazy_builder callback.
           else {
-            $callback = 'comment.post_render_cache:renderForm';
-            $context = array(
-              'entity_type' => $entity->getEntityTypeId(),
-              'entity_id' => $entity->id(),
-              'field_name' => $field_name,
-              'comment_type' => $this->getFieldSetting('comment_type'),
-            );
-            $placeholder = drupal_render_cache_generate_placeholder($callback, $context);
-            $output['comment_form'] = array(
-              '#post_render_cache' => array(
-                $callback => array(
-                  $context,
-                ),
-              ),
-              '#markup' => $placeholder,
-            );
+            $output['comment_form'] = [
+              '#lazy_builder' => ['comment.lazy_builders:renderForm', [
+                $entity->getEntityTypeId(),
+                $entity->id(),
+                $field_name,
+                $this->getFieldSetting('comment_type'),
+              ]],
+              '#create_placeholder' => TRUE,
+            ];
           }
         }
       }

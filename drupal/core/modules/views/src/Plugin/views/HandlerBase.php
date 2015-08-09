@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\views\Plugin\views\HandlerBase.
+ * Contains \Drupal\views\Plugin\views\HandlerBase.
  */
 
 namespace Drupal\views\Plugin\views;
@@ -721,7 +721,7 @@ abstract class HandlerBase extends PluginBase implements ViewsHandlerInterface {
       return $views_data['table']['entity type'];
     }
     else {
-      throw new \Exception(SafeMarkup::format('No entity type for field @field on view @view', array('@field' => $this->options['id'], '@view' => $this->view->storage->id())));
+      throw new \Exception("No entity type for field {$this->options['id']} on view {$this->view->storage->id()}");
     }
   }
 

@@ -32,6 +32,7 @@ use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\Datetime\DrupalDateTime;
 use Drupal\Core\Routing\GeneratorNotInitializedException;
 use Drupal\Core\Template\Attribute;
+use Drupal\Core\Render\BubbleableMetadata;
 use Drupal\Core\Render\Element;
 use Drupal\Core\Session\AnonymousUserSession;
 
@@ -194,7 +195,7 @@ function drupal_get_html_head($render = TRUE) {
   $elements = _drupal_add_html_head();
   \Drupal::moduleHandler()->alter('html_head', $elements);
   if ($render) {
-    return drupal_render($elements);
+    return \Drupal::service('renderer')->renderPlain($elements);
   }
   else {
     return $elements;
@@ -259,7 +260,7 @@ function valid_email_address($mail) {
  * @{
  * Functions to sanitize values.
  *
- * See http://drupal.org/writing-secure-code for information
+ * See https://www.drupal.org/writing-secure-code for information
  * on writing secure code.
  */
 
@@ -294,53 +295,6 @@ function check_url($uri) {
  * @{
  * Functions to format numbers, strings, dates, etc.
  */
-
-/**
- * Formats XML elements.
- *
- * Note: It is the caller's responsibility to sanitize any input parameters.
- * This function does not perform sanitization.
- *
- * @param $array
- *   An array where each item represents an element and is either a:
- *   - (key => value) pair (<key>value</key>)
- *   - Associative array with fields:
- *     - 'key': The element name. Element names are not sanitized, so do not
- *       pass user input.
- *     - 'value': element contents
- *     - 'attributes': associative array of element attributes
- *
- * In both cases, 'value' can be a simple string, or it can be another array
- * with the same format as $array itself for nesting.
- */
-function format_xml_elements($array) {
-  $output = '';
-  foreach ($array as $key => $value) {
-    if (is_numeric($key)) {
-      if ($value['key']) {
-        $output .= ' <' . $value['key'];
-        if (isset($value['attributes']) && is_array($value['attributes'])) {
-          $output .= new Attribute($value['attributes']);
-        }
-
-        if (isset($value['value']) && $value['value'] != '') {
-          $output .= '>' . (is_array($value['value']) ? format_xml_elements($value['value']) : SafeMarkup::checkPlain($value['value'])) . '</' . $value['key'] . ">\n";
-        }
-        else {
-          $output .= " />\n";
-        }
-      }
-    }
-    else {
-      $output .= ' <' . $key . '>' . (is_array($value) ? format_xml_elements($value) : SafeMarkup::checkPlain($value)) . "</$key>\n";
-    }
-  }
-  // @todo This is marking the output string as safe HTML, but we have only
-  //   sanitized the attributes and tag values, not the tag names, and we
-  //   cannot guarantee the assembled markup is safe. Consider a fix in:
-  //   https://www.drupal.org/node/2296885
-  return SafeMarkup::set($output);
-}
 
 /**
  * Generates a string representation for the given byte count.
@@ -430,42 +384,6 @@ function date_iso8601($date) {
   // The DATE_ISO8601 constant cannot be used here because it does not match
   // date('c') and produces invalid RDF markup.
   return date('c', $date);
-}
-
-/**
- * Translates a formatted date string.
- *
- * Callback for preg_replace_callback() within format_date().
- */
-function _format_date_callback(array $matches = NULL, $new_langcode = NULL) {
-  // We cache translations to avoid redundant and rather costly calls to t().
-  static $cache, $langcode;
-
-  if (!isset($matches)) {
-    $langcode = $new_langcode;
-    return;
-  }
-
-  $code = $matches[1];
-  $string = $matches[2];
-
-  if (!isset($cache[$langcode][$code][$string])) {
-    $options = array(
-      'langcode' => $langcode,
-    );
-
-    if ($code == 'F') {
-      $options['context'] = 'Long month name';
-    }
-
-    if ($code == '') {
-      $cache[$langcode][$code][$string] = $string;
-    }
-    else {
-      $cache[$langcode][$code][$string] = t($string, array(), $options);
-    }
-  }
-  return $cache[$langcode][$code][$string];
 }
 
 /**
@@ -654,10 +572,10 @@ function drupal_js_defaults($data = NULL) {
  *   The merged #attached array.
  *
  * @deprecated To be removed in Drupal 8.0.x. Use
- *   \Drupal\Core\Render\Renderer::mergeAttachments() instead.
+ *   \Drupal\Core\Render\BubbleableMetadata::mergeAttachments() instead.
  */
 function drupal_merge_attached(array $a, array $b) {
-  return \Drupal::service('renderer')->mergeAttachments($a, $b);
+  return BubbleableMetadata::mergeAttachments($a, $b);
 }
 
 /**
@@ -938,9 +856,9 @@ function drupal_process_states(&$elements) {
  * foreach ($regions as $region) {
  *   drupal_attach_tabledrag('my-module-table', array(
  *     'action' => 'order',
- *     'relationship' => sibling',
+ *     'relationship' => 'sibling',
  *     'group' => 'my-elements-weight',
- *     'subgroup' => my-elements-weight-' . $region,
+ *     'subgroup' => 'my-elements-weight-' . $region,
  *   ));
  * }
  * @endcode
@@ -1030,7 +948,8 @@ function drupal_clear_js_cache() {
 /**
  * Pre-render callback: Renders a link into #markup.
  *
- * @deprecated Use \Drupal\Core\Render\Element\Link::preRenderLink().
+ * @deprecated in Drupal 8.x, will be removed before Drupal 9.0.
+ *   Use \Drupal\Core\Render\Element\Link::preRenderLink().
  */
 function drupal_pre_render_link($element) {
   return Element\Link::preRenderLink($element);
@@ -1117,7 +1036,7 @@ function drupal_pre_render_links($element) {
     $child = &$element[$key];
     // If the child has links which have not been printed yet and the user has
     // access to it, merge its links in to the parent.
-    if (isset($child['#links']) && empty($child['#printed']) && (!isset($child['#access']) || $child['#access'])) {
+    if (isset($child['#links']) && empty($child['#printed']) && Element::isVisibleElement($child)) {
       $element['#links'] += $child['#links'];
       // Mark the child as having been printed already (so that its links
       // cannot be mistakenly rendered twice).
@@ -1274,33 +1193,6 @@ function show(&$element) {
 }
 
 /**
- * Generates a render cache placeholder.
- *
- * This can be used to generate placeholders, and hence should also be used by
- * #post_render_cache callbacks that want to replace the placeholder with the
- * final markup.
- *
- * @param string $callback
- *   The #post_render_cache callback that will replace the placeholder with its
- *   eventual markup.
- * @param array $context
- *   An array providing context for the #post_render_cache callback. This array
- *   will be altered to provide a 'token' key/value pair, if not already
- *   provided, to uniquely identify the generated placeholder.
- *
- * @return string
- *   The generated placeholder HTML.
- *
- * @throws \Exception
- *
- * @deprecated in Drupal 8.0.x-dev, will be removed before Drupal 9.0.0.
- *   Use \Drupal::service('renderer')->generateCachePlaceholder().
- */
-function drupal_render_cache_generate_placeholder($callback, array &$context) {
-  return \Drupal::service('renderer')->generateCachePlaceholder($callback, $context);
-}
-
-/**
  * Retrieves the default properties for the defined element type.
  *
  * @param $type
@@ -1403,8 +1295,10 @@ function drupal_flush_all_caches() {
   // Reset all static caches.
   drupal_static_reset();
 
-  // Wipe the PHP Storage caches.
-  PhpStorageFactory::get('service_container')->deleteAll();
+  // Invalidate the container.
+  \Drupal::service('kernel')->invalidateContainer();
+
+  // Wipe the Twig PHP Storage cache.
   PhpStorageFactory::get('twig')->deleteAll();
 
   // Rebuild module and theme data.
@@ -1412,13 +1306,6 @@ function drupal_flush_all_caches() {
   /** @var \Drupal\Core\Extension\ThemeHandlerInterface $theme_handler */
   $theme_handler = \Drupal::service('theme_handler');
   $theme_handler->refreshInfo();
-  // Remove the cache of the active theme's info file information in state.
-  // @see \Drupal\Core\Theme\ThemeInitialization::getActiveByThemeName()
-  $keys = [];
-  foreach ($theme_handler->listInfo() as $theme_name => $theme) {
-    $keys[] = 'theme.active_theme.' . $theme_name;
-  }
-  \Drupal::state()->deleteMultiple($keys);
   // In case the active theme gets requested later in the same request we need
   // to reset the theme manager.
   \Drupal::theme()->resetActiveTheme();
@@ -1440,14 +1327,6 @@ function drupal_flush_all_caches() {
   // Ensure that all modules that are currently supposed to be enabled are
   // actually loaded.
   $module_handler->loadAll();
-
-  // Rebuild the schema and cache a fully-built schema based on new module data.
-  // This is necessary for any invocation of index.php, because setting cache
-  // table entries requires schema information and that occurs during bootstrap
-  // before any modules are loaded, so if there is no cached schema,
-  // drupal_get_schema() will try to generate one, but with no loaded modules,
-  // it will return nothing.
-  drupal_get_schema(NULL, TRUE);
 
   // Rebuild all information based on new module data.
   $module_handler->invokeAll('rebuild');

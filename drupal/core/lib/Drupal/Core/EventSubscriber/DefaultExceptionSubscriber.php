@@ -9,7 +9,6 @@ namespace Drupal\Core\EventSubscriber;
 
 use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Core\Config\ConfigFactoryInterface;
-use Drupal\Core\Render\BareHtmlPageRendererInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\Core\Utility\Error;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
@@ -44,23 +43,13 @@ class DefaultExceptionSubscriber implements EventSubscriberInterface {
   protected $configFactory;
 
   /**
-   * The bare HTML page renderer.
-   *
-   * @var \Drupal\Core\Render\BareHtmlPageRendererInterface
-   */
-  protected $bareHtmlPageRenderer;
-
-  /**
    * Constructs a new DefaultExceptionSubscriber.
    *
    * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
    *   The configuration factory.
-   * @param \Drupal\Core\Render\BareHtmlPageRendererInterface $bare_html_page_renderer
-   *   The bare HTML page renderer.
    */
-  public function __construct(ConfigFactoryInterface $config_factory, BareHtmlPageRendererInterface $bare_html_page_renderer) {
+  public function __construct(ConfigFactoryInterface $config_factory) {
     $this->configFactory = $config_factory;
-    $this->bareHtmlPageRenderer = $bare_html_page_renderer;
   }
 
   /**
@@ -87,15 +76,13 @@ class DefaultExceptionSubscriber implements EventSubscriberInterface {
 
     // Display the message if the current error reporting level allows this type
     // of message to be displayed, and unconditionally in update.php.
+    $message = '';
     if (error_displayable($error)) {
-      $class = 'error';
-
       // If error type is 'User notice' then treat it as debug information
       // instead of an error message.
       // @see debug()
       if ($error['%type'] == 'User notice') {
         $error['%type'] = 'Debug';
-        $class = 'status';
       }
 
       // Attempt to reduce verbosity by removing DRUPAL_ROOT from the file path
@@ -125,12 +112,11 @@ class DefaultExceptionSubscriber implements EventSubscriberInterface {
         // sure the backtrace is escaped as it can contain user submitted data.
         $message .= '<pre class="backtrace">' . SafeMarkup::escape(Error::formatBacktrace($backtrace)) . '</pre>';
       }
-      drupal_set_message(SafeMarkup::set($message), $class, TRUE);
     }
 
-    $content = $this->t('The website has encountered an error. Please try again later.');
-    $output = $this->bareHtmlPageRenderer->renderBarePage(['#markup' => $content], $this->t('Error'), 'maintenance_page');
-    $response = new Response($output);
+    $content = $this->t('The website encountered an unexpected error. Please try again later.');
+    $content .= $message ? '</br></br>' . $message : '';
+    $response = new Response($content, 500);
 
     if ($exception instanceof HttpExceptionInterface) {
       $response->setStatusCode($exception->getStatusCode());
@@ -159,7 +145,7 @@ class DefaultExceptionSubscriber implements EventSubscriberInterface {
     // of message to be displayed,
     $data = NULL;
     if (error_displayable($error) && $message = $exception->getMessage()) {
-      $data = ['error' => sprintf('A fatal error occurred: %s', $message)];
+      $data = ['message' => sprintf('A fatal error occurred: %s', $message)];
     }
 
     $response = new JsonResponse($data, Response::HTTP_INTERNAL_SERVER_ERROR);
@@ -198,13 +184,7 @@ class DefaultExceptionSubscriber implements EventSubscriberInterface {
    *   The format as which to treat the exception.
    */
   protected function getFormat(Request $request) {
-    // @todo We are trying to switch to a more robust content negotiation
-    // library in https://www.drupal.org/node/1505080 that will make
-    // $request->getRequestFormat() reliable as a better alternative
-    // to this code. We therefore use this style for now on the expectation
-    // that it will get replaced with better code later. This approach makes
-    // that change easier when we get to it.
-    $format = \Drupal::service('http_negotiation.format_negotiator')->getContentType($request);
+    $format = $request->query->get(MainContentViewSubscriber::WRAPPER_FORMAT, $request->getRequestFormat());
 
     // These are all JSON errors for our purposes. Any special handling for
     // them can/should happen in earlier listeners if desired.

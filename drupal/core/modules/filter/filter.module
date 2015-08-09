@@ -10,7 +10,6 @@ use Drupal\Component\Utility\Unicode;
 use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Component\Utility\Xss;
 use Drupal\Core\Cache\Cache;
-use Drupal\Core\Extension\Extension;
 use Drupal\Core\Render\Element;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Session\AccountInterface;
@@ -26,7 +25,7 @@ function filter_help($route_name, RouteMatchInterface $route_match) {
     case 'help.page.filter':
       $output = '';
       $output .= '<h3>' . t('About') . '</h3>';
-      $output .= '<p>' . t('The Filter module allows administrators to configure text formats. Text formats define the HTML tags, codes, and other input allowed in text entered in the site and they defend your web site against potentially damaging input from malicious users. A visual text editor can be associated with the text formats by using the <a href="!editor_help">Text Editor module</a>. For more information, see <a href="!filter_do">the online documentation for the Filter module</a>.', array('!filter_do' => 'https://drupal.org/documentation/modules/filter/','!editor_help' => \Drupal::url('help.page', array('name' => 'editor')))) . '</p>';
+      $output .= '<p>' . t('The Filter module allows administrators to configure text formats. Text formats define the HTML tags, codes, and other input allowed in text entered in the site and they defend your web site against potentially damaging input from malicious users. A visual text editor can be associated with the text formats by using the <a href="!editor_help">Text Editor module</a>. For more information, see <a href="!filter_do">the online documentation for the Filter module</a>.', array('!filter_do' => 'https://www.drupal.org/documentation/modules/filter/','!editor_help' => (\Drupal::moduleHandler()->moduleExists('editor')) ? \Drupal::url('help.page', array('name' => 'editor')) : '#')) . '</p>';
       $output .= '<h3>' . t('Uses') . '</h3>';
       $output .= '<dl>';
       $output .= '<dt>' . t('Managing text formats') . '</dt>';
@@ -81,44 +80,6 @@ function filter_theme() {
       ),
     )
   );
-}
-
-/**
- * Implements hook_system_info_alter().
- *
- * Prevents uninstallation of modules that provide filter plugins that are being
- * used in a filter format.
- */
-function filter_system_info_alter(&$info, Extension $file, $type) {
-  // It is not safe to call filter_formats() during maintenance mode.
-  if ($type == 'module' && !defined('MAINTENANCE_MODE')) {
-    // Get filter plugins supplied by this module.
-    $filter_plugins = array_filter(\Drupal::service('plugin.manager.filter')->getDefinitions(), function ($definition) use ($file) {
-      return $definition['provider'] == $file->getName();
-    });
-    if (!empty($filter_plugins)) {
-      $used_in = [];
-      // Find out if any filter formats have the plugin enabled.
-      foreach (filter_formats() as $filter_format) {
-        $filters = $filter_format->filters();
-        // Typically, all formats will contain settings for all filter plugins,
-        // even if they are disabled. However, if a module which provides filter
-        // plugins is being enabled right now, that won't be the case, so we
-        // still check to see if this format has this filter before we check
-        // the filter status.
-       foreach ($filter_plugins as $filter_plugin) {
-          if ($filters->has($filter_plugin['id']) && $filters->get($filter_plugin['id'])->status) {
-            $used_in[] = $filter_format->label();
-            $info['required'] = TRUE;
-            break;
-          }
-        }
-      }
-      if (!empty($used_in)) {
-        $info['explanation'] = t('Provides a filter plugin that is in use in the following filter formats: %formats', array('%formats' => implode(', ', $used_in)));
-      }
-    }
-  }
 }
 
 /**
@@ -306,8 +267,8 @@ function filter_fallback_format() {
  * Note: this function should only be used when filtering text for use elsewhere
  * than on a rendered HTML page. If this is part of a HTML page, then a
  * renderable array with a #type 'processed_text' element should be used instead
- * of this, because that will allow cache tags to be set and bubbled up, assets
- * to be loaded and #post_render_cache callbacks to be associated. In other
+ * of this, because that will allow cacheability metadata to be set and bubbled
+ * up and attachments to be associated (assets, placeholders, etc.). In other
  * words: if you are presenting the filtered text in a HTML page, the only way
  * this will be presented correctly, is by using the 'processed_text' element.
  *
@@ -327,7 +288,7 @@ function filter_fallback_format() {
  *   FilterInterface::TYPE_HTML_RESTRICTOR is the only type that cannot be
  *   skipped.
  *
- * @return string
+ * @return \Drupal\Component\Utility\SafeStringInterface
  *   The filtered text.
  *
  * @see filter_process_text()
@@ -392,7 +353,10 @@ function _filter_tips($format_id, $long = FALSE) {
       if ($filter->status) {
         $tip = $filter->tips($long);
         if (isset($tip)) {
-          $tips[$format->label()][$name] = array('tip' => $tip, 'id' => $name);
+          $tips[$format->label()][$name] = array(
+            'tip' => array('#markup' => $tip),
+            'id' => $name,
+          );
         }
       }
     }
@@ -469,7 +433,6 @@ function template_preprocess_filter_tips(&$variables) {
   foreach ($variables['tips'] as $name => $tiplist) {
     foreach ($tiplist as $tip_key => $tip) {
       $tiplist[$tip_key]['attributes'] = new Attribute();
-      $tiplist[$tip_key]['tip'] = Xss::filterAdmin($tiplist[$tip_key]['tip']);
     }
 
     $variables['tips'][$name] = array(
@@ -538,7 +501,7 @@ function _filter_url($text, $filter) {
   // we cannot cleanly differ between protocols here without hard-coding MAILTO,
   // so '//' is optional for all protocols.
   // @see \Drupal\Component\Utility\UrlHelper::filterBadProtocol()
-  $protocols = \Drupal::config('system.filter')->get('protocols');
+  $protocols = \Drupal::getContainer()->getParameter('filter_protocols') ?: ['http', 'https'];
   $protocols = implode(':(?://)?|', $protocols) . ':(?://)?';
 
   $valid_url_path_characters = "[\p{L}\p{M}\p{N}!\*\';:=\+,\.\$\/%#\[\]\-_~@&]";
@@ -574,7 +537,7 @@ function _filter_url($text, $filter) {
   $tasks['_filter_url_parse_full_links'] = $pattern;
 
   // Match email addresses.
-  $url_pattern = "[\p{L}\p{M}\p{N}._-]{1,254}@(?:$domain)";
+  $url_pattern = "[\p{L}\p{M}\p{N}._+-]{1,254}@(?:$domain)";
   $pattern = "`($url_pattern)`u";
   $tasks['_filter_url_parse_email_links'] = $pattern;
 

@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\user\Tests\UserPasswordResetTest.
+ * Contains \Drupal\user\Tests\UserPasswordResetTest.
  */
 
 namespace Drupal\user\Tests;
@@ -57,6 +57,7 @@ class UserPasswordResetTest extends PageCacheTagsTestBase {
     $this->drupalLogin($account);
 
     $this->account = User::load($account->id());
+    $this->account->pass_raw = $account->pass_raw;
     $this->drupalLogout();
 
     // Set the last login time that is used to generate the one-time link so
@@ -143,15 +144,34 @@ class UserPasswordResetTest extends PageCacheTagsTestBase {
     $timeout = $this->config('user.settings')->get('password_reset_timeout');
     $bogus_timestamp = REQUEST_TIME - $timeout - 60;
     $_uid = $this->account->id();
-    $this->drupalGet("user/reset/$_uid/$bogus_timestamp/" . user_pass_rehash($this->account->getPassword(), $bogus_timestamp, $this->account->getLastLoginTime(), $this->account->id()));
+    $this->drupalGet("user/reset/$_uid/$bogus_timestamp/" . user_pass_rehash($this->account, $bogus_timestamp));
     $this->assertText(t('You have tried to use a one-time login link that has expired. Please request a new one using the form below.'), 'Expired password reset request rejected.');
 
     // Create a user, block the account, and verify that a login link is denied.
     $timestamp = REQUEST_TIME - 1;
     $blocked_account = $this->drupalCreateUser()->block();
     $blocked_account->save();
-    $this->drupalGet("user/reset/" . $blocked_account->id() . "/$timestamp/" . user_pass_rehash($blocked_account->getPassword(), $timestamp, $blocked_account->getLastLoginTime(), $this->account->id()));
+    $this->drupalGet("user/reset/" . $blocked_account->id() . "/$timestamp/" . user_pass_rehash($blocked_account, $timestamp));
     $this->assertResponse(403);
+
+    // Verify a blocked user can not request a new password.
+    $this->drupalGet('user/password');
+    // Count email messages before to compare with after.
+    $before = count($this->drupalGetMails(array('id' => 'user_password_reset')));
+    $edit = array('name' => $blocked_account->getUsername());
+    $this->drupalPostForm(NULL, $edit, t('Submit'));
+    $this->assertRaw(t('%name is blocked or has not been activated yet.', array('%name' => $blocked_account->getUsername())), 'Notified user blocked accounts can not request a new password');
+    $this->assertTrue(count($this->drupalGetMails(array('id' => 'user_password_reset'))) === $before, 'No email was sent when requesting password reset for a blocked account');
+
+    // Verify a password reset link is invalidated when the user's email address changes.
+    $this->drupalGet('user/password');
+    $edit = array('name' => $this->account->getUsername());
+    $this->drupalPostForm(NULL, $edit, t('Submit'));
+    $old_email_reset_link = $this->getResetURL();
+    $this->account->setEmail("1" . $this->account->getEmail());
+    $this->account->save();
+    $this->drupalGet($old_email_reset_link);
+    $this->assertText(t('You have tried to use a one-time login link that has either been used or is no longer valid. Please request a new one using the form below.'), 'One-time link is no longer valid.');
   }
 
   /**
@@ -165,6 +185,29 @@ class UserPasswordResetTest extends PageCacheTagsTestBase {
     preg_match('#.+user/reset/.+#', $email['body'], $urls);
 
     return $urls[0];
+  }
+
+  /**
+   * Test user password reset while logged in.
+   */
+  public function testUserPasswordResetLoggedIn() {
+    // Log in.
+    $this->drupalLogin($this->account);
+
+    // Reset the password by username via the password reset page.
+    $this->drupalGet('user/password');
+    $this->drupalPostForm(NULL, NULL, t('Submit'));
+
+    // Click the reset URL while logged and change our password.
+    $resetURL = $this->getResetURL();
+    $this->drupalGet($resetURL);
+    $this->drupalPostForm(NULL, NULL, t('Log in'));
+
+    // Change the password.
+    $password = user_password();
+    $edit = array('pass[pass1]' => $password, 'pass[pass2]' => $password);
+    $this->drupalPostForm(NULL, $edit, t('Save'));
+    $this->assertText(t('The changes have been saved.'), 'Password changed.');
   }
 
   /**

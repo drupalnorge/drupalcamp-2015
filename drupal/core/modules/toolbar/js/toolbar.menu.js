@@ -1,8 +1,11 @@
 /**
+ * @file
  * Builds a nested accordion widget.
  *
  * Invoke on an HTML list element with the jQuery plugin pattern.
- * - For example, $('.menu').drupalToolbarMenu();
+ *
+ * @example
+ * $('.toolbar-menu').drupalToolbarMenu();
  */
 
 (function ($, Drupal, drupalSettings) {
@@ -77,7 +80,7 @@
       // Adjust the toggle text.
       $toggle
         .find('.action')
-        // Expand Structure, Collapse Structure
+        // Expand Structure, Collapse Structure.
         .text((switcher) ? ui.handleClose : ui.handleOpen);
     }
 
@@ -103,7 +106,7 @@
       // Add a handle to each list item if it has a menu.
       $menu.find('li').each(function (index, element) {
         var $item = $(element);
-        if ($item.children('ul.menu').length) {
+        if ($item.children('ul.toolbar-menu').length) {
           var $box = $item.children('.toolbar-box');
           options.text = Drupal.t('@label', {'@label': $box.find('a').text()});
           $item.children('.toolbar-box')
@@ -121,7 +124,7 @@
      * @param {jQuery} $lists
      *   A jQuery object of ul elements.
      *
-     * @param {Integer} level
+     * @param {number} level
      *   The current level number to be assigned to the list elements.
      */
     function markListLevels($lists, level) {
@@ -175,7 +178,12 @@
   /**
    * A toggle is an interactive element often bound to a click handler.
    *
-   * @return {String}
+   * @param {object} options
+   * @param {string} options.class
+   * @param {string} options.action
+   * @param {string} options.text
+   *
+   * @return {string}
    *   A string representing a DOM fragment.
    */
   Drupal.theme.toolbarMenuItemToggle = function (options) {

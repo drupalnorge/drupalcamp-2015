@@ -1,15 +1,19 @@
 /**
+ * @file
  * Attaches behaviors for the Comment module's "new" indicator.
  *
  * May only be loaded for authenticated users, with the History module
  * installed.
  */
+
 (function ($, Drupal, window) {
 
   "use strict";
 
   /**
    * Render "new" comment indicators wherever necessary.
+   *
+   * @type {Drupal~behavior}
    */
   Drupal.behaviors.commentNewIndicator = {
     attach: function (context) {
@@ -61,7 +65,7 @@
         var $comment = $(placeholder)
           .removeClass('hidden')
           .text(newCommentString)
-          .closest('.comment')
+          .closest('.js-comment')
           // Add 'new' class to the comment, so it can be styled.
           .addClass('new');
 

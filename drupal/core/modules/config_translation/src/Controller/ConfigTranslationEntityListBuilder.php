@@ -41,6 +41,7 @@ class ConfigTranslationEntityListBuilder extends ConfigEntityListBuilder impleme
       '#attributes' => array(
         'class' => array('table-filter', 'js-show'),
       ),
+      '#weight' => -10,
     );
 
     $build['filters']['text'] = array(
@@ -57,6 +58,7 @@ class ConfigTranslationEntityListBuilder extends ConfigEntityListBuilder impleme
     );
 
     $build['table']['#attributes']['class'][] = 'config-translation-entity-list';
+    $build['table']['#weight'] = 0;
     $build['#attached']['library'][] = 'system/drupal.system.modules';
 
     return $build;
@@ -82,8 +84,8 @@ class ConfigTranslationEntityListBuilder extends ConfigEntityListBuilder impleme
   /**
    * {@inheritdoc}
    */
-  public function getDefaultOperations(EntityInterface $entity) {
-    $operations = parent::getDefaultOperations($entity);
+  public function getOperations(EntityInterface $entity) {
+    $operations = parent::getOperations($entity);
     foreach (array_keys($operations) as $operation) {
       // This is a translation UI for translators. Show the translation
       // operation only.

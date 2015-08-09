@@ -8,6 +8,7 @@
 namespace Drupal\node\Entity;
 
 use Drupal\Core\Entity\ContentEntityBase;
+use Drupal\Core\Entity\EntityChangedTrait;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Field\BaseFieldDefinition;
@@ -52,7 +53,9 @@ use Drupal\user\UserInterface;
  *     "bundle" = "type",
  *     "label" = "title",
  *     "langcode" = "langcode",
- *     "uuid" = "uuid"
+ *     "uuid" = "uuid",
+ *     "status" = "status",
+ *     "uid" = "uid",
  *   },
  *   bundle_entity_type = "node_type",
  *   field_ui_base_route = "entity.node_type.edit_form",
@@ -68,6 +71,19 @@ use Drupal\user\UserInterface;
  * )
  */
 class Node extends ContentEntityBase implements NodeInterface {
+
+  use EntityChangedTrait;
+
+  /**
+   * Whether the node is being previewed or not.
+   *
+   * The variable is set to public as it will give a considerable performance
+   * improvement. See https://www.drupal.org/node/2498919.
+   *
+   * @var true|null
+   *   TRUE if the node is being previewed and NULL if it is not.
+   */
+  public $in_preview = NULL;
 
   /**
    * {@inheritdoc}
@@ -255,7 +271,7 @@ class Node extends ContentEntityBase implements NodeInterface {
    * {@inheritdoc}
    */
   public function isPublished() {
-    return (bool) $this->get('status')->value;
+    return (bool) $this->getEntityKey('status');
   }
 
   /**
@@ -277,7 +293,7 @@ class Node extends ContentEntityBase implements NodeInterface {
    * {@inheritdoc}
    */
   public function getOwnerId() {
-    return $this->get('uid')->target_id;
+    return $this->getEntityKey('uid');
   }
 
   /**
@@ -490,6 +506,13 @@ class Node extends ContentEntityBase implements NodeInterface {
           'rows' => 4,
         ),
       ));
+
+    $fields['revision_translation_affected'] = BaseFieldDefinition::create('boolean')
+      ->setLabel(t('Revision translation affected'))
+      ->setDescription(t('Indicates if the last edit of a translation belongs to current revision.'))
+      ->setReadOnly(TRUE)
+      ->setRevisionable(TRUE)
+      ->setTranslatable(TRUE);
 
     return $fields;
   }

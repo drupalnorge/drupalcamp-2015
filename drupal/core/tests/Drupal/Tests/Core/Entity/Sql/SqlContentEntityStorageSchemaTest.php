@@ -502,6 +502,15 @@ class SqlContentEntityStorageSchemaTest extends UnitTestCase {
       ),
     ));
 
+    $this->setUpStorageDefinition('default_langcode', array(
+      'columns' => array(
+        'value' => array(
+          'type' => 'int',
+          'size' => 'tiny',
+        ),
+      ),
+    ));
+
     $expected = array(
       'entity_test' => array(
         'description' => 'The base table for entity_test entities.',
@@ -531,10 +540,21 @@ class SqlContentEntityStorageSchemaTest extends UnitTestCase {
             'type' => 'varchar',
             'not null' => TRUE,
           ),
+          'default_langcode' => array(
+            'type' => 'int',
+            'size' => 'tiny',
+            'not null' => true,
+          ),
         ),
         'primary key' => array('id', 'langcode'),
         'unique keys' => array(),
-        'indexes' => array(),
+        'indexes' => array(
+          'entity_test__id__default_langcode__langcode' => array(
+            0 => 'id',
+            1 => 'default_langcode',
+            2 => 'langcode',
+          ),
+        ),
         'foreign keys' => array(
           'entity_test' => array(
             'table' => 'entity_test',
@@ -547,7 +567,9 @@ class SqlContentEntityStorageSchemaTest extends UnitTestCase {
     $this->setUpStorageSchema($expected);
 
     $table_mapping = new DefaultTableMapping($this->entityType, $this->storageDefinitions);
-    $table_mapping->setFieldNames('entity_test', array_keys($this->storageDefinitions));
+    $non_data_fields = array_keys($this->storageDefinitions);
+    unset($non_data_fields[array_search('default_langcode', $non_data_fields)]);
+    $table_mapping->setFieldNames('entity_test', $non_data_fields);
     $table_mapping->setFieldNames('entity_test_field_data', array_keys($this->storageDefinitions));
 
     $this->storage->expects($this->any())
@@ -601,6 +623,14 @@ class SqlContentEntityStorageSchemaTest extends UnitTestCase {
       'columns' => array(
         'value' => array(
           'type' => 'varchar',
+        ),
+      ),
+    ));
+    $this->setUpStorageDefinition('default_langcode', array(
+      'columns' => array(
+        'value' => array(
+          'type' => 'int',
+          'size' => 'tiny',
         ),
       ),
     ));
@@ -677,11 +707,21 @@ class SqlContentEntityStorageSchemaTest extends UnitTestCase {
             'type' => 'varchar',
             'not null' => TRUE,
           ),
+          'default_langcode' => array(
+            'type' => 'int',
+            'size' => 'tiny',
+            'not null' => true,
+          ),
         ),
         'primary key' => array('id', 'langcode'),
         'unique keys' => array(),
         'indexes' => array(
           'entity_test__revision_id' => array('revision_id'),
+          'entity_test__id__default_langcode__langcode' => array(
+            0 => 'id',
+            1 => 'default_langcode',
+            2 => 'langcode',
+          ),
         ),
         'foreign keys' => array(
           'entity_test' => array(
@@ -705,10 +745,21 @@ class SqlContentEntityStorageSchemaTest extends UnitTestCase {
             'type' => 'varchar',
             'not null' => TRUE,
           ),
+          'default_langcode' => array(
+            'type' => 'int',
+            'size' => 'tiny',
+            'not null' => true,
+          ),
         ),
         'primary key' => array('revision_id', 'langcode'),
         'unique keys' => array(),
-        'indexes' => array(),
+        'indexes' => array(
+          'entity_test__id__default_langcode__langcode' => array(
+            0 => 'id',
+            1 => 'default_langcode',
+            2 => 'langcode',
+          ),
+        ),
         'foreign keys' => array(
           'entity_test' => array(
             'table' => 'entity_test',
@@ -725,8 +776,10 @@ class SqlContentEntityStorageSchemaTest extends UnitTestCase {
     $this->setUpStorageSchema($expected);
 
     $table_mapping = new DefaultTableMapping($this->entityType, $this->storageDefinitions);
-    $table_mapping->setFieldNames('entity_test', array_keys($this->storageDefinitions));
-    $table_mapping->setFieldNames('entity_test_revision', array_keys($this->storageDefinitions));
+    $non_data_fields = array_keys($this->storageDefinitions);
+    unset($non_data_fields[array_search('default_langcode', $non_data_fields)]);
+    $table_mapping->setFieldNames('entity_test', $non_data_fields);
+    $table_mapping->setFieldNames('entity_test_revision', $non_data_fields);
     $table_mapping->setFieldNames('entity_test_field_data', array_keys($this->storageDefinitions));
     $table_mapping->setFieldNames('entity_test_revision_field_data', array_keys($this->storageDefinitions));
 
@@ -802,7 +855,7 @@ class SqlContentEntityStorageSchemaTest extends UnitTestCase {
         'description' => "Data storage for $entity_type_id field $field_name.",
         'fields' => array(
           'bundle' => array(
-            'type' => 'varchar',
+            'type' => 'varchar_ascii',
             'length' => 128,
             'not null' => true,
             'default' => '',
@@ -828,7 +881,7 @@ class SqlContentEntityStorageSchemaTest extends UnitTestCase {
             'description' => 'The entity revision id this data is attached to, which for an unversioned entity type is the same as the entity id',
           ),
           'langcode' => array(
-            'type' => 'varchar',
+            'type' => 'varchar_ascii',
             'length' => 32,
             'not null' => true,
             'default' => '',
@@ -947,7 +1000,7 @@ class SqlContentEntityStorageSchemaTest extends UnitTestCase {
         'description' => "Data storage for $entity_type_id field $field_name.",
         'fields' => array(
           'bundle' => array(
-            'type' => 'varchar',
+            'type' => 'varchar_ascii',
             'length' => 128,
             'not null' => true,
             'default' => '',
@@ -961,19 +1014,19 @@ class SqlContentEntityStorageSchemaTest extends UnitTestCase {
             'description' => 'A boolean indicating whether this data item has been deleted',
           ),
           'entity_id' => array(
-            'type' => 'varchar',
+            'type' => 'varchar_ascii',
             'length' => 128,
             'not null' => true,
             'description' => 'The entity id this data is attached to',
           ),
           'revision_id' => array(
-            'type' => 'varchar',
+            'type' => 'varchar_ascii',
             'length' => 128,
             'not null' => true,
             'description' => 'The entity revision id this data is attached to, which for an unversioned entity type is the same as the entity id',
           ),
           'langcode' => array(
-            'type' => 'varchar',
+            'type' => 'varchar_ascii',
             'length' => 32,
             'not null' => true,
             'default' => '',

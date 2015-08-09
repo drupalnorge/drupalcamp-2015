@@ -34,22 +34,32 @@ class UpdateManagerInstall extends FormBase {
   protected $root;
 
   /**
+   * The site path.
+   *
+   * @var string
+   */
+  protected $sitePath;
+
+  /**
    * Constructs a new UpdateManagerInstall.
    *
    * @param string $root
    *   The app root.
    * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
    *   The module handler.
+   * @param string $site_path
+   *   The site path.
    */
-  public function __construct($root, ModuleHandlerInterface $module_handler) {
+  public function __construct($root, ModuleHandlerInterface $module_handler, $site_path) {
     $this->root = $root;
     $this->moduleHandler = $module_handler;
+    $this->sitePath = $site_path;
   }
 
   /**
    * {@inheritdoc}
    */
-  public function getFormID() {
+  public function getFormId() {
     return 'update_manager_install_form';
   }
 
@@ -59,7 +69,8 @@ class UpdateManagerInstall extends FormBase {
   public static function create(ContainerInterface $container) {
     return new static(
       $container->get('app.root'),
-      $container->get('module_handler')
+      $container->get('module_handler'),
+      $container->get('site.path')
     );
   }
 
@@ -75,9 +86,9 @@ class UpdateManagerInstall extends FormBase {
     $form['help_text'] = array(
       '#prefix' => '<p>',
       '#markup' => $this->t('You can find <a href="@module_url">modules</a> and <a href="@theme_url">themes</a> on <a href="@drupal_org_url">drupal.org</a>. The following file extensions are supported: %extensions.', array(
-        '@module_url' => 'http://drupal.org/project/modules',
-        '@theme_url' => 'http://drupal.org/project/themes',
-        '@drupal_org_url' => 'http://drupal.org',
+        '@module_url' => 'https://www.drupal.org/project/modules',
+        '@theme_url' => 'https://www.drupal.org/project/themes',
+        '@drupal_org_url' => 'https://www.drupal.org',
         '%extensions' => archiver_get_extensions(),
       )),
       '#suffix' => '</p>',
@@ -217,7 +228,7 @@ class UpdateManagerInstall extends FormBase {
     // install the code, there's no need to prompt for FTP/SSH credentials.
     // Instead, we instantiate a Drupal\Core\FileTransfer\Local and invoke
     // update_authorize_run_install() directly.
-    if (fileowner($project_real_location) == fileowner(conf_path())) {
+    if (fileowner($project_real_location) == fileowner($this->sitePath)) {
       $this->moduleHandler->loadInclude('update', 'inc', 'update.authorize');
       $filetransfer = new Local($this->root);
       call_user_func_array('update_authorize_run_install', array_merge(array($filetransfer), $arguments));

@@ -8,6 +8,7 @@
 namespace Drupal\system\Controller;
 
 use Drupal\Component\Serialization\Json;
+use Drupal\Core\Cache\CacheableMetadata;
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\Core\Entity\Query\QueryFactory;
 use Drupal\Core\Extension\ThemeHandlerInterface;
@@ -128,8 +129,16 @@ class SystemController extends ControllerBase {
       array('callable' => 'menu.default_tree_manipulators:generateIndexAndSort'),
     );
     $tree = $this->menuLinkTree->transform($tree, $manipulators);
+    $tree_access_cacheability = new CacheableMetadata();
     $blocks = array();
     foreach ($tree as $key => $element) {
+      $tree_access_cacheability = $tree_access_cacheability->merge(CacheableMetadata::createFromObject($element->access));
+
+      // Only render accessible links.
+      if (!$element->access->isAllowed()) {
+        continue;
+      }
+
       $link = $element->link;
       $block['title'] = $link->getTitle();
       $block['description'] = $link->getDescription();
@@ -145,15 +154,19 @@ class SystemController extends ControllerBase {
 
     if ($blocks) {
       ksort($blocks);
-      return array(
+      $build = [
         '#theme' => 'admin_page',
         '#blocks' => $blocks,
-      );
+      ];
+      $tree_access_cacheability->applyTo($build);
+      return $build;
     }
     else {
-      return array(
+      $build = [
         '#markup' => $this->t('You do not have any administrative items.'),
-      );
+      ];
+      $tree_access_cacheability->applyTo($build);
+      return $build;
     }
   }
 
@@ -228,9 +241,10 @@ class SystemController extends ControllerBase {
 
       if (empty($theme->status)) {
         // Ensure this theme is compatible with this version of core.
+        $theme->incompatible_core = !isset($theme->info['core']) || ($theme->info['core'] != \DRUPAL::CORE_COMPATIBILITY);
         // Require the 'content' region to make sure the main page
         // content has a common place in all themes.
-        $theme->incompatible_core = !isset($theme->info['core']) || ($theme->info['core'] != \DRUPAL::CORE_COMPATIBILITY) || !isset($theme->info['regions']['content']);
+        $theme->incompatible_region = !isset($theme->info['regions']['content']);
         $theme->incompatible_php = version_compare(phpversion(), $theme->info['php']) < 0;
         // Confirmed that the base theme is available.
         $theme->incompatible_base = isset($theme->info['base theme']) && !isset($themes[$theme->info['base theme']]);

@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\system\Tests\Entity\EntityFieldTest.
+ * Contains \Drupal\system\Tests\Entity\EntityFieldTest.
  */
 
 namespace Drupal\system\Tests\Entity;
@@ -58,6 +58,7 @@ class EntityFieldTest extends EntityUnitTestBase  {
     }
 
     // Create the test field.
+    module_load_install('entity_test');
     entity_test_install();
 
     // Install required default configuration for filter module.
@@ -593,12 +594,12 @@ class EntityFieldTest extends EntityUnitTestBase  {
   public function testDataTypes() {
     $types = \Drupal::typedDataManager()->getDefinitions();
     foreach (entity_test_entity_types() as $entity_type) {
-      $this->assertTrue($types['entity:' . $entity_type]['class'], 'Entity data type registed.');
+      $this->assertTrue($types['entity:' . $entity_type]['class'], 'Entity data type registered.');
     }
     // Check bundle types are provided as well.
     entity_test_create_bundle('bundle');
     $types = \Drupal::typedDataManager()->getDefinitions();
-    $this->assertTrue($types['entity:entity_test:bundle']['class'], 'Entity bundle data type registed.');
+    $this->assertTrue($types['entity:entity_test:bundle']['class'], 'Entity bundle data type registered.');
   }
 
   /**

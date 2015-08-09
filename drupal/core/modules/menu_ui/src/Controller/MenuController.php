@@ -7,7 +7,7 @@
 
 namespace Drupal\menu_ui\Controller;
 
-use Drupal\Component\Utility\Xss;
+use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\Core\Menu\MenuParentFormSelectorInterface;
 use Drupal\system\MenuInterface;
@@ -60,6 +60,8 @@ class MenuController extends ControllerBase {
         $available_menus[$menu] = $menu;
       }
     }
+    // @todo Update this to use the optional $cacheability parameter, so that
+    //   a cacheable JSON response can be sent.
     $options = $this->menuParentSelector->getParentSelectOptions('', $available_menus);
 
     return new JsonResponse($options);
@@ -75,7 +77,7 @@ class MenuController extends ControllerBase {
    *   The menu label.
    */
   public function menuTitle(MenuInterface $menu) {
-    return Xss::filter($menu->label());
+    return SafeMarkup::xssFilter($menu->label());
   }
 
 }

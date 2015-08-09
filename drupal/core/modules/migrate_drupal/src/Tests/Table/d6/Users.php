@@ -2,11 +2,11 @@
 
 /**
  * @file
- * Contains \Drupal\migrate_drupal\Tests\Dump\Users.
+ * Contains \Drupal\migrate_drupal\Tests\Table\d6\Users.
  *
  * THIS IS A GENERATED FILE. DO NOT EDIT.
  *
- * @see cores/scripts/dump-database-d6.sh
+ * @see core/scripts/migrate-db.sh
  * @see https://www.drupal.org/sandbox/benjy/2405029
  */
 
@@ -52,19 +52,19 @@ class Users extends DrupalDumpBase {
         'mode' => array(
           'type' => 'int',
           'not null' => TRUE,
-          'length' => '4',
+          'length' => '11',
           'default' => '0',
         ),
         'sort' => array(
           'type' => 'int',
           'not null' => FALSE,
-          'length' => '4',
+          'length' => '11',
           'default' => '0',
         ),
         'threshold' => array(
           'type' => 'int',
           'not null' => FALSE,
-          'length' => '4',
+          'length' => '11',
           'default' => '0',
         ),
         'theme' => array(
@@ -82,7 +82,7 @@ class Users extends DrupalDumpBase {
         'signature_format' => array(
           'type' => 'int',
           'not null' => TRUE,
-          'length' => '6',
+          'length' => '11',
           'default' => '0',
         ),
         'created' => array(
@@ -106,7 +106,7 @@ class Users extends DrupalDumpBase {
         'status' => array(
           'type' => 'int',
           'not null' => TRUE,
-          'length' => '4',
+          'length' => '11',
           'default' => '0',
         ),
         'timezone' => array(
@@ -161,6 +161,7 @@ class Users extends DrupalDumpBase {
           'default' => '0',
         ),
       ),
+      'mysql_character_set' => 'utf8',
     ));
     $this->database->insert("users")->fields(array(
       'uid',
@@ -311,3 +312,4 @@ class Users extends DrupalDumpBase {
   }
 
 }
+#ce6d7264b7ef5ed1ffe854326893e1e0

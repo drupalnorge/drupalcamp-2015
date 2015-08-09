@@ -8,6 +8,7 @@
 namespace Drupal\Tests\Component\Utility;
 
 use Drupal\Component\Utility\SafeMarkup;
+use Drupal\Component\Utility\Xss;
 use Drupal\Tests\UnitTestCase;
 
 /**
@@ -67,6 +68,18 @@ class SafeMarkupTest extends UnitTestCase {
     $this->assertFalse(SafeMarkup::isSafe($returned), 'String set with "css" provider is not safe for default (html)');
     $returned = SafeMarkup::set('string3');
     $this->assertFalse(SafeMarkup::isSafe($returned, 'all'), 'String set with "html" provider is not safe for "all"');
+  }
+
+  /**
+   * Tests SafeMarkup::isSafe() with different objects.
+   *
+   * @covers ::isSafe
+   */
+  public function testIsSafe() {
+    $safe_string = $this->getMock('\Drupal\Component\Utility\SafeStringInterface');
+    $this->assertTrue(SafeMarkup::isSafe($safe_string));
+    $string_object = new SafeMarkupTestString('test');
+    $this->assertFalse(SafeMarkup::isSafe($string_object));
   }
 
   /**
@@ -186,6 +199,124 @@ class SafeMarkupTest extends UnitTestCase {
    */
   function testPlaceholder() {
     $this->assertEquals('<em class="placeholder">Some text</em>', SafeMarkup::placeholder('Some text'));
+  }
+
+  /**
+   * Tests SafeMarkup::replace().
+   *
+   * @dataProvider providerReplace
+   * @covers ::replace
+   */
+  public function testReplace($search, $replace, $subject, $expected, $is_safe) {
+    $result = SafeMarkup::replace($search, $replace, $subject);
+    $this->assertEquals($expected, $result);
+    $this->assertEquals($is_safe, SafeMarkup::isSafe($result));
+  }
+
+  /**
+   * Tests the interaction between the safe list and XSS filtering.
+   *
+   * @covers ::xssFilter
+   * @covers ::escape
+   */
+  public function testAdminXss() {
+    // Use the predefined XSS admin tag list. This strips the <marquee> tags.
+    $this->assertEquals('text', SafeMarkup::xssFilter('<marquee>text</marquee>', Xss::getAdminTagList()));
+    $this->assertTrue(SafeMarkup::isSafe('text'), 'The string \'text\' is marked as safe.');
+
+    // This won't strip the <marquee> tags and the string with HTML will be
+    // marked as safe.
+    $filtered = SafeMarkup::xssFilter('<marquee>text</marquee>', array('marquee'));
+    $this->assertEquals('<marquee>text</marquee>', $filtered);
+    $this->assertTrue(SafeMarkup::isSafe('<marquee>text</marquee>'), 'The string \'<marquee>text</marquee>\' is marked as safe.');
+
+    // SafeMarkup::xssFilter() with the default tag list will strip the
+    // <marquee> tag even though the string was marked safe above.
+    $this->assertEquals('text', SafeMarkup::xssFilter('<marquee>text</marquee>'));
+
+    // SafeMarkup::escape() will not escape the markup tag since the string was
+    // marked safe above.
+    $this->assertEquals('<marquee>text</marquee>', SafeMarkup::escape($filtered));
+
+    // SafeMarkup::checkPlain() will escape the markup tag even though the
+    // string was marked safe above.
+    $this->assertEquals('&lt;marquee&gt;text&lt;/marquee&gt;', SafeMarkup::checkPlain($filtered));
+
+    // Ensure that SafeMarkup::xssFilter strips all tags when passed an empty
+    // array and uses the default tag list when not passed a tag list.
+    $this->assertEquals('text', SafeMarkup::xssFilter('<em>text</em>', []));
+    $this->assertEquals('<em>text</em>', SafeMarkup::xssFilter('<em>text</em>'));
+  }
+
+  /**
+   * Data provider for testReplace().
+   *
+   * @see testReplace()
+   */
+  public function providerReplace() {
+    $tests = [];
+
+    // Subject unsafe.
+    $tests[] = [
+      '<placeholder>',
+      SafeMarkup::set('foo'),
+      '<placeholder>bazqux',
+      'foobazqux',
+      FALSE,
+    ];
+
+    // All safe.
+    $tests[] = [
+      '<placeholder>',
+      SafeMarkup::set('foo'),
+      SafeMarkup::set('<placeholder>barbaz'),
+      'foobarbaz',
+      TRUE,
+    ];
+
+    // Safe subject, but should result in unsafe string because replacement is
+    // unsafe.
+    $tests[] = [
+      '<placeholder>',
+      'fubar',
+      SafeMarkup::set('<placeholder>barbaz'),
+      'fubarbarbaz',
+      FALSE,
+    ];
+
+    // Array with all safe.
+    $tests[] = [
+      ['<placeholder1>', '<placeholder2>', '<placeholder3>'],
+      [SafeMarkup::set('foo'), SafeMarkup::set('bar'), SafeMarkup::set('baz')],
+      SafeMarkup::set('<placeholder1><placeholder2><placeholder3>'),
+      'foobarbaz',
+      TRUE,
+    ];
+
+    // Array with unsafe replacement.
+    $tests[] = [
+      ['<placeholder1>', '<placeholder2>', '<placeholder3>',],
+      [SafeMarkup::set('bar'), SafeMarkup::set('baz'), 'qux'],
+      SafeMarkup::set('<placeholder1><placeholder2><placeholder3>'),
+      'barbazqux',
+      FALSE,
+    ];
+
+    return $tests;
+  }
+
+}
+
+class SafeMarkupTestString {
+
+  protected $string;
+
+  public function __construct($string) {
+    $this->string = $string;
+  }
+
+  public function __toString() {
+    return $this->string;
   }
 
 }

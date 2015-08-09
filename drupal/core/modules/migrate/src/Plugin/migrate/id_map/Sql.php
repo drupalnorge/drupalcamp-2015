@@ -261,6 +261,12 @@ class Sql extends PluginBase implements MigrateIdMapInterface {
       foreach ($this->migration->getSourcePlugin()->getIds() as $id_definition) {
         $mapkey = 'sourceid' . $count++;
         $source_id_schema[$mapkey] = $this->getFieldSchema($id_definition);
+
+        // With InnoDB, utf8mb4-based primary keys can't be over 191 characters.
+        // Use ASCII-based primary keys instead.
+        if (isset($source_id_schema[$mapkey]['type']) && $source_id_schema[$mapkey]['type'] == 'varchar') {
+          $source_id_schema[$mapkey]['type'] = 'varchar_ascii';
+        }
         $pks[] = $mapkey;
       }
 
@@ -315,34 +321,36 @@ class Sql extends PluginBase implements MigrateIdMapInterface {
       $this->getDatabase()->schema()->createTable($this->mapTableName, $schema);
 
       // Now do the message table.
-      $fields = array();
-      $fields['msgid'] = array(
-        'type' => 'serial',
-        'unsigned' => TRUE,
-        'not null' => TRUE,
-      );
-      $fields += $source_id_schema;
+      if (!$this->getDatabase()->schema()->tableExists($this->messageTableName())) {
+        $fields = array();
+        $fields['msgid'] = array(
+          'type' => 'serial',
+          'unsigned' => TRUE,
+          'not null' => TRUE,
+        );
+        $fields += $source_id_schema;
 
-      $fields['level'] = array(
-        'type' => 'int',
-        'unsigned' => TRUE,
-        'not null' => TRUE,
-        'default' => 1,
-      );
-      $fields['message'] = array(
-        'type' => 'text',
-        'size' => 'medium',
-        'not null' => TRUE,
-      );
-      $schema = array(
-        'description' => 'Messages generated during a migration process',
-        'fields' => $fields,
-        'primary key' => array('msgid'),
-      );
-      if ($pks) {
-        $schema['indexes']['sourcekey'] = $pks;
+        $fields['level'] = array(
+          'type' => 'int',
+          'unsigned' => TRUE,
+          'not null' => TRUE,
+          'default' => 1,
+        );
+        $fields['message'] = array(
+          'type' => 'text',
+          'size' => 'medium',
+          'not null' => TRUE,
+        );
+        $schema = array(
+          'description' => 'Messages generated during a migration process',
+          'fields' => $fields,
+          'primary key' => array('msgid'),
+        );
+        if ($pks) {
+          $schema['indexes']['sourcekey'] = $pks;
+        }
+        $this->getDatabase()->schema()->createTable($this->messageTableName(), $schema);
       }
-      $this->getDatabase()->schema()->createTable($this->messageTableName(), $schema);
     }
     else {
       // Add any missing columns to the map table.
