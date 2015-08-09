@@ -40,7 +40,7 @@
 <html{{ html_attributes }}>
   <head>
     {{ head }}
-    <title>{{ head_title }}</title>
+    <title>{{ head_title|safe_join(' | ') }}</title>
     {{ styles }}
     {{ scripts }}
     <link type="text/css" rel="stylesheet" href="http://fonts.googleapis.com/css?family=Istok+Web%7COpen+Sans:400,300,600,700,800" media="all" />
