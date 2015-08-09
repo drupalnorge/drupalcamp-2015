@@ -2,6 +2,8 @@
 
 /**
  * @file
+ * Contains \Drupal\forum\Tests\ForumTest.
+ *
  * Tests for forum.module.
  */
 
@@ -392,12 +394,12 @@ class ForumTest extends WebTestBase {
   /**
    * Creates a forum container or a forum.
    *
-   * @param $type
+   * @param string $type
    *   The forum type (forum container or forum).
-   * @param $parent
+   * @param int $parent
    *   The forum parent. This defaults to 0, indicating a root forum.
    *
-   * @return
+   * @return \Drupal\Core\Database\StatementInterface
    *   The created taxonomy term data.
    */
   function createForum($type, $parent = 0) {
@@ -441,7 +443,7 @@ class ForumTest extends WebTestBase {
   /**
    * Deletes a forum.
    *
-   * @param $tid
+   * @param int $tid
    *   The forum ID.
    */
   function deleteForum($tid) {
@@ -461,9 +463,9 @@ class ForumTest extends WebTestBase {
   /**
    * Runs basic tests on the indicated user.
    *
-   * @param $user
+   * @param \Drupal\Core\Session\AccountInterface $user
    *   The logged in user.
-   * @param $admin
+   * @param bool $admin
    *   User has 'access administration pages' privilege.
    */
   private function doBasicTests($user, $admin) {
@@ -565,9 +567,9 @@ class ForumTest extends WebTestBase {
    *
    * @param \Drupal\Core\Entity\EntityInterface $node
    *   The node being checked.
-   * @param $admin
+   * @param bool $admin
    *   Boolean to indicate whether the user can 'access administration pages'.
-   * @param $response
+   * @param int $response
    *   The expected HTTP response code.
    */
   private function verifyForums(EntityInterface $node, $admin, $response = 200) {
@@ -602,7 +604,7 @@ class ForumTest extends WebTestBase {
       '#theme' => 'breadcrumb',
       '#links' => $breadcrumb_build,
     );
-    $this->assertRaw(drupal_render($breadcrumb), 'Breadcrumbs were displayed');
+    $this->assertRaw(\Drupal::service('renderer')->renderRoot($breadcrumb), 'Breadcrumbs were displayed');
 
     // View forum edit node.
     $this->drupalGet('node/' . $node->id() . '/edit');
@@ -639,9 +641,9 @@ class ForumTest extends WebTestBase {
   /**
    * Verifies the display of a forum page.
    *
-   * @param $forum
+   * @param array $forum
    *   A row from the taxonomy_term_data table in an array.
-   * @param $parent
+   * @param array $parent
    *   (optional) An array representing the forum's parent.
    */
   private function verifyForumView($forum, $parent = NULL) {
@@ -662,7 +664,7 @@ class ForumTest extends WebTestBase {
       '#theme' => 'breadcrumb',
       '#links' => $breadcrumb_build,
     );
-    $this->assertRaw(drupal_render($breadcrumb), 'Breadcrumbs were displayed');
+    $this->assertRaw(\Drupal::service('renderer')->renderRoot($breadcrumb), 'Breadcrumbs were displayed');
   }
 
   /**

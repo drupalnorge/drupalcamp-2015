@@ -16,6 +16,7 @@ use Drupal\Component\Utility\Xss;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Render\Renderer;
+use Drupal\Core\Render\SafeString;
 use Drupal\Core\Url as CoreUrl;
 use Drupal\views\Plugin\views\HandlerBase;
 use Drupal\views\Plugin\views\display\DisplayPluginBase;
@@ -394,7 +395,7 @@ abstract class FieldPluginBase extends HandlerBase implements FieldHandlerInterf
     if ($relationship_id == 'none') {
       return $values->_entity;
     }
-    else {
+    elseif (isset($values->_relationship_entities[$relationship_id])) {
       return $values->_relationship_entities[$relationship_id];
     }
   }
@@ -875,10 +876,16 @@ abstract class FieldPluginBase extends HandlerBase implements FieldHandlerInterf
       $this->documentSelfTokens($options[t('Fields')]);
 
       // Default text.
-      $output = '<p>' . $this->t('You must add some additional fields to this display before using this field. These fields may be marked as <em>Exclude from display</em> if you prefer. Note that due to rendering order, you cannot use fields that come after this field; if you need a field not listed here, rearrange your fields.') . '</p>';
+
+      $output = [];
+      $output[] = [
+        '#markup' => '<p>' . $this->t('You must add some additional fields to this display before using this field. These fields may be marked as <em>Exclude from display</em> if you prefer. Note that due to rendering order, you cannot use fields that come after this field; if you need a field not listed here, rearrange your fields.') . '</p>',
+      ];
       // We have some options, so make a list.
       if (!empty($options)) {
-        $output = '<p>' . $this->t("The following replacement tokens are available for this field. Note that due to rendering order, you cannot use fields that come after this field; if you need a field not listed here, rearrange your fields.") . '</p>';
+        $output[] = [
+          '#markup' => '<p>' . $this->t("The following replacement tokens are available for this field. Note that due to rendering order, you cannot use fields that come after this field; if you need a field not listed here, rearrange your fields.") . '</p>',
+        ];
         foreach (array_keys($options) as $type) {
           if (!empty($options[$type])) {
             $items = array();
@@ -890,7 +897,7 @@ abstract class FieldPluginBase extends HandlerBase implements FieldHandlerInterf
               '#items' => $items,
               '#list_type' => $type,
             );
-            $output .= $this->getRenderer()->render($item_list);
+            $output[] = $item_list;
           }
         }
       }
@@ -901,7 +908,7 @@ abstract class FieldPluginBase extends HandlerBase implements FieldHandlerInterf
       $form['alter']['help'] = array(
         '#type' => 'details',
         '#title' => $this->t('Replacement patterns'),
-        '#value' => SafeMarkup::set($output),
+        '#value' => $output,
         '#states' => array(
           'visible' => array(
             array(
@@ -984,7 +991,7 @@ abstract class FieldPluginBase extends HandlerBase implements FieldHandlerInterf
         '#type' => 'textfield',
         '#title' => $this->t('More link path'),
         '#default_value' => $this->options['alter']['more_link_path'],
-        '#description' => $this->t('This can be an internal Drupal path such as node/add or an external URL such as "http://drupal.org". You may use the "Replacement patterns" above.'),
+        '#description' => $this->t('This can be an internal Drupal path such as node/add or an external URL such as "https://www.drupal.org". You may use the "Replacement patterns" above.'),
         '#states' => array(
           'visible' => array(
             ':input[name="options[alter][trim]"]' => array('checked' => TRUE),
@@ -1110,6 +1117,16 @@ abstract class FieldPluginBase extends HandlerBase implements FieldHandlerInterf
   /**
    * {@inheritdoc}
    */
+  public function postRender(ResultRow $row, $output) {
+    // Make sure the last rendered value is available also when this is
+    // retrieved from cache.
+    $this->last_render = $output;
+    return [];
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function advancedRender(ResultRow $values) {
     if ($this->allowAdvancedRender() && $this instanceof MultiItemsFieldHandlerInterface) {
       $raw_items = $this->getItems($values);
@@ -1121,7 +1138,7 @@ abstract class FieldPluginBase extends HandlerBase implements FieldHandlerInterf
     else {
       $value = $this->render($values);
       if (is_array($value)) {
-        $value = $this->getRenderer()->render($value);
+        $value = (string) $this->getRenderer()->render($value);
       }
       $this->last_render = $value;
       $this->original_value = $value;
@@ -1134,7 +1151,7 @@ abstract class FieldPluginBase extends HandlerBase implements FieldHandlerInterf
         foreach ($raw_items as $count => $item) {
           $value = $this->render_item($count, $item);
           if (is_array($value)) {
-            $value = $this->getRenderer()->render($value);
+            $value = (string) $this->getRenderer()->render($value);
           }
           $this->last_render = $value;
           $this->original_value = $this->last_render;
@@ -1152,7 +1169,7 @@ abstract class FieldPluginBase extends HandlerBase implements FieldHandlerInterf
       }
 
       if (is_array($value)) {
-        $value = $this->getRenderer()->render($value);
+        $value = (string) $this->getRenderer()->render($value);
       }
       // This happens here so that renderAsLink can get the unaltered value of
       // this field as a token rather than the altered value.
@@ -1168,7 +1185,7 @@ abstract class FieldPluginBase extends HandlerBase implements FieldHandlerInterf
         $this->last_render = $this->renderText($alter);
       }
     }
-    // @todo Fix this in https://www.drupal.org/node/2280961
+    // @todo Fix this in https://www.drupal.org/node/2280961.
     $this->last_render = SafeMarkup::set($this->last_render);
 
 
@@ -1247,9 +1264,9 @@ abstract class FieldPluginBase extends HandlerBase implements FieldHandlerInterf
           $more_link_path = Unicode::substr($more_link_path, Unicode::strlen($base_path));
         }
 
-        // @todo Views should expect and store a leading /. See:
-        //   https://www.drupal.org/node/2423913
-        $more_link = \Drupal::l($more_link_text, CoreUrl::fromUserInput('/' . $more_link_path), array('attributes' => array('class' => array('views-more-link'))));
+        // @todo Views should expect and store a leading /. See
+        //   https://www.drupal.org/node/2423913.
+        $more_link = \Drupal::l($more_link_text, CoreUrl::fromUserInput('/' . $more_link_path, array('attributes' => array('class' => array('views-more-link')))));
 
         $suffix .= " " . $more_link;
       }
@@ -1274,9 +1291,7 @@ abstract class FieldPluginBase extends HandlerBase implements FieldHandlerInterf
    * Render this field as user-defined altered text.
    */
   protected function renderAltered($alter, $tokens) {
-    // Filter this right away as our substitutions are already sanitized.
-    $template = Xss::filterAdmin($alter['text']);
-    return $this->viewsTokenReplace($template, $tokens);
+    return SafeString::create($this->viewsTokenReplace($alter['text'], $tokens));
   }
 
   /**
@@ -1313,8 +1328,8 @@ abstract class FieldPluginBase extends HandlerBase implements FieldHandlerInterf
     $path = $alter['path'];
     if (empty($alter['url'])) {
       if (!parse_url($path, PHP_URL_SCHEME)) {
-        // @todo Views should expect and store a leading /. See:
-        //   https://www.drupal.org/node/2423913
+        // @todo Views should expect and store a leading /. See
+        //   https://www.drupal.org/node/2423913.
         $alter['url'] = CoreUrl::fromUserInput('/' . ltrim($path, '/'));
       }
       else {
@@ -1518,11 +1533,14 @@ abstract class FieldPluginBase extends HandlerBase implements FieldHandlerInterf
 
     // Now add replacements for our fields.
     foreach ($this->displayHandler->getHandlers('field') as $field => $handler) {
+      /** @var static $handler */
+      $placeholder = $handler->getFieldTokenPlaceholder();
+
       if (isset($handler->last_render)) {
-        $tokens["{{ $field }}"] = $handler->last_render;
+        $tokens[$placeholder] = $handler->last_render;
       }
       else {
-        $tokens["{{ $field }}"] = '';
+        $tokens[$placeholder] = '';
       }
 
       // We only use fields up to (and including) this one.
@@ -1539,6 +1557,16 @@ abstract class FieldPluginBase extends HandlerBase implements FieldHandlerInterf
     }
 
     return $tokens;
+  }
+
+  /**
+   * Returns a token placeholder for the current field.
+   *
+   * @return string
+   *   A token placeholder.
+   */
+  protected function getFieldTokenPlaceholder() {
+    return '{{ ' . $this->options['id'] . ' }}';
   }
 
   /**

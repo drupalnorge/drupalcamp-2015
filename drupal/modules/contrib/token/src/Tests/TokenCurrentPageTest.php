@@ -27,7 +27,7 @@ class TokenCurrentPageTest extends TokenTestBase {
       '[current-page:url]' => \Drupal::url('user.login', [], array('absolute' => TRUE)),
       '[current-page:url:absolute]' => \Drupal::url('user.login', [], array('absolute' => TRUE)),
       '[current-page:url:relative]' => \Drupal::url('user.login'),
-      '[current-page:url:path]' => 'user/login',
+      '[current-page:url:path]' => '/user/login',
       '[current-page:url:args:value:0]' => 'user',
       '[current-page:url:args:value:1]' => 'login',
       '[current-page:url:args:value:2]' => NULL,
@@ -43,13 +43,13 @@ class TokenCurrentPageTest extends TokenTestBase {
     $this->assertPageTokens('user/login', $tokens);
 
     $this->drupalCreateContentType(array('type' => 'page'));
-    $node = $this->drupalCreateNode(array('title' => 'Node title', 'path' => array('alias' => 'node-alias')));
+    $node = $this->drupalCreateNode(array('title' => 'Node title', 'path' => array('alias' => '/node-alias')));
     $tokens = array(
       '[current-page:title]' => 'Node title',
       '[current-page:url]' => $node->url('canonical', array('absolute' => TRUE)),
       '[current-page:url:absolute]' => $node->url('canonical', array('absolute' => TRUE)),
       '[current-page:url:relative]' => $node->url(),
-      '[current-page:url:alias]' => 'node-alias',
+      '[current-page:url:alias]' => '/node-alias',
       '[current-page:url:args:value:0]' => 'node-alias',
       '[current-page:url:args:value:1]' => NULL,
       '[current-page:url:unaliased]' => $node->url('canonical', array('absolute' => TRUE, 'alias' => TRUE)),
@@ -64,6 +64,6 @@ class TokenCurrentPageTest extends TokenTestBase {
       '[current-page:arg:1]' => 1,
       '[current-page:arg:2]' => NULL,
     );
-    $this->assertPageTokens("node/{$node->id()}", $tokens, array(), array('url_options' => array('query' => array('foo' => 'bar'))));
+    $this->assertPageTokens("/node/{$node->id()}", $tokens, array(), array('url_options' => array('query' => array('foo' => 'bar'))));
   }
 }

@@ -494,7 +494,9 @@ function template_preprocess_views_view_table(&$variables) {
           'attributes' => array('title' => $title),
           'query' => $query,
         );
-        $variables['header'][$field]['content'] = \Drupal::l($label, new Url('<current>', [], $link_options));
+        // It is ok to specify no URL path here as we will always reload the
+        // current page.
+        $variables['header'][$field]['content'] = \Drupal::l($label, new Url('<none>', [], $link_options));
       }
 
       $variables['header'][$field]['default_classes'] = $fields[$field]->options['element_default_classes'];
@@ -883,9 +885,7 @@ function template_preprocess_views_view_rss(&$variables) {
     // Compare the link to the default home page; if it's the default home page,
     // just use $base_url.
     $url_string = $url->setOptions($url_options)->toString();
-    // @todo Should page.front be stored with a leading slash? See
-    //   https://www.drupal.org/node/2430595.
-    if ($url_string === Url::fromUserInput('/' . $config->get('page.front'))->toString()) {
+    if ($url_string === Url::fromUserInput($config->get('page.front'))->toString()) {
       $url_string = Url::fromRoute('<front>')->setAbsolute()->toString();
     }
 
@@ -895,7 +895,7 @@ function template_preprocess_views_view_rss(&$variables) {
   $variables['langcode'] = SafeMarkup::checkPlain(\Drupal::languageManager()->getCurrentLanguage()->getId());
   $variables['namespaces'] = new Attribute($style->namespaces);
   $variables['items'] = $items;
-  $variables['channel_elements'] = format_xml_elements($style->channel_elements);
+  $variables['channel_elements'] = \Drupal::service('renderer')->render($style->channel_elements);
 
   // During live preview we don't want to output the header since the contents
   // of the feed are being displayed inside a normal HTML page.
@@ -915,11 +915,21 @@ function template_preprocess_views_view_rss(&$variables) {
  */
 function template_preprocess_views_view_row_rss(&$variables) {
   $item = $variables['row'];
-
-  $variables['title'] = SafeMarkup::checkPlain($item->title);
+  $variables['title'] = $item->title;
   $variables['link'] = $item->link;
-  $variables['description'] = SafeMarkup::checkPlain($item->description);
-  $variables['item_elements'] = empty($item->elements) ? '' : format_xml_elements($item->elements);
+
+  /** @var \Drupal\Core\Render\RendererInterface $renderer */
+  $renderer = \Drupal::service('renderer');
+  // We render the item description. It might contain entities, which attach rss
+  // elements via hook_entity_view, see comment_entity_view().
+  $variables['description'] = is_array($item->description) ? $renderer->render($item->description) : $item->description;
+  $variables['item_elements'] = array();
+  foreach ($item->elements as $element) {
+    if (isset($element['attributes']) && is_array($element['attributes'])) {
+      $element['attributes'] = new Attribute($element['attributes']);
+    }
+    $variables['item_elements'][] = $element;
+  }
 }
 
 /**
@@ -1032,7 +1042,6 @@ function template_preprocess_views_mini_pager(&$variables) {
     $variables['items']['previous']['attributes'] = new Attribute();
   }
 
-  $li_next = array();
   if ($pager_page_array[$element] < ($pager_total[$element] - 1)) {
     $options = array(
       'query' => pager_query_add_page($parameters, $element, $pager_page_array[$element] + 1),
@@ -1043,6 +1052,10 @@ function template_preprocess_views_mini_pager(&$variables) {
     }
     $variables['items']['next']['attributes'] = new Attribute();
   }
+
+  // This is is based on the entire current query string. We need to ensure
+  // cacheability is affected accordingly.
+  $variables['#cache']['contexts'][] = 'url.query_args';
 }
 
 /**

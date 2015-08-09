@@ -33,3 +33,7 @@ ul {
   list-style-type: disc;
   padding: 0 20px;
 }
+// Strange bug with some empty messages blocks. Just hack it away, I guess.
+.messages.messages-- {
+  display: none;
+}

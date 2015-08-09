@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\system\Tests\Form\FormTest.
+ * Contains \Drupal\system\Tests\Form\FormTest.
  */
 
 namespace Drupal\system\Tests\Form;
@@ -51,7 +51,7 @@ class FormTest extends WebTestBase {
    * If the form field is found in $form_state->getErrors() then the test pass.
    */
   function testRequiredFields() {
-    // Originates from http://drupal.org/node/117748
+    // Originates from https://www.drupal.org/node/117748.
     // Sets of empty strings and arrays.
     $empty_strings = array('""' => "", '"\n"' => "\n", '" "' => " ", '"\t"' => "\t", '" \n\t "' => " \n\t ", '"\n\n\n\n\n"' => "\n\n\n\n\n");
     $empty_arrays = array('array()' => array());
@@ -123,8 +123,8 @@ class FormTest extends WebTestBase {
           // Form elements of type 'radios' throw all sorts of PHP notices
           // when you try to render them like this, so we ignore those for
           // testing the required marker.
-          // @todo Fix this work-around (http://drupal.org/node/588438).
-          $form_output = ($type == 'radios') ? '' : drupal_render($form);
+          // @todo Fix this work-around (https://www.drupal.org/node/588438).
+          $form_output = ($type == 'radios') ? '' : \Drupal::service('renderer')->renderRoot($form);
           if ($required) {
             // Make sure we have a form error for this element.
             $this->assertTrue(isset($errors[$element]), "Check empty($key) '$type' field '$element'");
@@ -188,7 +188,7 @@ class FormTest extends WebTestBase {
     }
 
     // Check the page for error messages.
-    $errors = $this->xpath('//div[contains(@class, "error")]//li');
+    $errors = $this->xpath('//div[contains(@class, "form-item--error-message")]//strong');
     foreach ($errors as $error) {
       $expected_key = array_search($error[0], $expected);
       // If the error message is not one of the expected messages, fail.

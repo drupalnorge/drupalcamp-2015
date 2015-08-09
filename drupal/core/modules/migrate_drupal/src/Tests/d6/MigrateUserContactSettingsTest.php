@@ -7,10 +7,6 @@
 
 namespace Drupal\migrate_drupal\Tests\d6;
 
-use Drupal\Core\Database\Database;
-use Drupal\migrate\MigrateExecutable;
-use Drupal\migrate_drupal\Tests\d6\MigrateDrupal6TestBase;
-
 /**
  * Users contact settings migration.
  *
@@ -21,16 +17,22 @@ class MigrateUserContactSettingsTest extends MigrateDrupal6TestBase {
   /**
    * {@inheritdoc}
    */
+  public static $modules = ['contact'];
+
+  /**
+   * {@inheritdoc}
+   */
   protected function setUp() {
     parent::setUp();
 
-    $dumps = array(
-      $this->getDumpDirectory() . '/Users.php',
-      $this->getDumpDirectory() . '/ProfileValues.php',
-      $this->getDumpDirectory() . '/UsersRoles.php',
-      $this->getDumpDirectory() . '/EventTimezones.php',
-    );
-    $this->loadDumps($dumps);
+    $this->installSchema('user', array('users_data'));
+
+    $this->loadDumps([
+      'Users.php',
+      'ProfileValues.php',
+      'UsersRoles.php',
+      'EventTimezones.php',
+    ]);
 
     $id_mappings = array(
       'd6_user' => array(
@@ -39,13 +41,9 @@ class MigrateUserContactSettingsTest extends MigrateDrupal6TestBase {
         array(array(15), array(15)),
       ),
     );
-
     $this->prepareMigrations($id_mappings);
 
-    // Migrate users.
-    $migration = entity_load('migration', 'd6_user_contact_settings');
-    $executable = new MigrateExecutable($migration, $this);
-    $executable->import();
+    $this->executeMigration('d6_user_contact_settings');
   }
 
   /**

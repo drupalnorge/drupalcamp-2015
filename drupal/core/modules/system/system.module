@@ -12,6 +12,7 @@ use Drupal\Core\Extension\Extension;
 use Drupal\Core\Extension\ExtensionDiscovery;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\KeyValueStore\KeyValueDatabaseExpirableFactory;
+use Drupal\Core\PageCache\RequestPolicyInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\Menu\MenuTreeParameters;
@@ -87,8 +88,8 @@ function system_help($route_name, RouteMatchInterface $route_match) {
       $output .= '<dd>' . t('The System module provides pages for managing basic site configuration, including <a href="!date-time-settings">Date and time formats</a> and basic <a href="!site-info">Site information</a> (site name, email address to send mail from, home page, and error pages). Additional configuration pages are listed on the main <a href="!config">Configuration page</a>.', array('!date-time-settings' => \Drupal::url('entity.date_format.collection'), '!site-info' => \Drupal::url('system.site_information_settings'), '!config' => \Drupal::url('system.admin_config'))) . '</dd>';
       $output .= '<dt>' . t('Using maintenance mode') . '</dt>';
       $output .= '<dd>' . t('When you are performing site maintenance, you can prevent non-administrative users (including anonymous visitors) from viewing your site by putting it in <a href="!maintenance-mode">Maintenance mode</a>. This will prevent unauthorized users from making changes to the site while you are performing maintenance, or from seeing a broken site while updates are in progress.', array('!maintenance-mode' => \Drupal::url('system.site_maintenance_mode'))) . '</dd>';
-      $output .= '<dt>' . t('Managing the cache') . '</dt>';
-      $output .= '<dd>' . t('Users with appropriate permission can manage the system cache on the <a href="!cache-settings">Performance page</a>. If enabled, the cache system will re-use previously-built pages for anonymous page requests, instead of building them again. The site can also be configured to aggregate CSS and JavaScript files, making the total request size smaller. Depending on your site configuration and the amount of web traffic from anonymous visitors, the cache system may significantly increase the speed of your site.', array('!cache-settings' => \Drupal::url('system.performance_settings'))) . '</dd>';
+      $output .= '<dt>' . t('Configuring for performance') . '</dt>';
+      $output .= '<dd>' . t('On the <a href="!performance-page">Performance page</a>, the site can be configured to aggregate CSS and JavaScript files, making the total request size smaller. Note that, for small- to medium-sized websites, the <a href="!page-cache">Internal Page Cache module</a> should be installed so that pages are efficiently cached and reused.', array('!performance-page' => \Drupal::url('system.performance_settings'), '!page-cache' => (\Drupal::moduleHandler()->moduleExists('page_cache')) ? \Drupal::url('help.page', array('name' => 'page_cache')) : '#')) . '</dd>';
       $output .= '<dt>' . t('Configuring cron') . '</dt>';
       $output .= '<dd>' . t('In order for the site and its modules to continue to operate well, a set of routine administrative operations must run on a regular basis; these operations are known as <em>cron</em> tasks. On the <a href="!cron">Cron page</a>, you can configure cron to run periodically as part of normal page requests, or you can turn this off and trigger cron from an outside process on your web server. You can verify the status of cron tasks by visiting the <a href="!status">Status report page</a>. For more information, see the <a href="!handbook">online documentation for configuring cron jobs</a>.', array('!status' => \Drupal::url('system.status'), '!handbook' => 'https://www.drupal.org/cron', '!cron' => \Drupal::url('system.cron_settings'))) . '</dd>';
       $output .= '<dt>' . t('Configuring the file system') . '</dt>';
@@ -114,7 +115,7 @@ function system_help($route_name, RouteMatchInterface $route_match) {
       return '<p>' . t('These options control the default display settings for your entire site, across all themes. Unless they have been overridden by a specific theme, these settings will be used.') . '</p>';
 
     case 'system.modules_list':
-      $output = '<p>' . t('Download additional <a href="!modules">contributed modules</a> to extend your site\'s functionality.', array('!modules' => 'http://drupal.org/project/modules')) . '</p>';
+      $output = '<p>' . t('Download additional <a href="!modules">contributed modules</a> to extend your site\'s functionality.', array('!modules' => 'https://www.drupal.org/project/modules')) . '</p>';
       if (\Drupal::moduleHandler()->moduleExists('update')) {
         if (update_manager_access()) {
           $output .= '<p>' . t('Regularly review and install <a href="!updates">available updates</a> to maintain a secure and current site. Always run the <a href="!update-php">update script</a> each time a module is updated.', array('!update-php' => \Drupal::url('system.db_update'), '!updates' => \Drupal::url('update.status'))) . '</p>';
@@ -124,7 +125,7 @@ function system_help($route_name, RouteMatchInterface $route_match) {
         }
       }
       else {
-        $output .= '<p>' . t('Regularly review available updates to maintain a secure and current site. Always run the <a href="!update-php">update script</a> each time a module is updated. Enable the Update Manager module to update and install modules and themes.', array('!update-php' => \Drupal::url('system.db_update'))) . '</p>';
+        $output .= '<p>' . t('Regularly review available updates to maintain a secure and current site. Always run the <a href="!update-php">update script</a> each time a module is updated. Enable the <a href="!update-manager">Update Manager module</a> to update and install modules and themes.', array('!update-php' => \Drupal::url('system.db_update'), '!update-manager' => \Drupal::url('system.modules_list', [], ['fragment' => 'module-update']))) . '</p>';
       }
       return $output;
 
@@ -519,7 +520,6 @@ function system_filetransfer_info() {
  */
 function system_page_attachments(array &$page) {
   // Ensure the same CSS is loaded in template_preprocess_maintenance_page().
-  $page['#attached']['library'][] = 'core/normalize';
   $page['#attached']['library'][] = 'system/base';
   if (\Drupal::service('router.admin_context')->isAdminRoute()) {
     $page['#attached']['library'][] = 'system/admin';
@@ -564,7 +564,7 @@ function system_page_attachments(array &$page) {
       '#tag' => 'meta',
       '#attributes' => array(
         'name' => 'Generator',
-        'content' => 'Drupal ' . $version . ' (http://drupal.org)',
+        'content' => 'Drupal ' . $version . ' (https://www.drupal.org)',
       ),
     ),
     // Attach default mobile meta tags for responsive design.
@@ -607,26 +607,61 @@ function system_page_attachments(array &$page) {
 }
 
 /**
+ * Implements hook_js_settings_build().
+ *
+ * Sets values for the core/drupal.ajax library, which just depends on the
+ * active theme but no other request-dependent values.
+ */
+function system_js_settings_build(&$settings, AttachedAssetsInterface $assets) {
+  // Generate the values for the core/drupal.ajax library.
+  // We need to send ajaxPageState settings for core/drupal.ajax if:
+  // - ajaxPageState is being loaded in this Response, in which case it will
+  //   already exist at $settings['ajaxPageState'] (because the core/drupal.ajax
+  //   library definition specifies a placeholder 'ajaxPageState' setting).
+  // - core/drupal.ajax already has been loaded and hence this is an AJAX
+  //   Response in which we must send the list of extra asset libraries that are
+  //   being added in this AJAX Response.
+  /** @var \Drupal\Core\Asset\LibraryDependencyResolver $library_dependency_resolver */
+  $library_dependency_resolver = \Drupal::service('library.dependency_resolver');
+  if (isset($settings['ajaxPageState']) || in_array('core/drupal.ajax', $library_dependency_resolver->getLibrariesWithDependencies($assets->getAlreadyLoadedLibraries()))) {
+    // Provide the page with information about the theme that's used, so that
+    // a later AJAX request can be rendered using the same theme.
+    // @see \Drupal\Core\Theme\AjaxBasePageNegotiator
+    $theme_key = \Drupal::theme()->getActiveTheme()->getName();
+    $settings['ajaxPageState']['theme'] = $theme_key;
+
+    // Provide the page with information about the individual asset libraries
+    // used, information not otherwise available when aggregation is enabled.
+    $minimal_libraries = $library_dependency_resolver->getMinimalRepresentativeSubset(array_merge(
+      $assets->getLibraries(),
+      $assets->getAlreadyLoadedLibraries()
+    ));
+    sort($minimal_libraries);
+    $settings['ajaxPageState']['libraries'] = implode(',', $minimal_libraries);
+  }
+}
+
+/**
  * Implements hook_js_settings_alter().
  *
- * Sets values for the core/drupalSettings and core/drupal.ajax libraries.
+ * Sets values which depend on the current request, like core/drupalSettings
+ * as well as theme_token ajax state.
  */
 function system_js_settings_alter(&$settings, AttachedAssetsInterface $assets) {
-  // url() generates the script and prefix using hook_url_outbound_alter().
-  // Instead of running the hook_url_outbound_alter() again here, extract
-  // them from url().
-  // @todo Make this less hacky: http://drupal.org/node/1547376.
   $request = \Drupal::request();
-  $scriptPath = $request->getScriptName();
-
-  $pathPrefix = '';
   $current_query = $request->query->all();
-  Url::fromRoute('<front>', [], array('script' => &$scriptPath, 'prefix' => &$pathPrefix))->toString();
+
+  // Let output path processors set a prefix.
+  /** @var \Drupal\Core\PathProcessor\OutboundPathProcessorInterface $path_processor */
+  $path_processor = \Drupal::service('path_processor_manager');
+  $options = ['prefix' => ''];
+  $path_processor->processOutbound('/', $options);
+  $pathPrefix = $options['prefix'];
+
   $current_path = \Drupal::routeMatch()->getRouteName() ? Url::fromRouteMatch(\Drupal::routeMatch())->getInternalPath() : '';
   $current_path_is_admin = \Drupal::service('router.admin_context')->isAdminRoute();
   $path_settings = [
     'baseUrl' => $request->getBaseUrl() . '/',
-    'scriptPath' => $scriptPath,
     'pathPrefix' => $pathPrefix,
     'currentPath' => $current_path,
     'currentPathIsAdmin' => $current_path_is_admin,
@@ -647,36 +682,44 @@ function system_js_settings_alter(&$settings, AttachedAssetsInterface $assets) {
   if (!isset($settings['pluralDelimiter'])) {
     $settings['pluralDelimiter'] = LOCALE_PLURAL_DELIMITER;
   }
-
-  // Now generate the values for the core/drupal.ajax library.
-  // We need to send ajaxPageState settings for core/drupal.ajax if:
-  // - ajaxPageState is being loaded in this Response, in which case it will
-  //   already exist at $settings['ajaxPageState'] (because the core/drupal.ajax
-  //   library definition specifies a placeholder 'ajaxPageState' setting).
-  // - core/drupal.ajax already has been loaded and hence this is an AJAX
-  //   Response in which we must send the list of extra asset libraries that are
-  //   being added in this AJAX Response.
+  // Add the theme token to ajaxPageState, ensuring the database is available
+  // before doing so.
   /** @var \Drupal\Core\Asset\LibraryDependencyResolver $library_dependency_resolver */
   $library_dependency_resolver = \Drupal::service('library.dependency_resolver');
   if (isset($settings['ajaxPageState']) || in_array('core/drupal.ajax', $library_dependency_resolver->getLibrariesWithDependencies($assets->getAlreadyLoadedLibraries()))) {
-    // Provide the page with information about the theme that's used, so that
-    // a later AJAX request can be rendered using the same theme.
-    // @see \Drupal\Core\Theme\AjaxBasePageNegotiator
-    $theme_key = \Drupal::theme()->getActiveTheme()->getName();
-    $settings['ajaxPageState']['theme'] = $theme_key;
-    // Checks that the DB is available before filling theme_token.
     if (!defined('MAINTENANCE_MODE')) {
-      $settings['ajaxPageState']['theme_token'] = \Drupal::csrfToken()->get($theme_key);
+      // The theme token is only validated when the theme requested is not the
+      // default, so don't generate it unless necessary.
+      // @see \Drupal\Core\Theme\AjaxBasePageNegotiator::determineActiveTheme()
+      $active_theme_key = \Drupal::theme()->getActiveTheme()->getName();
+      if ($active_theme_key !== \Drupal::service('theme_handler')->getDefault()) {
+        $settings['ajaxPageState']['theme_token'] = \Drupal::csrfToken()
+          ->get($active_theme_key);
+      }
     }
+  }
+}
 
-    // Provide the page with information about the individual asset libraries
-    // used, information not otherwise available when aggregation is enabled.
-    $minimal_libraries = $library_dependency_resolver->getMinimalRepresentativeSubset(array_merge(
-      $assets->getLibraries(),
-      $assets->getAlreadyLoadedLibraries()
-    ));
-    sort($minimal_libraries);
-    $settings['ajaxPageState']['libraries'] = implode(',', $minimal_libraries);
+/**
+ * Implements hook_form_alter().
+ */
+function system_form_alter(&$form, FormStateInterface $form_state) {
+  // If the page that's being built is cacheable, set the 'immutable' flag, to
+  // ensure that when the form is used, a new form build ID is generated when
+  // appropriate, to prevent information disclosure.
+
+  // Note: This code just wants to know whether cache response headers are set,
+  // not whether page_cache module will be active.
+  // \Drupal\Core\EventSubscriber\FinishResponseSubscriber::onRespond will
+  // send those headers, in case $request_policy->check($request) succeeds. In
+  // that case we need to ensure that the immutable flag is sot, so future POST
+  // request won't take over the form state of another user.
+  /** @var \Drupal\Core\PageCache\RequestPolicyInterface $request_policy */
+  $request_policy = \Drupal::service('page_cache_request_policy');
+  $request = \Drupal::requestStack()->getCurrentRequest();
+  $request_is_cacheable = $request_policy->check($request) === RequestPolicyInterface::ALLOW;
+  if ($request_is_cacheable) {
+    $form_state->addBuildInfo('immutable', TRUE);
   }
 }
 
@@ -763,7 +806,7 @@ function system_preprocess_block(&$variables) {
       }
       $variables['site_slogan'] = '';
       if ($variables['content']['site_slogan']['#access'] && $variables['content']['site_slogan']['#markup']) {
-        $variables['site_slogan'] = $variables['content']['site_slogan']['#markup'];
+        $variables['site_slogan']['#markup'] = $variables['content']['site_slogan']['#markup'];
       }
       break;
 
@@ -883,14 +926,24 @@ function system_get_info($type, $name = NULL) {
  */
 function _system_rebuild_module_data() {
   $listing = new ExtensionDiscovery(\Drupal::root());
-  // Find modules
-  $modules = $listing->scan('module');
 
-  // Find installation profiles.
+  // Find installation profiles. This needs to happen before performing a
+  // module scan as the module scan requires knowing what the active profile is.
+  // @todo Remove as part of https://www.drupal.org/node/2186491.
   $profiles = $listing->scan('profile');
+  $profile = drupal_get_profile();
+  if ($profile && isset($profiles[$profile])) {
+    // Prime the drupal_get_filename() static cache with the profile info file
+    // location so we can use drupal_get_path() on the active profile during
+    // the module scan.
+    // @todo Remove as part of https://www.drupal.org/node/2186491.
+    drupal_get_filename('profile', $profile, $profiles[$profile]->getPathname());
+  }
 
+  // Find modules.
+  $modules = $listing->scan('module');
   // Include the installation profile in modules that are loaded.
-  if ($profile = drupal_get_profile()) {
+  if ($profile) {
     $modules[$profile] = $profiles[$profile];
     // Installation profile hooks are always executed last.
     $modules[$profile]->weight = 1000;
@@ -1158,6 +1211,12 @@ function system_get_module_admin_tasks($module, array $info) {
 
   $admin_tasks = array();
   foreach ($tree as $element) {
+    if (!$element->access->isAllowed()) {
+      // @todo Bubble cacheability metadata of both accessible and inaccessible
+      //   links. Currently made impossible by the way admin tasks are rendered.
+      continue;
+    }
+
     $link = $element->link;
     if ($link->getProvider() != $module) {
       continue;
@@ -1308,9 +1367,9 @@ function system_retrieve_file($url, $destination = NULL, $managed = FALSE, $repl
     }
   }
   try {
-    $data = \Drupal::httpClient()
+    $data = (string) \Drupal::httpClient()
       ->get($url)
-      ->getBody(TRUE);
+      ->getBody();
     $local = $managed ? file_save_data($data, $path, $replace) : file_unmanaged_save_data($data, $path, $replace);
   }
   catch (RequestException $exception) {

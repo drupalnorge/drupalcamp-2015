@@ -2,21 +2,23 @@
 
 /**
  * @file
- * Contains \Drupal\system\Tests\Upgrade\MigrateTestBase.
+ * Contains \Drupal\migrate\Tests\MigrateTestBase.
  */
 
 namespace Drupal\migrate\Tests;
 
 use Drupal\Core\Database\Database;
+use Drupal\migrate\Entity\Migration;
 use Drupal\migrate\Entity\MigrationInterface;
+use Drupal\migrate\MigrateExecutable;
 use Drupal\migrate\MigrateMessageInterface;
 use Drupal\migrate\Row;
-use Drupal\simpletest\WebTestBase;
+use Drupal\simpletest\KernelTestBase;
 
 /**
  * Base class for migration tests.
  */
-abstract class MigrateTestBase extends WebTestBase implements MigrateMessageInterface {
+abstract class MigrateTestBase extends KernelTestBase implements MigrateMessageInterface {
 
   /**
    * The file path(s) to the dumped database(s) to load into the child site.
@@ -43,6 +45,13 @@ abstract class MigrateTestBase extends WebTestBase implements MigrateMessageInte
    */
   protected $migrateMessages;
 
+  /**
+   * The primary migration being tested.
+   *
+   * @var \Drupal\migrate\Entity\MigrationInterface
+   */
+  protected $migration;
+
   public static $modules = array('migrate');
 
   /**
@@ -50,16 +59,17 @@ abstract class MigrateTestBase extends WebTestBase implements MigrateMessageInte
    */
   protected function setUp() {
     parent::setUp();
+
     $connection_info = Database::getConnectionInfo('default');
     foreach ($connection_info as $target => $value) {
-      $connection_info[$target]['prefix'] = array(
-        // Simpletest uses 7 character prefixes at most so this can't cause
-        // collisions.
-        'default' => $value['prefix']['default'] . '0',
-        // Add the original simpletest prefix so SQLite can attach its database.
-        // @see \Drupal\Core\Database\Driver\sqlite\Connection::init()
-        $value['prefix']['default'] => $value['prefix']['default'],
-      );
+      $prefix = is_array($value['prefix']) ? $value['prefix']['default'] : $value['prefix'];
+      // Simpletest uses 7 character prefixes at most so this can't cause
+      // collisions.
+      $connection_info[$target]['prefix']['default'] = $prefix . '0';
+
+      // Add the original simpletest prefix so SQLite can attach its database.
+      // @see \Drupal\Core\Database\Driver\sqlite\Connection::init()
+      $connection_info[$target]['prefix'][$value['prefix']['default']] = $value['prefix']['default'];
     }
     Database::addConnectionInfo('migrate', 'default', $connection_info['default']);
   }
@@ -73,21 +83,6 @@ abstract class MigrateTestBase extends WebTestBase implements MigrateMessageInte
   }
 
   /**
-   * Prepare the migration.
-   *
-   * @param \Drupal\migrate\Entity\MigrationInterface $migration
-   *   The migration object.
-   * @param array $files
-   *   An array of files.
-   */
-  protected function prepare(MigrationInterface $migration, array $files = array()) {
-    $this->loadDumps($files);
-    if ($this instanceof MigrateDumpAlterInterface) {
-      static::migrateDumpAlter($this);
-    }
-  }
-
-  /**
    * Load Drupal 6 database dumps to be used.
    *
    * @param array $files
@@ -95,7 +90,7 @@ abstract class MigrateTestBase extends WebTestBase implements MigrateMessageInte
    * @param string $method
    *   The name of the method in the dump class to use. Defaults to load.
    */
-  protected function loadDumps($files, $method = 'load') {
+  protected function loadDumps(array $files, $method = 'load') {
     // Load the database from the portable PHP dump.
     // The files may be gzipped.
     foreach ($files as $file) {
@@ -134,6 +129,25 @@ abstract class MigrateTestBase extends WebTestBase implements MigrateMessageInte
         $id_map->saveIdMapping($row, $id_mapping[1]);
       }
     }
+  }
+
+  /**
+   * Executes a single migration.
+   *
+   * @param string|\Drupal\migrate\Entity\MigrationInterface $migration
+   *  The migration to execute, or its ID.
+   */
+  protected function executeMigration($migration) {
+    if (is_string($migration)) {
+      $this->migration = Migration::load($migration);
+    }
+    else {
+      $this->migration = $migration;
+    }
+    if ($this instanceof MigrateDumpAlterInterface) {
+      static::migrateDumpAlter($this);
+    }
+    (new MigrateExecutable($this->migration, $this))->import();
   }
 
   /**

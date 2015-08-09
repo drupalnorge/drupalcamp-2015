@@ -151,10 +151,8 @@ class UserListBuilder extends EntityListBuilder {
       '#theme' => 'item_list',
       '#items' => $users_roles,
     );
-    $row['member_for'] = $this->dateFormatter->formatInterval(REQUEST_TIME - $entity->getCreatedTime());
-    $row['access'] = $entity->access ? $this->t('@time ago', array(
-      '@time' => $this->dateFormatter->formatInterval(REQUEST_TIME - $entity->getLastAccessedTime()),
-    )) : t('never');
+    $row['member_for'] = $this->dateFormatter->formatTimeDiffSince($entity->getCreatedTime());
+    $row['access'] = $entity->access ? $this->t('@time ago', array('@time' => $this->dateFormatter->formatTimeDiffSince($entity->getLastAccessedTime()))) : t('never');
     return $row + parent::buildRow($entity);
   }
 
@@ -174,9 +172,8 @@ class UserListBuilder extends EntityListBuilder {
    * {@inheritdoc}
    */
   public function render() {
-    $build['accounts'] = parent::render();
-    $build['accounts']['#empty'] = $this->t('No people available.');
-    $build['pager']['#type'] = 'pager';
+    $build = parent::render();
+    $build['table']['#empty'] = $this->t('No people available.');
     return $build;
   }
 

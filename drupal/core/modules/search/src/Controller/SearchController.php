@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains Drupal\search\Controller\SearchController
+ * Contains \Drupal\search\Controller\SearchController.
  */
 
 namespace Drupal\search\Controller;
@@ -117,14 +117,11 @@ class SearchController extends ControllerBase {
         '#markup' => '<h3>' . $this->t('Your search yielded no results.') . '</h3>',
       ),
       '#list_type' => 'ol',
-      '#attributes' => array(
-        'class' => array(
-          'search-results',
-          $plugin->getPluginId() . '-results',
-        ),
-      ),
       '#cache' => array(
         'tags' => $entity->getCacheTags(),
+      ),
+      '#context' => array(
+        'plugin' => $plugin->getPluginId(),
       ),
     );
 
@@ -139,8 +136,6 @@ class SearchController extends ControllerBase {
     $build['pager'] = array(
       '#type' => 'pager',
     );
-
-    $build['#attached']['library'][] = 'search/drupal.search.results';
 
     return $build;
   }

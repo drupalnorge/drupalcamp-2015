@@ -8,8 +8,8 @@ dependencies:
   - file
   - views
 
-# Information added by Drupal.org packaging script on 2015-04-29
-version: '8.0.0-beta10'
+# Information added by Drupal.org packaging script on 2015-08-03
+version: '8.0.0-beta14'
 core: '8.x'
 project: 'drupal'
-datestamp: 1430314871
+datestamp: 1438593763

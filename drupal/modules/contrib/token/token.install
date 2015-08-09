@@ -19,20 +19,13 @@ function token_requirements($phase = 'runtime') {
       if (!empty($problem['problems'])) {
         $problems = array_unique($problem['problems']);
         $problems = array_map('\Drupal\Component\Utility\SafeMarkup::checkPlain', $problems);
-        // ToDo: Use render arrays. See https://drupal.org/node/2195739
-        $token_problems[$problem_key] = $problem['label'] . \Drupal::theme()->render('item_list', array('items' => $problems));
+        $requirements['token-' . $problem_key] = array(
+          'title' => $problem['label'],
+          // @todo Use render arrays. See https://drupal.org/node/2195739
+          'value' => \Drupal::theme()->render('item_list', array('items' => $problems)),
+          'severity' => $problem['severity'],
+        );
       }
-      else {
-        unset($token_problems[$problem_key]);
-      }
-    }
-    if (!empty($token_problems)) {
-      $requirements['token_problems'] = array(
-        'title' => t('Tokens'),
-        'value' => t('Problems detected'),
-        'severity' => REQUIREMENT_WARNING,
-        'description' => array('#markup' => '<p>' . implode('</p><p>', $token_problems) . '</p>'),
-      );
     }
   }
 
@@ -251,19 +244,24 @@ function token_get_token_problems() {
   $token_info = \Drupal::token()->getInfo();
   $token_problems = array(
     'not-array' => array(
-      'label' => t('The following tokens or token types are not defined as arrays:'),
+      'label' => t('Tokens or token types not defined as arrays'),
+      'severity' => REQUIREMENT_ERROR,
     ),
     'missing-info' => array(
-      'label' => t('The following tokens or token types are missing the required name:'),
+      'label' => t('Tokens or token types missing name property'),
+      'severity' => REQUIREMENT_WARNING,
     ),
     'type-no-tokens' => array(
-      'label' => t('The following token types do not have any tokens defined:'),
+      'label' => t('Token types do not have any tokens defined'),
+      'severity' => REQUIREMENT_INFO,
     ),
     'tokens-no-type' => array(
-      'label' => t('The following token types are not defined but have tokens:'),
+      'label' => t('Token types are not defined but have tokens'),
+      'severity' => REQUIREMENT_INFO,
     ),
     'duplicate' => array(
-      'label' => t('The following token or token types are defined by multiple modules:')
+      'label' => t('Token or token types are defined by multiple modules'),
+      'severity' => REQUIREMENT_ERROR,
     ),
   );
 
@@ -276,6 +274,9 @@ function token_get_token_problems() {
     }
     elseif (!isset($type_info['name'])) {
       $token_problems['missing-info']['problems'][] = "\$info['types']['$type']";
+    }
+    elseif (is_array($type_info['name'])) {
+      $token_problems['duplicate']['problems'][] = "\$info['types']['$type']";
     }
     elseif (empty($token_info['tokens'][$real_type])) {
       $token_problems['type-no-tokens']['problems'][] = "\$info['tokens']['$real_type']";
@@ -297,7 +298,7 @@ function token_get_token_problems() {
         elseif (!isset($tokens[$token]['name'])) {
           $token_problems['missing-info']['problems'][] = "\$info['tokens']['$type']['$token']";
         }
-        elseif (is_array($tokens[$token]['name']) || isset($tokens[$token]['description']) && is_array($tokens[$token]['description'])) {
+        elseif (is_array($tokens[$token]['name'])) {
           $token_problems['duplicate']['problems'][] = "\$info['tokens']['$type']['$token']";
         }
       }

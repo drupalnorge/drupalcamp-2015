@@ -396,9 +396,10 @@ display:
       display_extenders: {  }
     cache_metadata:
       contexts:
-        - languages
-        - user
+        - 'languages:language_content'
+        - 'languages:language_interface'
         - 'user.node_grants:view'
+        - user.permissions
       cacheable: false
   block_1:
     display_plugin: block
@@ -409,7 +410,8 @@ display:
       display_extenders: {  }
     cache_metadata:
       contexts:
-        - languages
-        - user
+        - 'languages:language_content'
+        - 'languages:language_interface'
         - 'user.node_grants:view'
+        - user.permissions
       cacheable: false

@@ -31,7 +31,7 @@ abstract class ViewUnitTestBase extends KernelTestBase {
    *
    * @var array
    */
-  public static $modules = array('system', 'views', 'views_test_config', 'views_test_data');
+  public static $modules = array('system', 'views', 'views_test_config', 'views_test_data', 'user');
 
   /**
    * {@inheritdoc}
@@ -118,7 +118,7 @@ abstract class ViewUnitTestBase extends KernelTestBase {
    * @param array $args
    *   (optional) An array of the view arguments to use for the view.
    */
-  protected function executeView($view, $args = array()) {
+  protected function executeView($view, array $args = array()) {
     $view->setDisplay();
     $view->preExecute($args);
     $view->execute();

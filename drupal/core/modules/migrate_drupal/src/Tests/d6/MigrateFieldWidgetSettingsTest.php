@@ -7,9 +7,6 @@
 
 namespace Drupal\migrate_drupal\Tests\d6;
 
-use Drupal\migrate\MigrateExecutable;
-use Drupal\migrate_drupal\Tests\d6\MigrateDrupal6TestBase;
-
 /**
  * Migrate field widget settings.
  *
@@ -30,6 +27,7 @@ class MigrateFieldWidgetSettingsTest extends MigrateDrupal6TestBase {
     'image',
     'datetime',
     'node',
+    'text',
   );
 
   /**
@@ -61,18 +59,14 @@ class MigrateFieldWidgetSettingsTest extends MigrateDrupal6TestBase {
       ),
     );
     $this->prepareMigrations($id_mappings);
-    $migration = entity_load('migration', 'd6_field_instance_widget_settings');
-    $dumps = array(
-      $this->getDumpDirectory() . '/ContentNodeFieldInstance.php',
-      $this->getDumpDirectory() . '/ContentNodeField.php',
-      $this->getDumpDirectory() . '/ContentFieldTest.php',
-      $this->getDumpDirectory() . '/ContentFieldTestTwo.php',
-      $this->getDumpDirectory() . '/ContentFieldMultivalue.php',
-    );
-    $this->prepare($migration, $dumps);
-    $executable = new MigrateExecutable($migration, $this);
-    $executable->import();
-
+    $this->loadDumps([
+      'ContentNodeFieldInstance.php',
+      'ContentNodeField.php',
+      'ContentFieldTest.php',
+      'ContentFieldTestTwo.php',
+      'ContentFieldMultivalue.php',
+    ]);
+    $this->executeMigration('d6_field_instance_widget_settings');
   }
 
   /**

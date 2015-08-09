@@ -9,12 +9,12 @@ dependencies:
 id: seven_login
 theme: seven
 region: content
-weight: 10
+weight: -3
 provider: null
 plugin: user_login_block
 settings:
   id: user_login_block
-  label: 'User login'
+  label: Pålogging
   provider: user
   label_display: visible
   cache:

@@ -22,7 +22,7 @@ class FieldConfigEntityUnitTest extends UnitTestCase {
   /**
    * The entity type used for testing.
    *
-   * @var \Drupal\Core\Entity\EntityTypeInterface|\PHPUnit_Framework_MockObject_MockObject
+   * @var \Drupal\Core\Config\Entity\ConfigEntityTypeInterface|\PHPUnit_Framework_MockObject_MockObject
    */
   protected $entityType;
 
@@ -73,7 +73,7 @@ class FieldConfigEntityUnitTest extends UnitTestCase {
    */
   protected function setUp() {
     $this->entityTypeId = $this->randomMachineName();
-    $this->entityType = $this->getMock('\Drupal\Core\Entity\EntityTypeInterface');
+    $this->entityType = $this->getMock('\Drupal\Core\Config\Entity\ConfigEntityTypeInterface');
 
     $this->entityManager = $this->getMock('\Drupal\Core\Entity\EntityManagerInterface');
 
@@ -178,7 +178,7 @@ class FieldConfigEntityUnitTest extends UnitTestCase {
    * Test that invalid bundles are handled.
    *
    * @expectedException \LogicException
-   * @expectedExceptionMessage Missing bundle entity, entity type <em class="placeholder">bundle_entity_type</em>, entity id <em class="placeholder">test_bundle_not_exists</em>.
+   * @expectedExceptionMessage Missing bundle entity, entity type bundle_entity_type, entity id test_bundle_not_exists.
    */
   public function testCalculateDependenciesIncorrectBundle() {
     $storage = $this->getMock('\Drupal\Core\Config\Entity\ConfigEntityStorageInterface');

@@ -42,6 +42,13 @@ class UpdateReady extends FormBase {
   protected $state;
 
   /**
+   * The Site path.
+   *
+   * @var string
+   */
+   protected $sitePath;
+
+  /**
    * Constructs a new UpdateReady object.
    *
    * @param string $root
@@ -50,17 +57,20 @@ class UpdateReady extends FormBase {
    *   The object that manages enabled modules in a Drupal installation.
    * @param \Drupal\Core\State\StateInterface $state
    *   The state key value store.
+   * @param string $site_path
+   *   The site path.
    */
-  public function __construct($root, ModuleHandlerInterface $module_handler, StateInterface $state) {
+  public function __construct($root, ModuleHandlerInterface $module_handler, StateInterface $state, $site_path) {
     $this->root = $root;
     $this->moduleHandler = $module_handler;
     $this->state = $state;
+    $this->sitePath = $site_path;
   }
 
   /**
    * {@inheritdoc}
    */
-  public function getFormID() {
+  public function getFormId() {
     return 'update_manager_update_ready_form';
   }
 
@@ -71,7 +81,8 @@ class UpdateReady extends FormBase {
     return new static(
       $container->get('app.root'),
       $container->get('module_handler'),
-      $container->get('state')
+      $container->get('state'),
+      $container->get('site.path')
     );
   }
 
@@ -86,7 +97,7 @@ class UpdateReady extends FormBase {
 
     $form['backup'] = array(
       '#prefix' => '<strong>',
-      '#markup' => $this->t('Back up your database and site before you continue. <a href="@backup_url">Learn how</a>.', array('@backup_url' => 'http://drupal.org/node/22281')),
+      '#markup' => $this->t('Back up your database and site before you continue. <a href="@backup_url">Learn how</a>.', array('@backup_url' => 'https://www.drupal.org/node/22281')),
       '#suffix' => '</strong>',
     );
 
@@ -142,7 +153,7 @@ class UpdateReady extends FormBase {
       // trying to install the code, there's no need to prompt for FTP/SSH
       // credentials. Instead, we instantiate a Drupal\Core\FileTransfer\Local
       // and invoke update_authorize_run_update() directly.
-      if (fileowner($project_real_location) == fileowner(conf_path())) {
+      if (fileowner($project_real_location) == fileowner($this->sitePath)) {
         $this->moduleHandler->loadInclude('update', 'inc', 'update.authorize');
         $filetransfer = new Local($this->root);
         update_authorize_run_update($filetransfer, $updates);

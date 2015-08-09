@@ -63,7 +63,6 @@ class TokenCommentTest extends TokenKernelTestBase {
 
     // Fix http://example.com/index.php/comment/1 fails 'url:path' test.
     $parent_comment_path = $parent_comment->url();
-    $parent_comment_path = ltrim($parent_comment_path, '/');
 
     $tokens = array(
       'url' => $parent_comment->urlInfo('canonical', ['fragment' => "comment-{$parent_comment->id()}"])->setAbsolute()->toString(),
@@ -89,7 +88,6 @@ class TokenCommentTest extends TokenKernelTestBase {
 
     // Fix http://example.com/index.php/comment/1 fails 'url:path' test.
     $comment_path = \Drupal::url('entity.comment.canonical', array('comment' => $comment->id()));
-    $comment_path = ltrim($comment_path, '/');
 
     $tokens = array(
       'url' => $comment->urlInfo('canonical', ['fragment' => "comment-{$comment->id()}"])->setAbsolute()->toString(),
@@ -100,4 +98,5 @@ class TokenCommentTest extends TokenKernelTestBase {
     );
     $this->assertTokens('comment', array('comment' => $comment), $tokens);
   }
+
 }

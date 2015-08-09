@@ -10,11 +10,13 @@ namespace Drupal\Core\Form;
 use Drupal\Component\Utility\Crypt;
 use Drupal\Component\Utility\Html;
 use Drupal\Component\Utility\NestedArray;
-use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Component\Utility\UrlHelper;
+use Drupal\Core\Access\AccessResultInterface;
 use Drupal\Core\Access\CsrfTokenGenerator;
 use Drupal\Core\DependencyInjection\ClassResolverInterface;
+use Drupal\Core\EventSubscriber\MainContentViewSubscriber;
 use Drupal\Core\Extension\ModuleHandlerInterface;
+use Drupal\Core\Form\Exception\BrokenPostRequestException;
 use Drupal\Core\Render\Element;
 use Drupal\Core\Render\ElementInfoManagerInterface;
 use Drupal\Core\Theme\ThemeManagerInterface;
@@ -150,7 +152,7 @@ class FormBuilder implements FormBuilderInterface, FormValidatorInterface, FormS
     }
 
     if (!is_object($form_arg) || !($form_arg instanceof FormInterface)) {
-      throw new \InvalidArgumentException(SafeMarkup::format('The form argument @form_arg is not a valid form.', array('@form_arg' => $form_arg)));
+      throw new \InvalidArgumentException("The form argument $form_arg is not a valid form.");
     }
 
     // Add the $form_arg as the callback object and determine the form ID.
@@ -182,9 +184,22 @@ class FormBuilder implements FormBuilderInterface, FormValidatorInterface, FormS
     // Ensure the form ID is prepared.
     $form_id = $this->getFormId($form_id, $form_state);
 
+    $request = $this->requestStack->getCurrentRequest();
+
+    // Inform $form_state about the request method that's building it, so that
+    // it can prevent persisting state changes during HTTP methods for which
+    // that is disallowed by HTTP: GET and HEAD.
+    $form_state->setRequestMethod($request->getMethod());
+
+    // Initialize the form's user input. The user input should include only the
+    // input meant to be treated as part of what is submitted to the form, so
+    // we base it on the form's method rather than the request's method. For
+    // example, when someone does a GET request for
+    // /node/add/article?destination=foo, which is a form that expects its
+    // submission method to be POST, the user input during the GET request
+    // should be initialized to empty rather than to ['destination' => 'foo'].
     $input = $form_state->getUserInput();
     if (!isset($input)) {
-      $request = $this->requestStack->getCurrentRequest();
       $input = $form_state->isMethodType('get') ? $request->query->all() : $request->request->all();
       $form_state->setUserInput($input);
     }
@@ -244,6 +259,12 @@ class FormBuilder implements FormBuilderInterface, FormValidatorInterface, FormS
       }
     }
 
+    // If this form is an AJAX request, disable all form redirects.
+    $request = $this->requestStack->getCurrentRequest();
+    if ($ajax_form_request = $request->query->has(static::AJAX_FORM_REQUEST)) {
+      $form_state->disableRedirect();
+    }
+
     // Now that we have a constructed form, process it. This is where:
     // - Element #process functions get called to further refine $form.
     // - User input, if any, gets incorporated in the #value property of the
@@ -256,6 +277,24 @@ class FormBuilder implements FormBuilderInterface, FormValidatorInterface, FormS
     // All of the handlers in the pipeline receive $form_state by reference and
     // can use it to know or update information about the state of the form.
     $response = $this->processForm($form_id, $form, $form_state);
+
+    // In case the post request exceeds the configured allowed size
+    // (post_max_size), the post request is potentially broken. Add some
+    // protection against that and at the same time have a nice error message.
+    if ($ajax_form_request && !isset($form_state->getUserInput()['form_id'])) {
+      throw new BrokenPostRequestException($this->getFileUploadMaxSize());
+    }
+
+    // After processing the form, if this is an AJAX form request, interrupt
+    // form rendering and return by throwing an exception that contains the
+    // processed form and form state. This exception will be caught by
+    // \Drupal\Core\Form\EventSubscriber\FormAjaxSubscriber::onException() and
+    // then passed through
+    // \Drupal\Core\Form\FormAjaxResponseBuilderInterface::buildResponse() to
+    // build a proper AJAX response.
+    if ($ajax_form_request && $form_state->isProcessingInput()) {
+      throw new FormAjaxException($form, $form_state);
+    }
 
     // If the form returns a response, skip subsequent page construction by
     // throwing an exception.
@@ -286,8 +325,22 @@ class FormBuilder implements FormBuilderInterface, FormValidatorInterface, FormS
    */
   public function rebuildForm($form_id, FormStateInterface &$form_state, $old_form = NULL) {
     $form = $this->retrieveForm($form_id, $form_state);
-    // All rebuilt forms will be cached.
-    $form_state->setCached();
+
+    // Only GET and POST are valid form methods. If the form receives its input
+    // via POST, then $form_state must be persisted when it is rebuilt between
+    // submissions. If the form receives its input via GET, then persisting
+    // state is forbidden by $form_state->setCached(), and the form must use
+    // the URL itself to transfer its state across steps. Although $form_state
+    // throws an exception based on the request method rather than the form's
+    // method, we base the decision to cache on the form method, because:
+    // - It's the form method that defines what the form needs to do to manage
+    //   its state.
+    // - rebuildForm() should only be called after successful input processing,
+    //   which means the request method matches the form method, and if not,
+    //   there's some other error, so it's ok if an exception is thrown.
+    if ($form_state->isMethodType('POST')) {
+      $form_state->setCached();
+    }
 
     // If only parts of the form will be returned to the browser (e.g., Ajax or
     // RIA clients), or if the form already had a new build ID regenerated when
@@ -559,7 +612,7 @@ class FormBuilder implements FormBuilderInterface, FormValidatorInterface, FormS
 
     // Only update the action if it is not already set.
     if (!isset($form['#action'])) {
-      $form['#action'] = $this->requestStack->getMasterRequest()->getRequestUri();
+      $form['#action'] = $this->buildFormAction();
     }
 
     // Fix the form method, if it is 'get' in $form_state, but not in $form.
@@ -629,6 +682,9 @@ class FormBuilder implements FormBuilderInterface, FormValidatorInterface, FormS
     }
     if (!isset($form['#id'])) {
       $form['#id'] = Html::getUniqueId($form_id);
+      // Provide a selector usable by JavaScript. As the ID is unique, its not
+      // possible to rely on it in JavaScript.
+      $form['#attributes']['data-drupal-selector'] = Html::getId($form_id);
     }
 
     $form += $this->elementInfo->getInfo('form');
@@ -657,6 +713,31 @@ class FormBuilder implements FormBuilderInterface, FormValidatorInterface, FormS
     $hooks[] = 'form_' . $form_id;
     $this->moduleHandler->alter($hooks, $form, $form_state, $form_id);
     $this->themeManager->alter($hooks, $form, $form_state, $form_id);
+  }
+
+  /**
+   * Builds the $form['#action'].
+   *
+   * @return string
+   *   The URL to be used as the $form['#action'].
+   */
+  protected function buildFormAction() {
+    // @todo Use <current> instead of the master request in
+    //   https://www.drupal.org/node/2505339.
+    $request = $this->requestStack->getMasterRequest();
+    $request_uri = $request->getRequestUri();
+
+    // Prevent cross site requests via the Form API by using an absolute URL
+    // when the request uri starts with multiple slashes..
+    if (strpos($request_uri, '//') === 0) {
+      $request_uri = $request->getUri();
+    }
+
+    // @todo Remove this parsing once these are removed from the request in
+    //   https://www.drupal.org/node/2504709.
+    $parsed = UrlHelper::parse($request_uri);
+    unset($parsed['query'][static::AJAX_FORM_REQUEST], $parsed['query'][MainContentViewSubscriber::WRAPPER_FORMAT]);
+    return $parsed['path'] . ($parsed['query'] ? ('?' . UrlHelper::buildQuery($parsed['query'])) : '');
   }
 
   /**
@@ -746,7 +827,16 @@ class FormBuilder implements FormBuilderInterface, FormValidatorInterface, FormS
     }
 
     if (!isset($element['#id'])) {
-      $element['#id'] = Html::getUniqueId('edit-' . implode('-', $element['#parents']));
+      $unprocessed_id = 'edit-' . implode('-', $element['#parents']);
+      $element['#id'] = Html::getUniqueId($unprocessed_id);
+      // Provide a selector usable by JavaScript. As the ID is unique, its not
+      // possible to rely on it in JavaScript.
+      $element['#attributes']['data-drupal-selector'] = Html::getId($unprocessed_id);
+    }
+    else {
+      // Provide a selector usable by JavaScript. As the ID is unique, its not
+      // possible to rely on it in JavaScript.
+      $element['#attributes']['data-drupal-selector'] = Html::getId($element['#id']);
     }
 
     // Add the aria-describedby attribute to associate the form control with its
@@ -773,6 +863,13 @@ class FormBuilder implements FormBuilderInterface, FormValidatorInterface, FormS
 
     // Recurse through all child elements.
     $count = 0;
+    if (isset($element['#access'])) {
+      $access = $element['#access'];
+      $inherited_access = NULL;
+      if (($access instanceof AccessResultInterface && !$access->isAllowed()) || $access === FALSE) {
+        $inherited_access = $access;
+      }
+    }
     foreach (Element::children($element) as $key) {
       // Prior to checking properties of child elements, their default
       // properties need to be loaded.
@@ -786,9 +883,9 @@ class FormBuilder implements FormBuilderInterface, FormValidatorInterface, FormS
         $element[$key]['#tree'] = $element['#tree'];
       }
 
-      // Deny access to child elements if parent is denied.
-      if (isset($element['#access']) && !$element['#access']) {
-        $element[$key]['#access'] = FALSE;
+      // Children inherit #access from parent.
+      if (isset($inherited_access)) {
+        $element[$key]['#access'] = $inherited_access;
       }
 
       // Make child elements inherit their parent's #disabled and #allow_focus
@@ -1101,6 +1198,17 @@ class FormBuilder implements FormBuilderInterface, FormValidatorInterface, FormS
       return TRUE;
     }
     return FALSE;
+  }
+
+  /**
+   * Wraps file_upload_max_size().
+   *
+   * @return string
+   *   A translated string representation of the size of the file size limit
+   *   based on the PHP upload_max_filesize and post_max_size.
+   */
+  protected function getFileUploadMaxSize() {
+    return file_upload_max_size();
   }
 
   /**

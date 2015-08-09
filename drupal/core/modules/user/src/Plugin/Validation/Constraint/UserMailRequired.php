@@ -19,7 +19,7 @@ use Symfony\Component\Validator\ExecutionContextInterface;
  * and the user performing the edit has 'administer users' permission.
  * This allows users without email address to be edited and deleted.
  *
- * @Plugin(
+ * @Constraint(
  *   id = "UserMailRequired",
  *   label = @Translation("User email required", context = "Validation")
  * )
@@ -58,7 +58,7 @@ class UserMailRequired extends Constraint implements ConstraintValidatorInterfac
   public function validate($items, Constraint $constraint) {
     /** @var \Drupal\Core\Field\FieldItemListInterface $items */
     /** @var \Drupal\user\UserInterface $account */
-    $account = $this->context->getMetadata()->getTypedData()->getEntity();
+    $account = $items->getEntity();
     $existing_value = NULL;
     if ($account->id()) {
       $account_unchanged = \Drupal::entityManager()

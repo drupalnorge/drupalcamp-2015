@@ -48,14 +48,14 @@ class TokenNodeTest extends TokenKernelTestBase {
   }
 
   function testNodeTokens() {
-    $page = Node::create(['type' => 'page', 'revision_log' => $this->randomMachineName(), 'path' => array('alias' => 'content/source-node')]);
+    $page = Node::create(['type' => 'page', 'revision_log' => $this->randomMachineName(), 'path' => array('alias' => '/content/source-node')]);
     $page->save();
     $tokens = array(
       'log' => $page->revision_log->value,
-      'url:path' => 'content/source-node',
+      'url:path' => '/content/source-node',
       'url:absolute' => \Drupal::url('entity.node.canonical', ['node' => $page->id()], array('absolute' => TRUE)),
       'url:relative' => \Drupal::url('entity.node.canonical', ['node' => $page->id()], array('absolute' => FALSE)),
-      'url:unaliased:path' => "node/{$page->id()}",
+      'url:unaliased:path' => "/node/{$page->id()}",
       'content-type' => 'Basic page',
       'content-type:name' => 'Basic page',
       'content-type:machine-name' => 'page',
@@ -65,7 +65,7 @@ class TokenNodeTest extends TokenKernelTestBase {
       // Deprecated tokens.
       'type' => 'page',
       'type-name' => 'Basic page',
-      'url:alias' => 'content/source-node',
+      'url:alias' => '/content/source-node',
     );
     $this->assertTokens('node', array('node' => $page), $tokens);
 
@@ -73,10 +73,10 @@ class TokenNodeTest extends TokenKernelTestBase {
     $article->save();
     $tokens = array(
       'log' => '',
-      'url:path' => "node/{$article->id()}",
+      'url:path' => "/node/{$article->id()}",
       'url:absolute' => \Drupal::url('entity.node.canonical', ['node' => $article->id()], array('absolute' => TRUE)),
       'url:relative' => \Drupal::url('entity.node.canonical', ['node' => $article->id()], array('absolute' => FALSE)),
-      'url:unaliased:path' => "node/{$article->id()}",
+      'url:unaliased:path' => "/node/{$article->id()}",
       'content-type' => 'Article',
       'content-type:name' => 'Article',
       'content-type:machine-name' => 'article',
@@ -86,7 +86,7 @@ class TokenNodeTest extends TokenKernelTestBase {
       // Deprecated tokens.
       'type' => 'article',
       'type-name' => 'Article',
-      'url:alias' => "node/{$article->id()}",
+      'url:alias' => "/node/{$article->id()}",
     );
     $this->assertTokens('node', array('node' => $article), $tokens);
   }

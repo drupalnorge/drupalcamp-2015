@@ -80,7 +80,7 @@ class SearchPageListBuilder extends DraggableListBuilder implements FormInterfac
   /**
    * {@inheritdoc}
    */
-  public function getFormID() {
+  public function getFormId() {
     return 'search_admin_settings';
   }
 
@@ -260,11 +260,6 @@ class SearchPageListBuilder extends DraggableListBuilder implements FormInterfac
       '#attributes' => array(
         'class' => array('container-inline'),
       ),
-      '#attached' => [
-        'library' => [
-          'search/admin',
-        ],
-      ],
     );
     // In order to prevent validation errors for the parent form, this cannot be
     // required, see self::validateAddSearchPage().

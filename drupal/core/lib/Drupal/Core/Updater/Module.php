@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\Core\Updater\Module.
+ * Contains \Drupal\Core\Updater\Module.
  */
 
 namespace Drupal\Core\Updater;
@@ -51,10 +51,9 @@ class Module extends Updater implements UpdaterInterface {
    * Implements Drupal\Core\Updater\UpdaterInterface::canUpdateDirectory().
    */
   public static function canUpdateDirectory($directory) {
-    if (file_scan_directory($directory, '/.*\.module$/')) {
-      return TRUE;
-    }
-    return FALSE;
+    $info = static::getExtensionInfo($directory);
+
+    return (isset($info['type']) && $info['type'] == 'module');
   }
 
   /**

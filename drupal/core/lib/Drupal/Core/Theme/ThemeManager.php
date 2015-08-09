@@ -41,7 +41,9 @@ class ThemeManager implements ThemeManagerInterface {
   protected $activeTheme;
 
   /**
-   * @var \Drupal\Core\Theme\ThemeInitialization
+   * The theme initialization.
+   *
+   * @var \Drupal\Core\Theme\ThemeInitializationInterface
    */
   protected $themeInitialization;
 
@@ -64,13 +66,13 @@ class ThemeManager implements ThemeManagerInterface {
    *   The app root.
    * @param \Drupal\Core\Theme\ThemeNegotiatorInterface $theme_negotiator
    *   The theme negotiator.
-   * @param \Drupal\Core\Theme\ThemeInitialization $theme_initialization
+   * @param \Drupal\Core\Theme\ThemeInitializationInterface $theme_initialization
    *   The theme initialization.
    * @param \Symfony\Component\HttpFoundation\RequestStack $request_stack
    *   The request stack.
    * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
    */
-  public function __construct($root, ThemeNegotiatorInterface $theme_negotiator, ThemeInitialization $theme_initialization, RequestStack $request_stack, ModuleHandlerInterface $module_handler) {
+  public function __construct($root, ThemeNegotiatorInterface $theme_negotiator, ThemeInitializationInterface $theme_initialization, RequestStack $request_stack, ModuleHandlerInterface $module_handler) {
     $this->root = $root;
     $this->themeNegotiator = $theme_negotiator;
     $this->themeInitialization = $theme_initialization;
@@ -89,13 +91,6 @@ class ThemeManager implements ThemeManagerInterface {
   public function setThemeRegistry(Registry $theme_registry) {
     $this->themeRegistry = $theme_registry;
     return $this;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function render($hook, array $variables) {
-    return $this->theme($hook, $variables);
   }
 
   /**
@@ -135,11 +130,9 @@ class ThemeManager implements ThemeManagerInterface {
   }
 
   /**
-   * Generates themed output (internal use only).
-   *
-   * @see \Drupal\Core\Render\RendererInterface::render();
+   * {@inheritdoc}
    */
-  protected function theme($hook, $variables = array()) {
+  public function render($hook, array $variables) {
     static $default_attributes;
 
     $active_theme = $this->getActiveTheme();
@@ -300,14 +293,23 @@ class ThemeManager implements ThemeManagerInterface {
           $preprocessor_function($variables, $hook, $info);
         }
       }
-      // Allow theme preprocess functions to set $variables['#attached'] and use
-      // it like the #attached property on render arrays. In Drupal 8, this is
-      // the (only) officially supported method of attaching assets from
-      // preprocess functions. Assets attached here should be associated with
-      // the template that we're preprocessing variables for.
-      if (isset($variables['#attached'])) {
-        $preprocess_attached = ['#attached' => $variables['#attached']];
-        drupal_render($preprocess_attached);
+      // Allow theme preprocess functions to set $variables['#attached'] and
+      // $variables['#cache'] and use them like the corresponding element
+      // properties on render arrays. In Drupal 8, this is the (only) officially
+      // supported method of attaching bubbleable metadata from preprocess
+      // functions. Assets attached here should be associated with the template
+      // that we are preprocessing variables for.
+      $preprocess_bubbleable = [];
+      foreach (['#attached', '#cache'] as $key) {
+        if (isset($variables[$key])) {
+          $preprocess_bubbleable[$key] = $variables[$key];
+        }
+      }
+      // We do not allow preprocess functions to define cacheable elements.
+      unset($preprocess_bubbleable['#cache']['keys']);
+      if ($preprocess_bubbleable) {
+        // @todo Inject the Renderer in https://www.drupal.org/node/2529438.
+        drupal_render($preprocess_bubbleable);
       }
     }
 

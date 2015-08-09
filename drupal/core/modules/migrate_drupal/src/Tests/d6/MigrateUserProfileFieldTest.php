@@ -8,8 +8,6 @@
 namespace Drupal\migrate_drupal\Tests\d6;
 
 use Drupal\field\Entity\FieldStorageConfig;
-use Drupal\migrate\MigrateExecutable;
-use Drupal\migrate_drupal\Tests\d6\MigrateDrupal6TestBase;
 
 /**
  * Tests the user profile field migration.
@@ -18,24 +16,21 @@ use Drupal\migrate_drupal\Tests\d6\MigrateDrupal6TestBase;
  */
 class MigrateUserProfileFieldTest extends MigrateDrupal6TestBase {
 
-  static $modules = array('link', 'options', 'datetime');
+  static $modules = array('link', 'options', 'datetime', 'text');
 
   /**
    * {@inheritdoc}
    */
   protected function setUp() {
     parent::setUp();
-    $migration = entity_load('migration', 'd6_user_profile_field');
-    $dumps = array(
-      $this->getDumpDirectory() . '/ProfileFields.php',
-      $this->getDumpDirectory() . '/Users.php',
-      $this->getDumpDirectory() . '/ProfileValues.php',
-      $this->getDumpDirectory() . '/UsersRoles.php',
-      $this->getDumpDirectory() . '/EventTimezones.php',
-    );
-    $this->prepare($migration, $dumps);
-    $executable = new MigrateExecutable($migration, $this);
-    $executable->import();
+    $this->loadDumps([
+      'ProfileFields.php',
+      'Users.php',
+      'ProfileValues.php',
+      'UsersRoles.php',
+      'EventTimezones.php',
+    ]);
+    $this->executeMigration('d6_user_profile_field');
   }
 
   /**
@@ -59,7 +54,7 @@ class MigrateUserProfileFieldTest extends MigrateDrupal6TestBase {
     $field_storage = FieldStorageConfig::load('user.profile_sold_to');
     $this->assertIdentical('list_string', $field_storage->getType(), 'Field type is list_string.');
     $settings = $field_storage->getSettings();
-    $this->assertIdentical($settings['allowed_values'], array(
+    $this->assertEqual($settings['allowed_values'], array(
       'Pill spammers' => 'Pill spammers',
       'Fitness spammers' => 'Fitness spammers',
       'Back\slash' => 'Back\slash',

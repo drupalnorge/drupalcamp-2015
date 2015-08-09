@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains Drupal\system\Tests\Database\SchemaTest.
+ * Contains \Drupal\system\Tests\Database\SchemaTest.
  */
 
 namespace Drupal\system\Tests\Database;
@@ -49,6 +49,11 @@ class SchemaTest extends KernelTestBase {
           'default' => "'\"funky default'\"",
           'description' => 'Schema column description for string.',
         ),
+        'test_field_string_ascii'  => array(
+          'type' => 'varchar_ascii',
+          'length' => 255,
+          'description' => 'Schema column description for ASCII string.',
+        ),
       ),
     );
     db_create_table('test_table', $table_specification);
@@ -61,6 +66,21 @@ class SchemaTest extends KernelTestBase {
 
     // Assert that the column comment has been set.
     $this->checkSchemaComment($table_specification['fields']['test_field']['description'], 'test_table', 'test_field');
+
+    if (Database::getConnection()->databaseType() == 'mysql') {
+      // Make sure that varchar fields have the correct collation.
+      $columns = db_query('SHOW FULL COLUMNS FROM {test_table}');
+      foreach ($columns as $column) {
+        if ($column->Field == 'test_field_string') {
+          $string_check = ($column->Collation == 'utf8mb4_general_ci');
+        }
+        if ($column->Field == 'test_field_string_ascii') {
+          $string_ascii_check = ($column->Collation == 'ascii_general_ci');
+        }
+      }
+      $this->assertTrue(!empty($string_check), 'string field has the right collation.');
+      $this->assertTrue(!empty($string_ascii_check), 'ASCII string field has the right collation.');
+    }
 
     // An insert without a value for the column 'test_table' should fail.
     $this->assertFalse($this->tryInsert(), 'Insert without a default failed.');
@@ -216,6 +236,101 @@ class SchemaTest extends KernelTestBase {
     }
     catch (\Exception $e) {}
     $this->assertTrue(db_table_exists('test_timestamp'), 'Table with database specific datatype was created.');
+  }
+
+  /**
+   * Tests that indexes on string fields are limited to 191 characters on MySQL.
+   *
+   * @see \Drupal\Core\Database\Driver\mysql\Schema::getNormalizedIndexes()
+   */
+  function testIndexLength() {
+    if (Database::getConnection()->databaseType() != 'mysql') {
+      return;
+    }
+    $table_specification = array(
+      'fields' => array(
+        'id'  => array(
+          'type' => 'int',
+          'default' => NULL,
+        ),
+        'test_field_text'  => array(
+          'type' => 'text',
+          'not null' => TRUE,
+        ),
+        'test_field_string_long'  => array(
+          'type' => 'varchar',
+          'length' => 255,
+          'not null' => TRUE,
+        ),
+        'test_field_string_ascii_long'  => array(
+          'type' => 'varchar_ascii',
+          'length' => 255,
+        ),
+        'test_field_string_short'  => array(
+          'type' => 'varchar',
+          'length' => 128,
+          'not null' => TRUE,
+        ),
+      ),
+      'indexes' => array(
+        'test_regular' => array(
+          'test_field_text',
+          'test_field_string_long',
+          'test_field_string_ascii_long',
+          'test_field_string_short',
+        ),
+        'test_length' => array(
+          array('test_field_text', 128),
+          array('test_field_string_long', 128),
+          array('test_field_string_ascii_long', 128),
+          array('test_field_string_short', 128),
+        ),
+        'test_mixed' => array(
+          array('test_field_text', 200),
+          'test_field_string_long',
+          array('test_field_string_ascii_long', 200),
+          'test_field_string_short',
+        ),
+      ),
+    );
+    db_create_table('test_table_index_length', $table_specification);
+
+    // Get index information.
+    $results = db_query('SHOW INDEX FROM {test_table_index_length}');
+    $expected_lengths = array(
+      'test_regular' => array(
+        'test_field_text' => 191,
+        'test_field_string_long' => 191,
+        'test_field_string_ascii_long' => NULL,
+        'test_field_string_short' => NULL,
+      ),
+      'test_length' => array(
+        'test_field_text' => 128,
+        'test_field_string_long' => 128,
+        'test_field_string_ascii_long' => 128,
+        'test_field_string_short' => NULL,
+      ),
+      'test_mixed' => array(
+        'test_field_text' => 191,
+        'test_field_string_long' => 191,
+        'test_field_string_ascii_long' => 200,
+        'test_field_string_short' => NULL,
+      ),
+    );
+
+    // Count the number of columns defined in the indexes.
+    $column_count = 0;
+    foreach ($table_specification['indexes'] as $index) {
+      foreach ($index as $field) {
+        $column_count++;
+      }
+    }
+    $test_count = 0;
+    foreach ($results as $result) {
+      $this->assertEqual($result->Sub_part, $expected_lengths[$result->Key_name][$result->Column_name], 'Index length matches expected value.');
+      $test_count++;
+    }
+    $this->assertEqual($test_count, $column_count, 'Number of tests matches expected value.');
   }
 
   /**

@@ -119,7 +119,7 @@ class LibraryDiscoveryParser {
       if (!isset($library['license'])) {
         $library['license'] = array(
           'name' => 'GNU-GPL-2.0-or-later',
-          'url' => 'https://drupal.org/licensing/faq',
+          'url' => 'https://www.drupal.org/licensing/faq',
           'gpl-compatible' => TRUE,
         );
       }
@@ -213,7 +213,7 @@ class LibraryDiscoveryParser {
   }
 
   /**
-   * Parses a given library file and allows module to alter it.
+   * Parses a given library file and allows modules and themes to alter it.
    *
    * This method sets the parsed information onto the library property.
    *

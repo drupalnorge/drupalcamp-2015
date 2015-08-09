@@ -64,7 +64,7 @@ class BlockContentTypeTest extends BlockContentTestBase {
     $this->assertTrue($block_type, 'The new block type has been created.');
 
     $this->drupalGet('block/add/' . $type->id());
-    $this->assertResponse(200, 'The new block type can be accessed at bloack/add.');
+    $this->assertResponse(200, 'The new block type can be accessed at block/add.');
 
     // Create a block type via the user interface.
     $edit = array(
@@ -189,6 +189,7 @@ class BlockContentTypeTest extends BlockContentTestBase {
         // block configure form.
         $path = $theme == $default_theme ? 'admin/structure/block' : "admin/structure/block/list/$theme";
         $this->drupalGet($path);
+        $this->clickLinkPartialName('Place block');
         $this->clickLink(t('Add custom block'));
         // The seven theme has markup inside the link, we cannot use clickLink().
         if ($default_theme == 'seven') {

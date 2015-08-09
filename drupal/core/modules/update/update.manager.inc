@@ -99,10 +99,10 @@ function _update_manager_check_backends(&$form, $operation) {
   $available_backends = drupal_get_filetransfer_info();
   if (empty($available_backends)) {
     if ($operation == 'update') {
-      $form['available_backends']['#markup'] = t('Your server does not support updating modules and themes from this interface. Instead, update modules and themes by uploading the new versions directly to the server, as described in the <a href="@handbook_url">handbook</a>.', array('@handbook_url' => 'http://drupal.org/getting-started/install-contrib'));
+      $form['available_backends']['#markup'] = t('Your server does not support updating modules and themes from this interface. Instead, update modules and themes by uploading the new versions directly to the server, as described in the <a href="@handbook_url">handbook</a>.', array('@handbook_url' => 'https://www.drupal.org/getting-started/install-contrib'));
     }
     else {
-      $form['available_backends']['#markup'] = t('Your server does not support installing modules and themes from this interface. Instead, install modules and themes by uploading them directly to the server, as described in the <a href="@handbook_url">handbook</a>.', array('@handbook_url' => 'http://drupal.org/getting-started/install-contrib'));
+      $form['available_backends']['#markup'] = t('Your server does not support installing modules and themes from this interface. Instead, install modules and themes by uploading them directly to the server, as described in the <a href="@handbook_url">handbook</a>.', array('@handbook_url' => 'https://www.drupal.org/getting-started/install-contrib'));
     }
     return FALSE;
   }
@@ -118,7 +118,7 @@ function _update_manager_check_backends(&$form, $operation) {
       'Updating modules and themes requires access to your server via one of the following methods: <strong>@backends</strong>. See the <a href="@handbook_url">handbook</a> for other update methods.',
       array(
         '@backends' => implode(', ', $backend_names),
-        '@handbook_url' => 'http://drupal.org/getting-started/install-contrib',
+        '@handbook_url' => 'https://www.drupal.org/getting-started/install-contrib',
       ));
   }
   else {
@@ -128,7 +128,7 @@ function _update_manager_check_backends(&$form, $operation) {
       'Installing modules and themes requires access to your server via one of the following methods: <strong>@backends</strong>. See the <a href="@handbook_url">handbook</a> for other installation methods.',
       array(
         '@backends' => implode(', ', $backend_names),
-        '@handbook_url' => 'http://drupal.org/getting-started/install-contrib',
+        '@handbook_url' => 'https://www.drupal.org/getting-started/install-contrib',
       ));
   }
   return TRUE;
@@ -306,7 +306,8 @@ function update_manager_local_transfers_allowed() {
   // the configuration directory to determine if local transfers will be
   // allowed.
   $temporary_file = drupal_tempnam('temporary://', 'update_');
-  $local_transfers_allowed = fileowner($temporary_file) === fileowner(conf_path());
+  $site_path = \Drupal::service('site.path');
+  $local_transfers_allowed = fileowner($temporary_file) === fileowner($site_path);
 
   // Clean up. If this fails, we can ignore it (since this is just a temporary
   // file anyway).

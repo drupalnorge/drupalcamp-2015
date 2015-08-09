@@ -85,7 +85,9 @@ class SpeakerBlock extends BlockBase {
     }
     $output .= '</div>';
     if (!$has_output) {
-      return FALSE;
+      return [
+        '#markup' => '',
+      ];
     }
 
     return array(

@@ -9,7 +9,7 @@ dependencies:
 id: oslo2015_messages
 theme: oslo2015
 region: messages
-weight: 0
+weight: -4
 provider: null
 plugin: system_messages_block
 settings:

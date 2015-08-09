@@ -77,7 +77,7 @@ class ContactSitewideTest extends WebTestBase {
     // User form could not be changed or deleted.
     // Cannot use ::assertNoLinkByHref as it does partial url matching and with
     // field_ui enabled admin/structure/contact/manage/personal/fields exists.
-    // @todo: See https://drupal.org/node/2031223 for the above
+    // @todo: See https://www.drupal.org/node/2031223 for the above.
     $edit_link = $this->xpath('//a[@href=:href]', array(
       ':href' => \Drupal::url('entity.contact_form.edit_form', array('contact_form' => 'personal'))
     ));
@@ -231,7 +231,7 @@ class ContactSitewideTest extends WebTestBase {
     }
     // Submit contact form one over limit.
     $this->submitContact($this->randomMachineName(16), $recipients[0], $this->randomMachineName(16), $id, $this->randomMachineName(64));
-    $this->assertRaw(t('You cannot send more than %number messages in @interval. Try again later.', array('%number' => $this->config('contact.settings')->get('flood.limit'), '@interval' => \Drupal::service('date.formatter')->formatInterval(600))));
+    $this->assertRaw(t('You cannot send more than %number messages in 10 min. Try again later.', array('%number' => $this->config('contact.settings')->get('flood.limit'))));
 
     // Test listing controller.
     $this->drupalLogin($admin_user);
@@ -250,10 +250,17 @@ class ContactSitewideTest extends WebTestBase {
     // Test field UI and field integration.
     $this->drupalGet('admin/structure/contact');
 
+    $view_link = $this->xpath('//table/tbody/tr/td/a[contains(@href, :href) and text()=:text]', [
+      ':href' => \Drupal::url('entity.contact_form.canonical', ['contact_form' => $contact_form]),
+      ':text' => $label,
+      ]
+    );
+    $this->assertTrue(!empty($view_link), 'Contact listing links to contact form.');
+
     // Find out in which row the form we want to add a field to is.
     $i = 0;
     foreach($this->xpath('//table/tbody/tr') as $row) {
-      if (((string)$row->td[0]) == $label) {
+      if (((string) $row->td[0]->a) == $label) {
         break;
       }
       $i++;

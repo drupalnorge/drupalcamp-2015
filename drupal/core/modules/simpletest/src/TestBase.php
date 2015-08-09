@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of \Drupal\simpletest\TestBase.
+ * Contains \Drupal\simpletest\TestBase.
  */
 
 namespace Drupal\simpletest;
@@ -13,18 +13,11 @@ use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Core\Database\Database;
 use Drupal\Core\Config\ConfigImporter;
 use Drupal\Core\Config\StorageComparer;
-use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\Core\Database\ConnectionNotDefinedException;
 use Drupal\Core\Config\StorageInterface;
-use Drupal\Core\Language\Language;
-use Drupal\Core\Session\AccountProxy;
-use Drupal\Core\Session\AnonymousUserSession;
 use Drupal\Core\Site\Settings;
 use Drupal\Core\StreamWrapper\PublicStream;
 use Drupal\Core\Utility\Error;
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\RequestStack;
-use Symfony\Component\DependencyInjection\Reference;
 
 /**
  * Base class for Drupal tests.
@@ -33,6 +26,9 @@ use Symfony\Component\DependencyInjection\Reference;
  * \Drupal\simpletest\WebTestBase or \Drupal\simpletest\KernelTestBase.
  */
 abstract class TestBase {
+
+  use SessionTestTrait;
+
   /**
    * The test run ID.
    *
@@ -130,7 +126,7 @@ abstract class TestBase {
    *
    * @var string
    * @todo Remove all remnants of $GLOBALS['conf'].
-   * @see https://drupal.org/node/2183323
+   * @see https://www.drupal.org/node/2183323
    */
   protected $originalConf;
 
@@ -187,7 +183,7 @@ abstract class TestBase {
   protected $originalProfile;
 
   /**
-   * The name of the session cookie.
+   * The name of the session cookie of the test-runner.
    *
    * @var string
    */
@@ -1140,11 +1136,12 @@ abstract class TestBase {
     }
 
     // Backup current in-memory configuration.
-    $this->originalSite = conf_path();
+    $site_path = \Drupal::service('site.path');
+    $this->originalSite = $site_path;
     $this->originalSettings = Settings::getAll();
     $this->originalConfig = $GLOBALS['config'];
     // @todo Remove all remnants of $GLOBALS['conf'].
-    // @see https://drupal.org/node/2183323
+    // @see https://www.drupal.org/node/2183323
     $this->originalConf = isset($GLOBALS['conf']) ? $GLOBALS['conf'] : NULL;
 
     // Backup statics and globals.
@@ -1155,7 +1152,7 @@ abstract class TestBase {
     // Save further contextual information.
     // Use the original files directory to avoid nesting it within an existing
     // simpletest directory if a test is executed within a test.
-    $this->originalFileDirectory = Settings::get('file_public_path', conf_path() . '/files');
+    $this->originalFileDirectory = Settings::get('file_public_path', $site_path . '/files');
     $this->originalProfile = drupal_get_profile();
     $this->originalUser = isset($user) ? clone $user : NULL;
 
@@ -1225,7 +1222,6 @@ abstract class TestBase {
     // After preparing the environment and changing the database prefix, we are
     // in a valid test environment.
     drupal_valid_test_ua($this->databasePrefix);
-    conf_path(FALSE, TRUE);
 
     // Reset settings.
     new Settings(array(
@@ -1281,7 +1277,7 @@ abstract class TestBase {
     }
 
     // Sleep for 50ms to allow shutdown functions and terminate events to
-    // complete. Further information: https://drupal.org/node/2194357.
+    // complete. Further information: https://www.drupal.org/node/2194357.
     usleep(50000);
 
     // Remove all prefixed tables.
@@ -1339,7 +1335,6 @@ abstract class TestBase {
     else {
       drupal_valid_test_ua(FALSE);
     }
-    conf_path(TRUE, TRUE);
 
     // Restore original shutdown callbacks.
     $callbacks = &drupal_register_shutdown_function();
@@ -1428,9 +1423,9 @@ abstract class TestBase {
    * Do not use this method when special characters are not possible (e.g., in
    * machine or file names that have already been validated); instead, use
    * \Drupal\simpletest\TestBase::randomMachineName(). If $length is greater
-   * than 2 the random string will include at least one ampersand ('&')
-   * character to ensure coverage for special characters and avoid the
-   * introduction of random test failures.
+   * than 3 the random string will include at least one ampersand ('&') and
+   * at least one greater than ('>') character to ensure coverage for special
+   * characters and avoid the introduction of random test failures.
    *
    * @param int $length
    *   Length of random string to generate.
@@ -1441,7 +1436,7 @@ abstract class TestBase {
    * @see \Drupal\Component\Utility\Random::string()
    */
   public function randomString($length = 8) {
-    if ($length < 3) {
+    if ($length < 4) {
       return $this->getRandomGenerator()->string($length, TRUE, array($this, 'randomStringValidate'));
     }
 
@@ -1449,9 +1444,10 @@ abstract class TestBase {
     // returned string contains a character that needs to be escaped in HTML by
     // injecting an ampersand into it.
     $replacement_pos = floor($length / 2);
-    // Remove 1 from the length to account for the ampersand character.
-    $string = $this->getRandomGenerator()->string($length - 1, TRUE, array($this, 'randomStringValidate'));
-    return substr_replace($string, '&', $replacement_pos, 0);
+    // Remove 2 from the length to account for the ampersand and greater than
+    // characters.
+    $string = $this->getRandomGenerator()->string($length - 2, TRUE, array($this, 'randomStringValidate'));
+    return substr_replace($string, '>&', $replacement_pos, 0);
   }
 
   /**
@@ -1474,7 +1470,7 @@ abstract class TestBase {
 
     // Starting with a space means that length might not be what is expected.
     // Starting with an @ sign causes CURL to fail if used in conjunction with a
-    // file upload, see https://drupal.org/node/2174997.
+    // file upload. See https://www.drupal.org/node/2174997.
     if (preg_match('/^(\s|@)/', $string)) {
       return FALSE;
     }
@@ -1640,7 +1636,7 @@ abstract class TestBase {
   }
 
   /**
-   * Configuration accessor for tests. Returns non-overriden configuration.
+   * Configuration accessor for tests. Returns non-overridden configuration.
    *
    * @param $name
    *   Configuration name.

@@ -30,6 +30,8 @@ class TwigEnvironmentTest extends KernelTestBase {
    * Tests inline templates.
    */
   public function testInlineTemplate() {
+    /** @var \Drupal\Core\Render\RendererInterface $renderer */
+    $renderer = $this->container->get('renderer');
     /** @var \Drupal\Core\Template\TwigEnvironment $environment */
     $environment = \Drupal::service('twig');
     $this->assertEqual($environment->renderInline('test-no-context'), 'test-no-context');
@@ -39,10 +41,10 @@ class TwigEnvironmentTest extends KernelTestBase {
     $unsafe_string = '<script>alert(\'Danger! High voltage!\');</script>';
     $element['test'] = array(
       '#type' => 'inline_template',
-      '#template' => 'test-with-context {{ unsafe_content }}',
+      '#template' => 'test-with-context <label>{{ unsafe_content }}</label>',
       '#context' => array('unsafe_content' => $unsafe_string),
     );
-    $this->assertEqual(drupal_render($element), 'test-with-context ' . SafeMarkup::checkPlain($unsafe_string));
+    $this->assertEqual($renderer->renderRoot($element), 'test-with-context <label>' . SafeMarkup::checkPlain($unsafe_string) . '</label>');
 
     // Enable twig_auto_reload and twig_debug.
     $settings = Settings::getAll();
@@ -61,8 +63,8 @@ class TwigEnvironmentTest extends KernelTestBase {
     );
     $element_copy = $element;
     // Render it twice so that twig caching is triggered.
-    $this->assertEqual(drupal_render($element), 'test-with-context muuh');
-    $this->assertEqual(drupal_render($element_copy), 'test-with-context muuh');
+    $this->assertEqual($renderer->renderRoot($element), 'test-with-context muuh');
+    $this->assertEqual($renderer->renderRoot($element_copy), 'test-with-context muuh');
   }
 
   /**

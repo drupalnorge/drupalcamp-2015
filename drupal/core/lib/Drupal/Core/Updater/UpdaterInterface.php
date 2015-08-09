@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\Core\Updater\UpdaterInterface.
+ * Contains \Drupal\Core\Updater\UpdaterInterface.
  */
 
 namespace Drupal\Core\Updater;
@@ -44,8 +44,6 @@ interface UpdaterInterface {
 
   /**
    * Determines if the Updater can handle the project provided in $directory.
-   *
-   * @todo Provide something more rational here, like a project spec file.
    *
    * @param string $directory
    *

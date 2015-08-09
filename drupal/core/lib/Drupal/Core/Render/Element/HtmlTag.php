@@ -8,6 +8,7 @@
 namespace Drupal\Core\Render\Element;
 
 use Drupal\Component\Utility\SafeMarkup;
+use Drupal\Component\Utility\Xss;
 use Drupal\Core\Template\Attribute;
 
 /**
@@ -46,7 +47,12 @@ class HtmlTag extends RenderElement {
    * Pre-render callback: Renders a generic HTML tag with attributes into #markup.
    *
    * Note: It is the caller's responsibility to sanitize any input parameters.
-   * This callback does not perform sanitization.
+   * This callback does not perform sanitization. Despite the result of this
+   * pre-render callback being a #markup element, it is not passed through
+   * \Drupal\Component\Utility\Xss::filterAdmin(). This is because it is marked
+   * safe here, which causes
+   * \Drupal\Core\Render\Renderer::xssFilterAdminIfUnsafe() to regard it as safe
+   * and bypass the call to \Drupal\Component\Utility\Xss::filterAdmin().
    *
    * @param array $element
    *   An associative array containing:
@@ -64,6 +70,9 @@ class HtmlTag extends RenderElement {
    *     wrapper prefix.
    *   - #value_suffix: (optional) A string to append to #value, e.g. a CDATA
    *     wrapper suffix.
+   *   - #noscript: (optional) If TRUE, the markup (including any prefix or
+   *     suffix) will be wrapped in a <noscript> element. (Note that passing
+   *     any non-empty value here will add the <noscript> tag.)
    *
    * @return array
    */
@@ -94,7 +103,7 @@ class HtmlTag extends RenderElement {
       $markup = SafeMarkup::set($markup);
     }
     if (!empty($element['#noscript'])) {
-      $element['#markup'] = '<noscript>' . $markup . '</noscript>';
+      $element['#markup'] = SafeMarkup::format('<noscript>@markup</noscript>', ['@markup' => $markup]);
     }
     else {
       $element['#markup'] = $markup;
@@ -153,7 +162,7 @@ class HtmlTag extends RenderElement {
     }
     else {
       // The IE expression might contain some user input data.
-      $expression = SafeMarkup::checkAdminXss($browsers['IE']);
+      $expression = Xss::filterAdmin($browsers['IE']);
     }
 
     // If the #prefix and #suffix properties are used, wrap them with
@@ -165,8 +174,8 @@ class HtmlTag extends RenderElement {
 
     // Ensure what we are dealing with is safe.
     // This would be done later anyway in drupal_render().
-    $prefix = isset($elements['#prefix']) ? SafeMarkup::checkAdminXss($elements['#prefix']) : '';
-    $suffix = isset($elements['#suffix']) ? SafeMarkup::checkAdminXss($elements['#suffix']) : '';
+    $prefix = isset($elements['#prefix']) ? Xss::filterAdmin($elements['#prefix']) : '';
+    $suffix = isset($elements['#suffix']) ? Xss::filterAdmin($elements['#suffix']) : '';
 
     // Now calling SafeMarkup::set is safe, because we ensured the
     // data coming in was at least admin escaped.

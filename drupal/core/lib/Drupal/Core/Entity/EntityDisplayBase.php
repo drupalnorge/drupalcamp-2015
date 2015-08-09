@@ -11,7 +11,6 @@ use Drupal\Core\Config\Entity\ConfigEntityBase;
 use Drupal\Core\Config\Entity\ConfigEntityInterface;
 use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Entity\Display\EntityDisplayInterface;
-use Drupal\Component\Utility\SafeMarkup;
 
 /**
  * Provides a common base class for entity view and form displays.
@@ -262,7 +261,7 @@ abstract class EntityDisplayBase extends ConfigEntityBase implements EntityDispl
       // If the target entity type uses entities to manage its bundles then
       // depend on the bundle entity.
       if (!$bundle_entity = $this->entityManager()->getStorage($bundle_entity_type_id)->load($this->bundle)) {
-        throw new \LogicException(SafeMarkup::format('Missing bundle entity, entity type %type, entity id %bundle.', array('%type' => $bundle_entity_type_id, '%bundle' => $this->bundle)));
+        throw new \LogicException("Missing bundle entity, entity type $bundle_entity_type_id, entity id {$this->bundle}.");
       }
       $this->addDependency('config', $bundle_entity->getConfigDependencyName());
     }
@@ -388,7 +387,7 @@ abstract class EntityDisplayBase extends ConfigEntityBase implements EntityDispl
   }
 
   /**
-   * Returns the field definition of a field.
+   * Gets the field definition of a field.
    */
   protected function getFieldDefinition($field_name) {
     $definitions = $this->getFieldDefinitions();
@@ -396,7 +395,7 @@ abstract class EntityDisplayBase extends ConfigEntityBase implements EntityDispl
   }
 
   /**
-   * Returns the definitions of the fields that are candidate for display.
+   * Gets the definitions of the fields that are candidate for display.
    */
   protected function getFieldDefinitions() {
     if (!isset($this->fieldDefinitions)) {

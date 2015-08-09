@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\field\Tests\FormTest.
+ * Contains \Drupal\field\Tests\FormTest.
  */
 
 namespace Drupal\field\Tests;
@@ -10,6 +10,8 @@ namespace Drupal\field\Tests;
 use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\Core\Form\FormState;
+use Drupal\field\Entity\FieldConfig;
+use Drupal\field\Entity\FieldStorageConfig;
 
 /**
  * Tests field form handling.
@@ -257,7 +259,7 @@ class FormTest extends FieldTestBase {
     $this->assertFieldByName("{$field_name}[0][value]", '', 'Widget 1 is displayed');
     $this->assertFieldByName("{$field_name}[1][value]", '', 'New widget is displayed');
     $this->assertNoField("{$field_name}[2][value]", 'No extraneous widget is displayed');
-    // TODO : check that non-field inputs are preserved ('title')...
+    // TODO : check that non-field inputs are preserved ('title'), etc.
 
     // Yet another time so that we can play with more values -> 3 widgets.
     $this->drupalPostForm(NULL, array(), t('Add another item'));
@@ -314,6 +316,30 @@ class FormTest extends FieldTestBase {
     // Re-submit: check that the field can be emptied.
 
     // Test with several multiple fields in a form
+  }
+
+  /**
+   * Tests the position of the required label.
+   */
+  public function testFieldFormUnlimitedRequired() {
+    $field_name = $this->fieldStorageUnlimited['field_name'];
+    $this->field['field_name'] = $field_name;
+    $this->field['required'] = TRUE;
+    FieldStorageConfig::create($this->fieldStorageUnlimited)->save();
+    FieldConfig::create($this->field)->save();
+    entity_get_form_display($this->field['entity_type'], $this->field['bundle'], 'default')
+      ->setComponent($field_name)
+      ->save();
+
+    // Display creation form -> 1 widget.
+    $this->drupalGet('entity_test/add');
+    // Check that the Required symbol is present for the multifield label.
+    $this->assertRaw(SafeMarkup::format('<h4 class="label form-required">@label</h4>', array('@label' => $this->field['label'])),
+        'Required symbol added field label.');
+    // Check that the label of the field input is visually hidden and contains
+    // the field title and an indication of the delta for a11y.
+    $this->assertRaw(SafeMarkup::format('<label for="edit-field-unlimited-0-value" class="visually-hidden form-required">@label (value 1)</label>', array('@label' => $this->field['label'])),
+        'Required symbol not added for field input.');
   }
 
   /**
@@ -409,7 +435,7 @@ class FormTest extends FieldTestBase {
     // Press 'add more' button through Ajax, and place the expected HTML result
     // as the tested content.
     $commands = $this->drupalPostAjaxForm(NULL, $edit, $field_name . '_add_more');
-    $this->setRawContent($commands[1]['data']);
+    $this->setRawContent($commands[2]['data']);
 
     for ($delta = 0; $delta <= $delta_range; $delta++) {
       $this->assertFieldByName("{$field_name}[$delta][value]", $values[$delta], "Widget $delta is displayed and has the right value");
@@ -589,7 +615,7 @@ class FormTest extends FieldTestBase {
     // widget.
     $this->field->default_value = array();
     $this->field->save();
-    entity_get_form_display($entity_type, $this->field->bundle, 'default')
+    entity_get_form_display($entity_type, $this->field->getTargetBundle(), 'default')
       ->setComponent($this->field->getName(), array(
         'type' => 'test_field_widget',
       ))
@@ -609,7 +635,7 @@ class FormTest extends FieldTestBase {
     $this->assertEqual($entity->{$field_name}->value, $value, 'Field value was updated');
 
     // Set the field back to hidden.
-    entity_get_form_display($entity_type, $this->field->bundle, 'default')
+    entity_get_form_display($entity_type, $this->field->getTargetBundle(), 'default')
       ->removeComponent($this->field->getName())
       ->save();
 

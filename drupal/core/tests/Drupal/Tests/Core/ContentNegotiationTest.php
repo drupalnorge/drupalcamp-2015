@@ -44,39 +44,13 @@ class ContentNegotiationTest extends UnitTestCase {
   }
 
   /**
-   * Tests the getContentType() method when a priority format is found.
-   *
-   * @dataProvider priorityFormatProvider
-   * @covers ::getContentType
+   * Tests the specifying a format via query parameters gets used.
    */
-  public function testAPriorityFormatIsFound($priority, $format) {
+  public function testFormatViaQueryParameter() {
     $request = new Request();
-    $request->setFormat($format['format'], $format['mime_type']);
-    $request->headers->set('Accept', sprintf('%s,application/json', $format['mime_type']));
+    $request->query->set('_format', 'bob');
 
-    $this->assertSame($priority, $this->contentNegotiation->getContentType($request));
-  }
-
-  public function priorityFormatProvider()
-  {
-    return [
-      ['drupal_dialog', ['format' => 'drupal_dialog', 'mime_type' => 'application/vnd.drupal-dialog']],
-      ['drupal_modal', ['format' => 'drupal_modal', 'mime_type' => 'application/vnd.drupal-modal']],
-      ['drupal_ajax', ['format' => 'drupal_ajax', 'mime_type' => 'application/vnd.drupal-ajax']],
-      ['html', ['format' => 'html', 'mime_type' => 'text/html']],
-    ];
-  }
-
-  /**
-   * Tests the getContentType() method when no priority format is found but a valid one is found.
-   *
-   * @covers ::getContentType
-   */
-  public function testNoPriorityFormatIsFoundButReturnsTheFirstValidOne() {
-    $request = new Request();
-    $request->headers->set('Accept', 'application/rdf+xml');
-
-    $this->assertSame('rdf', $this->contentNegotiation->getContentType($request));
+    $this->assertSame('bob', $this->contentNegotiation->getContentType($request));
   }
 
   /**
@@ -99,7 +73,7 @@ class ContentNegotiationTest extends UnitTestCase {
     $request = new Request();
     $request->headers->set('X-Requested-With', 'XMLHttpRequest');
 
-    $this->assertSame('ajax', $this->contentNegotiation->getContentType($request));
+    $this->assertSame('html', $this->contentNegotiation->getContentType($request));
   }
 
 }

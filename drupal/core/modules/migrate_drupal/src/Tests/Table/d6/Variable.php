@@ -2,11 +2,11 @@
 
 /**
  * @file
- * Contains \Drupal\migrate_drupal\Tests\Dump\Variable.
+ * Contains \Drupal\migrate_drupal\Tests\Table\d6\Variable.
  *
  * THIS IS A GENERATED FILE. DO NOT EDIT.
  *
- * @see cores/scripts/dump-database-d6.sh
+ * @see core/scripts/migrate-db.sh
  * @see https://www.drupal.org/sandbox/benjy/2405029
  */
 
@@ -37,6 +37,7 @@ class Variable extends DrupalDumpBase {
           'length' => 100,
         ),
       ),
+      'mysql_character_set' => 'utf8',
     ));
     $this->database->insert("variable")->fields(array(
       'name',
@@ -87,9 +88,6 @@ class Variable extends DrupalDumpBase {
     ))->values(array(
       'name' => 'book_child_type',
       'value' => 's:4:"book";',
-    ))->values(array(
-      'name' => 'cache',
-      'value' => 'i:1;',
     ))->values(array(
       'name' => 'cache_lifetime',
       'value' => 'i:0;',
@@ -478,9 +476,6 @@ class Variable extends DrupalDumpBase {
       'name' => 'image_toolkit',
       'value' => 's:2:"gd";',
     ))->values(array(
-      'name' => 'javascript_parsed',
-      'value' => 'a:0:{}',
-    ))->values(array(
       'name' => 'locale_cache_strings',
       'value' => 'i:1;',
     ))->values(array(
@@ -730,3 +725,4 @@ class Variable extends DrupalDumpBase {
   }
 
 }
+#32b72a0543c243804368c7bc10b05be5

@@ -3,9 +3,11 @@ services:
     class: Drupal\Core\Cache\CacheBackendInterface
     tags:
       - { name: cache.bin }
-    factory_method: get
-    factory_service: cache_factory
+    factory: cache_factory:get
     arguments: [migrate]
+  migrate.template_storage:
+    class: Drupal\migrate\MigrateTemplateStorage
+    arguments: ['@module_handler']
   plugin.manager.migrate.source:
     class: Drupal\migrate\Plugin\MigratePluginManager
     arguments: [source, '@container.namespaces', '@cache.discovery', '@module_handler', 'Drupal\migrate\Annotation\MigrateSource']

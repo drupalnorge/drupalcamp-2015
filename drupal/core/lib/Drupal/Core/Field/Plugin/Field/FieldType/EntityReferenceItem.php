@@ -72,9 +72,15 @@ class EntityReferenceItem extends FieldItemBase {
     $settings = $field_definition->getSettings();
     $target_type_info = \Drupal::entityManager()->getDefinition($settings['target_type']);
 
+    $target_id_data_type = 'string';
     if ($target_type_info->isSubclassOf('\Drupal\Core\Entity\FieldableEntityInterface')) {
-      // @todo: Lookup the entity type's ID data type and use it here.
-      // https://drupal.org/node/2107249
+      $id_definition = \Drupal::entityManager()->getBaseFieldDefinitions($settings['target_type'])[$target_type_info->getKey('id')];
+      if ($id_definition->getType() === 'integer') {
+        $target_id_data_type = 'integer';
+      }
+    }
+
+    if ($target_id_data_type === 'integer') {
       $target_id_definition = DataDefinition::create('integer')
         ->setLabel(t('@label ID', array($target_type_info->getLabel())))
         ->setSetting('unsigned', TRUE);
@@ -119,8 +125,8 @@ class EntityReferenceItem extends FieldItemBase {
   public static function schema(FieldStorageDefinitionInterface $field_definition) {
     $target_type = $field_definition->getSetting('target_type');
     $target_type_info = \Drupal::entityManager()->getDefinition($target_type);
-
-    if ($target_type_info->isSubclassOf('\Drupal\Core\Entity\FieldableEntityInterface')) {
+    $properties = static::propertyDefinitions($field_definition)['target_id'];
+    if ($target_type_info->isSubclassOf('\Drupal\Core\Entity\FieldableEntityInterface') && $properties->getDataType() === 'integer') {
       $columns = array(
         'target_id' => array(
           'description' => 'The ID of the target entity.',
@@ -133,7 +139,7 @@ class EntityReferenceItem extends FieldItemBase {
       $columns = array(
         'target_id' => array(
           'description' => 'The ID of the target entity.',
-          'type' => 'varchar',
+          'type' => 'varchar_ascii',
           // If the target entities act as bundles for another entity type,
           // their IDs should not exceed the maximum length for bundles.
           'length' => $target_type_info->getBundleOf() ? EntityTypeInterface::BUNDLE_MAX_LENGTH : 255,

@@ -52,6 +52,8 @@ use Symfony\Component\HttpFoundation\Request;
  */
 abstract class BrowserTestBase extends \PHPUnit_Framework_TestCase {
 
+  use SessionTestTrait;
+
   /**
    * Class loader.
    *
@@ -157,13 +159,6 @@ abstract class BrowserTestBase extends \PHPUnit_Framework_TestCase {
    * @var string
    */
   protected $profile = 'testing';
-
-  /**
-   * The current session name, if available.
-   *
-   * @var string
-   */
-  protected $sessionName;
 
   /**
    * The current user logged in using the Mink controlled browser.
@@ -702,7 +697,7 @@ abstract class BrowserTestBase extends \PHPUnit_Framework_TestCase {
     ), t('Log in'));
 
     // @see BrowserTestBase::drupalUserIsLoggedIn()
-    $account->sessionId = $this->getSession()->getCookie(session_name());
+    $account->sessionId = $this->getSession()->getCookie($this->getSessionName());
     $this->assertTrue($this->drupalUserIsLoggedIn($account), SafeMarkup::format('User %name successfully logged in.', array('name' => $account->getUsername())));
 
     $this->loggedInUser = $account;
@@ -835,11 +830,9 @@ abstract class BrowserTestBase extends \PHPUnit_Framework_TestCase {
       'passRaw' => $this->randomMachineName(),
     ));
 
-    // Some tests (SessionTest and SessionHttpsTest) need to examine whether the
-    // proper session cookies were set on a response. Because the child site
-    // uses the same session name as the test runner, it is necessary to make
-    // that available to test-methods.
-    $this->sessionName = session_name();
+    // The child site derives its session name from the database prefix when
+    // running web tests.
+    $this->generateSessionName($this->databasePrefix);
 
     // Get parameters for install_drupal() before removing global variables.
     $parameters = $this->installParameters();
@@ -929,7 +922,7 @@ abstract class BrowserTestBase extends \PHPUnit_Framework_TestCase {
     // By default, verbosely display all errors and disable all production
     // environment optimizations for all tests to avoid needless overhead and
     // ensure a sane default experience for test authors.
-    // @see https://drupal.org/node/2259167
+    // @see https://www.drupal.org/node/2259167
     $config->getEditable('system.logging')
       ->set('error_level', 'verbose')
       ->save();
@@ -957,7 +950,7 @@ abstract class BrowserTestBase extends \PHPUnit_Framework_TestCase {
     // Reset/rebuild all data structures after enabling the modules, primarily
     // to synchronize all data structures and caches between the test runner and
     // the child site.
-    // Affects e.g. file_get_stream_wrappers().
+    // Affects e.g. StreamWrapperManagerInterface::getWrappers().
     // @see \Drupal\Core\DrupalKernel::bootCode()
     // @todo Test-specific setUp() methods may set up further fixtures; find a
     //   way to execute this after setUp() is done, or to eliminate it entirely.
@@ -1265,6 +1258,9 @@ abstract class BrowserTestBase extends \PHPUnit_Framework_TestCase {
     $server = array_merge($server, $override_server_vars);
 
     $request = Request::create($request_path, 'GET', array(), array(), array(), $server);
+    // Ensure the the request time is REQUEST_TIME to ensure that API calls
+    // in the test use the right timestamp.
+    $request->server->set('REQUEST_TIME', REQUEST_TIME);
     $this->container->get('request_stack')->push($request);
 
     // The request context is normally set by the router_listener from within
@@ -1333,12 +1329,14 @@ abstract class BrowserTestBase extends \PHPUnit_Framework_TestCase {
    *   Return TRUE if the user is logged in, FALSE otherwise.
    */
   protected function drupalUserIsLoggedIn(UserInterface $account) {
-    if (!isset($account->sessionId)) {
-      return FALSE;
+    $logged_in = FALSE;
+
+    if (isset($account->sessionId)) {
+      $session_handler = $this->container->get('session_handler.storage');
+      $logged_in = (bool) $session_handler->read($account->sessionId);
     }
-    // The session ID is hashed before being stored in the database.
-    // @see \Drupal\Core\Session\SessionHandler::read()
-    return (bool) db_query("SELECT sid FROM {users_field_data} u INNER JOIN {sessions} s ON u.uid = s.uid AND u.default_langcode = 1 WHERE s.sid = :sid", array(':sid' => Crypt::hashBase64($account->sessionId)))->fetchField();
+
+    return $logged_in;
   }
 
 }

@@ -9,21 +9,17 @@
  */
 
 use Drupal\Component\Serialization\Json;
+use Drupal\Component\Utility\Crypt;
 use Drupal\Component\Utility\Html;
 use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Component\Utility\Unicode;
-use Drupal\Component\Utility\UrlHelper;
 use Drupal\Component\Utility\Xss;
-use Drupal\Core\Asset\AttachedAssets;
 use Drupal\Core\Config\Config;
 use Drupal\Core\Config\StorageException;
-use Drupal\Core\Extension\Extension;
-use Drupal\Core\Extension\ExtensionNameLengthException;
 use Drupal\Core\Template\Attribute;
 use Drupal\Core\Theme\ThemeSettings;
 use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\Render\Element;
-use Symfony\Component\HttpFoundation\Request;
 
 /**
  * @defgroup content_flags Content markers
@@ -109,17 +105,17 @@ function drupal_theme_rebuild() {
 /**
  * Allows themes and/or theme engines to discover overridden theme functions.
  *
- * @param $cache
+ * @param array $cache
  *   The existing cache of theme hooks to test against.
- * @param $prefixes
+ * @param array $prefixes
  *   An array of prefixes to test, in reverse order of importance.
  *
- * @return $implementations
+ * @return array
  *   The functions found, suitable for returning from hook_theme;
  */
 function drupal_find_theme_functions($cache, $prefixes) {
-  $implementations = array();
-  $functions = get_defined_functions();
+  $implementations = [];
+  $grouped_functions = drupal_group_functions_by_prefix();
 
   foreach ($cache as $hook => $info) {
     foreach ($prefixes as $prefix) {
@@ -135,8 +131,10 @@ function drupal_find_theme_functions($cache, $prefixes) {
       // are found using the base hook's pattern, not a pattern from an
       // intermediary suggestion.
       $pattern = isset($info['pattern']) ? $info['pattern'] : ($hook . '__');
-      if (!isset($info['base hook']) && !empty($pattern)) {
-        $matches = preg_grep('/^' . $prefix . '_' . $pattern . '/', $functions['user']);
+      // Grep only the functions which are within the prefix group.
+      list($first_prefix,) = explode('_', $prefix, 2);
+      if (!isset($info['base hook']) && !empty($pattern) && isset($grouped_functions[$first_prefix])) {
+        $matches = preg_grep('/^' . $prefix . '_' . $pattern . '/', $grouped_functions[$first_prefix]);
         if ($matches) {
           foreach ($matches as $match) {
             $new_hook = substr($match, strlen($prefix) + 1);
@@ -161,6 +159,25 @@ function drupal_find_theme_functions($cache, $prefixes) {
   }
 
   return $implementations;
+}
+
+/**
+ * Group all user functions by word before first underscore.
+ *
+ * @return array
+ *   Functions grouped by the first prefix.
+ */
+function drupal_group_functions_by_prefix() {
+  $functions = get_defined_functions();
+
+  $grouped_functions = [];
+  // Splitting user defined functions into groups by the first prefix.
+  foreach ($functions['user'] as $function) {
+    list($first_prefix,) = explode('_', $function, 2);
+    $grouped_functions[$first_prefix][] = $function;
+  }
+
+  return $grouped_functions;
 }
 
 /**
@@ -424,12 +441,10 @@ function template_preprocess_time(&$variables) {
     // Format and use a human-readable version of the timestamp, if any.
     if (isset($variables['timestamp'])) {
       $variables['text'] = format_date($variables['timestamp']);
-      $variables['html'] = FALSE;
     }
     // Otherwise, use the literal datetime attribute.
     elseif (isset($variables['attributes']['datetime'])) {
       $variables['text'] = $variables['attributes']['datetime'];
-      $variables['html'] = FALSE;
     }
   }
 }
@@ -479,6 +494,12 @@ function template_preprocess_datetime_wrapper(&$variables) {
 
   if (!empty($element['#title'])) {
     $variables['title'] = $element['#title'];
+  }
+
+  // Display any error messages.
+  $variables['errors'] = NULL;
+  if (!empty($element['#errors']) && empty($element['#error_no_message'])) {
+    $variables['errors'] = $element['#errors'];
   }
 
   if (!empty($element['#description'])) {
@@ -716,7 +737,8 @@ function template_preprocess_image(&$variables) {
  *   - header: An array containing the table headers. Each element of the array
  *     can be either a localized string or an associative array with the
  *     following keys:
- *     - data: The localized title of the table column.
+ *     - data: The localized title of the table column, as a string or render
+ *       array.
  *     - field: The database field represented in the table column (required
  *       if user is to be able to sort on this column).
  *     - sort: A default sort order for this column ("asc" or "desc"). Only
@@ -740,7 +762,7 @@ function template_preprocess_image(&$variables) {
  *       'even / odd' styling. Defaults to FALSE.
  *     Each cell can be either a string or an associative array with the
  *     following keys:
- *     - data: The string to display in the table cell.
+ *     - data: The string or render array to display in the table cell.
  *     - header: Indicates this cell is a header.
  *     - Any HTML attributes, such as "colspan", to apply to the table cell.
  *     Here's an example for $rows:
@@ -876,10 +898,6 @@ function template_preprocess_table(&$variables) {
           }
         }
 
-        if (is_array($cell_content)) {
-          $cell_content = drupal_render($cell_content);
-        }
-
         tablesort_header($cell_content, $cell, $variables['header'], $ts);
 
         // tablesort_header() removes the 'sort' and 'field' keys.
@@ -940,10 +958,6 @@ function template_preprocess_table(&$variables) {
               unset($cell['header']);
 
               $cell_attributes = $cell;
-
-              if (is_array($cell_content)) {
-                $cell_content = drupal_render($cell_content);
-              }
             }
             // Active table sort information.
             if (isset($variables['header'][$col_key]['data']) && $variables['header'][$col_key]['data'] == $ts['name'] && !empty($variables['header'][$col_key]['field'])) {
@@ -1002,7 +1016,7 @@ function template_preprocess_tablesort_indicator(&$variables) {
  *   - title: A title to be prepended to the list.
  *   - list_type: The type of list to return (e.g. "ul", "ol").
  *
- * @see http://drupal.org/node/1842756
+ * @see https://www.drupal.org/node/1842756
  */
 function template_preprocess_item_list(&$variables) {
   foreach ($variables['items'] as &$item) {
@@ -1053,30 +1067,6 @@ function template_preprocess_item_list(&$variables) {
 }
 
 /**
- * Prepares variables for feed icon templates.
- *
- * Default template: feed-icon.html.twig.
- *
- * @param array $variables
- *   An associative array containing:
- *   - url: An internal system path or a fully qualified external URL of the
- *     feed.
- *   - title: A descriptive title of the feed.
- */
-function template_preprocess_feed_icon(&$variables) {
-  $text = t('Subscribe to !feed-title', array('!feed-title' => $variables['title']));
-  $variables['icon'] = array(
-    '#theme' => 'image__feed_icon',
-    '#uri' => 'core/misc/feed.png',
-    '#width' => 16,
-    '#height' => 16,
-    '#alt' => $text,
-  );
-  // Stripping tags because that's what l() used to do.
-  $variables['attributes']['title'] = strip_tags($text);
-}
-
-/**
  * Returns HTML for an indentation div; used for drag and drop tables.
  *
  * @param $variables
@@ -1088,7 +1078,7 @@ function template_preprocess_feed_icon(&$variables) {
 function theme_indentation($variables) {
   $output = '';
   for ($n = 0; $n < $variables['size']; $n++) {
-    $output .= '<div class="js-indentation">&nbsp;</div>';
+    $output .= '<div class="js-indentation indentation">&nbsp;</div>';
   }
   return $output;
 }
@@ -1162,10 +1152,10 @@ function template_preprocess_maintenance_task_list(&$variables) {
  * This function is called for theme hooks implemented as templates only, not
  * for theme hooks implemented as functions. This preprocess function is the
  * first in the sequence of preprocessing functions that are called when
- * preparing variables for a template. See _theme() for more details about the
- * full sequence.
+ * preparing variables for a template.
  *
- * @see _theme()
+ * See the @link themeable Default theme implementations topic @endlink for
+ * details.
  */
 function template_preprocess(&$variables, $hook, $info) {
   // Tell all templates where they are located.
@@ -1267,69 +1257,46 @@ function template_preprocess_html(&$variables) {
   // Construct page title.
   if (!empty($variables['page']['#title'])) {
     $head_title = array(
-      'title' => SafeMarkup::set(trim(strip_tags($variables['page']['#title']))),
-      'name' => SafeMarkup::checkPlain($site_config->get('name')),
+      'title' => trim(strip_tags($variables['page']['#title'])),
+      'name' => $site_config->get('name'),
     );
   }
   // @todo Remove once views is not bypassing the view subscriber anymore.
-  //   @see http://drupal.org/node/2068471
+  //   @see https://www.drupal.org/node/2068471
   elseif ($is_front_page) {
     $head_title = array(
       'title' => t('Home'),
-      'name' => SafeMarkup::checkPlain($site_config->get('name')),
+      'name' => $site_config->get('name'),
     );
   }
   else {
-    $head_title = array('name' => SafeMarkup::checkPlain($site_config->get('name')));
+    $head_title = ['name' => $site_config->get('name')];
     if ($site_config->get('slogan')) {
-      $head_title['slogan'] = strip_tags(Xss::filterAdmin($site_config->get('slogan')));
+      $head_title['slogan'] = strip_tags($site_config->get('slogan'));
     }
   }
 
+  $variables['head_title'] = $head_title;
+  // @deprecated in Drupal 8.0.0, will be removed before Drupal 9.0.0.
   $variables['head_title_array'] = $head_title;
-  $output = '';
-  $separator = '';
-  foreach ($head_title as $item) {
-    $output .= $separator . SafeMarkup::escape($item);
-    $separator = ' | ';
-  }
-  $variables['head_title'] = SafeMarkup::set($output);
 
-  // Collect all attachments. This must happen in the preprocess function for
-  // #type => html, to ensure that attachments added in #pre_render callbacks
-  // for #type => html are included.
-  $attached = $variables['html']['#attached'];
-  $attached = drupal_merge_attached($attached, $variables['page']['#attached']);
-  if (isset($variables['page_top'])) {
-    $attached = drupal_merge_attached($attached, $variables['page_top']['#attached']);
+  // Create placeholder strings for these keys.
+  // @see \Drupal\Core\Render\HtmlResponseSubscriber
+  $types = [
+    'styles',
+    'scripts',
+    'scripts_bottom',
+    'head',
+  ];
+  $token = Crypt::randomBytesBase64(55);
+  foreach ($types as $type) {
+    $placeholder = SafeMarkup::format('<drupal-html-response-attachment-placeholder type="@type" token="@token"></drupal-html-response-attachment-placeholder>', [
+      '@type' => $type,
+      '@token' => $token,
+    ]);
+    $variables[$type]['#markup'] = $placeholder;
+    $variables[$type]['#attached']['html_response_placeholders'][$type] = $placeholder;
   }
-  if (isset($variables['page_bottom'])) {
-    $attached = drupal_merge_attached($attached, $variables['page_bottom']['#attached']);
-  }
-
-  // Render the attachments into HTML markup to be used directly in the template
-  // for #type => html: html.html.twig.
-  $all_attached = ['#attached' => $attached];
-  $assets = AttachedAssets::createFromRenderArray($all_attached);
-  // Take Ajax page state into account, to allow for something like Turbolinks
-  // to be implemented without altering core.
-  // @see https://github.com/rails/turbolinks/
-  $ajax_page_state = \Drupal::request()->request->get('ajax_page_state');
-  $assets->setAlreadyLoadedLibraries(isset($ajax_page_state) ? explode(',', $ajax_page_state['libraries']) : []);
-  // Optimize CSS/JS if necessary, but only during normal site operation.
-  $optimize_css = !defined('MAINTENANCE_MODE') && \Drupal::config('system.performance')->get('css.preprocess');
-  $optimize_js = !defined('MAINTENANCE_MODE') && \Drupal::config('system.performance')->get('js.preprocess');
-  // Render the asset collections.
-  $asset_resolver = \Drupal::service('asset.resolver');
-  $variables['styles'] = \Drupal::service('asset.css.collection_renderer')->render($asset_resolver->getCssAssets($assets, $optimize_css));
-  list($js_assets_header, $js_assets_footer) = $asset_resolver->getJsAssets($assets, $optimize_js);
-  $js_collection_renderer = \Drupal::service('asset.js.collection_renderer');
-  $variables['scripts'] = $js_collection_renderer->render($js_assets_header);
-  $variables['scripts_bottom'] = $js_collection_renderer->render($js_assets_footer);
-
-  // Handle all non-asset attachments.
-  drupal_process_attached($all_attached);
-  $variables['head'] = drupal_get_html_head(FALSE);
 }
 
 /**
@@ -1348,9 +1315,9 @@ function template_preprocess_page(&$variables) {
   // Move some variables to the top level for themer convenience and template cleanliness.
   $variables['title'] = $variables['page']['#title'];
 
-  foreach (system_region_list(\Drupal::theme()->getActiveTheme()->getName()) as $region_key => $region_name) {
-    if (!isset($variables['page'][$region_key])) {
-      $variables['page'][$region_key] = array();
+  foreach (\Drupal::theme()->getActiveTheme()->getRegions() as $region) {
+    if (!isset($variables['page'][$region])) {
+      $variables['page'][$region] = array();
     }
   }
 
@@ -1359,7 +1326,7 @@ function template_preprocess_page(&$variables) {
   $variables['language']          = $language_interface;
   $variables['logo']              = theme_get_setting('logo.url');
   $variables['site_name']         = (theme_get_setting('features.name') ? SafeMarkup::checkPlain($site_config->get('name')) : '');
-  $variables['site_slogan']       = (theme_get_setting('features.slogan') ? Xss::filterAdmin($site_config->get('slogan')) : '');
+  $variables['site_slogan']['#markup'] = (theme_get_setting('features.slogan') ? $site_config->get('slogan') : '');
 
   // An exception might be thrown.
   try {
@@ -1471,7 +1438,6 @@ function template_preprocess_maintenance_page(&$variables) {
   template_preprocess_page($variables);
 
   // @see system_page_attachments()
-  $variables['#attached']['library'][] = 'core/normalize';
   $variables['#attached']['library'][] = 'system/maintenance';
 }
 
@@ -1491,11 +1457,8 @@ function template_preprocess_install_page(&$variables) {
 
   // Override the site name that is displayed on the page, since Drupal is
   // still in the process of being installed.
-  $distribution_name = SafeMarkup::checkPlain(drupal_install_profile_distribution_name());
+  $distribution_name = drupal_install_profile_distribution_name();
   $variables['site_name'] = $distribution_name;
-  $variables['head_title_array']['name'] = $distribution_name;
-
-  $variables['head_title'] = implode(' | ', $variables['head_title_array']);
 }
 
 /**
@@ -1716,7 +1679,7 @@ function drupal_common_theme() {
       'render element' => 'elements',
     ),
     'time' => array(
-      'variables' => array('timestamp' => NULL, 'text' => NULL, 'attributes' => array(), 'html' => FALSE),
+      'variables' => array('timestamp' => NULL, 'text' => NULL, 'attributes' => array()),
     ),
     'datetime_form' => array(
       'render element' => 'element',
@@ -1761,7 +1724,7 @@ function drupal_common_theme() {
       'variables' => array('status' => MARK_NEW),
     ),
     'item_list' => array(
-      'variables' => array('items' => array(), 'title' => '', 'list_type' => 'ul', 'attributes' => array(), 'empty' => NULL),
+      'variables' => array('items' => array(), 'title' => '', 'list_type' => 'ul', 'attributes' => array(), 'empty' => NULL, 'context' => array()),
     ),
     'feed_icon' => array(
       'variables' => array('url' => NULL, 'title' => NULL),

@@ -8,8 +8,6 @@
 namespace Drupal\migrate_drupal\Tests\d6;
 
 use Drupal\Core\Entity\Entity\EntityViewMode;
-use Drupal\migrate\MigrateExecutable;
-use Drupal\migrate_drupal\Tests\d6\MigrateDrupal6TestBase;
 
 /**
  * Upgrade field formatter settings to entity.display.*.*.yml.
@@ -30,6 +28,8 @@ class MigrateFieldFormatterSettingsTest extends MigrateDrupal6TestBase {
    */
   protected function setUp() {
     parent::setUp();
+
+    $this->installConfig(['node']);
 
     entity_create('node_type', array('type' => 'test_page'))->save();
     entity_create('node_type', array('type' => 'story'))->save();
@@ -64,17 +64,14 @@ class MigrateFieldFormatterSettingsTest extends MigrateDrupal6TestBase {
     );
     $this->prepareMigrations($id_mappings);
 
-    $migration = entity_load('migration', 'd6_field_formatter_settings');
-    $dumps = array(
-      $this->getDumpDirectory() . '/ContentNodeFieldInstance.php',
-      $this->getDumpDirectory() . '/ContentNodeField.php',
-      $this->getDumpDirectory() . '/ContentFieldTest.php',
-      $this->getDumpDirectory() . '/ContentFieldTestTwo.php',
-      $this->getDumpDirectory() . '/ContentFieldMultivalue.php',
-    );
-    $this->prepare($migration, $dumps);
-    $executable = new MigrateExecutable($migration, $this);
-    $executable->import();
+    $this->loadDumps([
+      'ContentNodeFieldInstance.php',
+      'ContentNodeField.php',
+      'ContentFieldTest.php',
+      'ContentFieldTestTwo.php',
+      'ContentFieldMultivalue.php',
+    ]);
+    $this->executeMigration('d6_field_formatter_settings');
   }
 
   /**
@@ -194,9 +191,10 @@ class MigrateFieldFormatterSettingsTest extends MigrateDrupal6TestBase {
     $this->assertIdentical($expected, $component);
 
     // Test date field.
+    $defaults = array('format_type' => 'fallback', 'timezone_override' => '',);
     $expected['weight'] = 10;
     $expected['type'] = 'datetime_default';
-    $expected['settings'] = array('format_type' => 'fallback');
+    $expected['settings'] = array('format_type' => 'fallback') + $defaults;
     $component = $display->getComponent('field_test_date');
     $this->assertIdentical($expected, $component);
     $display = entity_load('entity_view_display', 'node.story.default');
@@ -210,13 +208,13 @@ class MigrateFieldFormatterSettingsTest extends MigrateDrupal6TestBase {
     $component = $display->getComponent('field_test_datestamp');
     $this->assertIdentical($expected, $component);
     $display = entity_load('entity_view_display', 'node.story.teaser');
-    $expected['settings'] = array('format_type' => 'medium');
+    $expected['settings'] = array('format_type' => 'medium') + $defaults;
     $component = $display->getComponent('field_test_datestamp');
     $this->assertIdentical($expected, $component);
 
     // Test datetime field.
     $expected['weight'] = 12;
-    $expected['settings'] = array('format_type' => 'short');
+    $expected['settings'] = array('format_type' => 'short') + $defaults;
     $component = $display->getComponent('field_test_datetime');
     $this->assertIdentical($expected, $component);
     $display = entity_load('entity_view_display', 'node.story.default');

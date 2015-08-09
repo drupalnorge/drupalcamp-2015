@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\Core\Database\Driver\pgsql\Install\Tasks
+ * Contains \Drupal\Core\Database\Driver\pgsql\Install\Tasks.
  */
 
 namespace Drupal\Core\Database\Driver\pgsql\Install;
@@ -51,7 +51,7 @@ class Tasks extends InstallTasks {
    * {@inheritdoc}
    */
   public function minimumVersion() {
-    return '8.3';
+    return '9.1.2';
   }
 
   /**

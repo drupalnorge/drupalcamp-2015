@@ -111,7 +111,7 @@ abstract class FilterFormatFormBase extends EntityForm {
       '#suffix' => '</div>',
       // This item is used as a pure wrapping container with heading. Ignore its
       // value, since 'filters' should only contain filter definitions.
-      // @see http://drupal.org/node/1829202
+      // See https://www.drupal.org/node/1829202.
       '#input' => FALSE,
     );
     // Filter order (tabledrag).
@@ -204,8 +204,8 @@ abstract class FilterFormatFormBase extends EntityForm {
   /**
    * {@inheritdoc}
    */
-  public function validate(array $form, FormStateInterface $form_state) {
-    parent::validate($form, $form_state);
+  public function validateForm(array &$form, FormStateInterface $form_state) {
+    parent::validateForm($form, $form_state);
 
     // @todo Move trimming upstream.
     $format_format = trim($form_state->getValue('format'));
