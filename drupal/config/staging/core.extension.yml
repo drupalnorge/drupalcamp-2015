@@ -1,6 +1,5 @@
 module:
   ban: 0
-  beta2beta: 0
   block: 0
   block_content: 0
   breakpoint: 0
@@ -18,7 +17,6 @@ module:
   field_ui: 0
   file: 0
   filter: 0
-  head2head: 0
   help: 0
   history: 0
   honeypot: 0
@@ -29,6 +27,7 @@ module:
   menu_ui: 0
   node: 0
   options: 0
+  page_cache: 0
   path: 0
   quickedit: 0
   rdf: 0
@@ -43,6 +42,7 @@ module:
   menu_link_content: 1
   content_translation: 10
   views: 10
+  minimal: 1000
 theme:
   classy: 0
   seven: 0
