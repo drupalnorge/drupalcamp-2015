@@ -35,6 +35,11 @@ class SignupBlock extends BlockBase implements ContainerFactoryPluginInterface {
   protected $routeMatch;
 
   /**
+   * The current user.
+   */
+  protected $account;
+
+  /**
    * Constructs a new UserLoginBlock instance.
    *
    * @param array $configuration
@@ -71,17 +76,19 @@ class SignupBlock extends BlockBase implements ContainerFactoryPluginInterface {
    * {@inheritdoc}
    */
   protected function blockAccess(AccountInterface $account) {
-    $route_name = $this->routeMatch->getRouteName();
-    if ($account->isAnonymous() && !in_array($route_name, array('user.register', 'user.login'))) {
-      return AccessResult::allowed();
-    }
-    return AccessResult::forbidden();
+    // Abuse this to get current account. Seemed so convenient.
+    $this->account = $account;
+    return AccessResult::allowed();
   }
 
   /**
    * {@inheritdoc}
    */
   public function build() {
+    $logged_in = TRUE;
+    if ($this->account->isAnonymous()) {
+      $logged_in = FALSE;
+    }
     return array(
       '#theme' => 'camposlo-register-block',
       '#register_link' => array(
@@ -104,6 +111,7 @@ class SignupBlock extends BlockBase implements ContainerFactoryPluginInterface {
           ],
         ],
       ),
+      '#logged_in' => $logged_in,
     );
   }
 
