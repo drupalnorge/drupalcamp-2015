@@ -4,14 +4,13 @@ unprotected_forms:
   - search_block_form
   - views_exposed_form
   - honeypot_settings_form
-protect_all_forms: 0
-log: 1
+protect_all_forms: false
+log: true
 element_name: url
-time_limit: '5'
+time_limit: 0
 expire: 300
 form_settings:
-  user_register_form: 1
-  user_pass: 0
-  node_type_node_form: 0
-  comment_comment_form: 0
+  user_register_form: true
+  user_pass: false
+  node_type_node_form: false
 langcode: nb
