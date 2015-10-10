@@ -1,4 +1,4 @@
-uuid: 33b091a3-88fd-41a3-9320-32ec746ca60f
+uuid: 2ffdd608-cc08-491b-b302-2c795be80d60
 langcode: nb
 status: true
 dependencies:
@@ -8,7 +8,7 @@ dependencies:
     - oslo2015
 id: oslo2015_branding
 theme: oslo2015
-region: content
+region: '-1'
 weight: -50
 provider: null
 plugin: system_branding_block

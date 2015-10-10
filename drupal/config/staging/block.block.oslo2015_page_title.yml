@@ -1,9 +1,7 @@
-uuid: 8c6bb132-033e-4880-9500-a239f11b20fe
+uuid: 69d8143c-f46f-4166-9d08-8a0db1e81a09
 langcode: nb
 status: true
 dependencies:
-  module:
-    - system
   theme:
     - oslo2015
 id: oslo2015_page_title
@@ -17,9 +15,4 @@ settings:
   label: 'Page title'
   provider: core
   label_display: '0'
-visibility:
-  request_path:
-    id: request_path
-    pages: '<front>'
-    negate: true
-    context_mapping: {  }
+visibility: {  }
