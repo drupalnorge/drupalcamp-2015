@@ -17,7 +17,4 @@ settings:
   label: Contact
   provider: camposlo
   label_display: '0'
-  cache:
-    max_age: 0
-    contexts: {  }
 visibility: {  }

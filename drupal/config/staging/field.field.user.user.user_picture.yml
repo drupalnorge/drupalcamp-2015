@@ -6,6 +6,7 @@ dependencies:
     - field.storage.user.user_picture
   module:
     - image
+    - user
 id: user.user.user_picture
 field_name: user_picture
 entity_type: user
@@ -32,6 +33,6 @@ settings:
     title: ''
     width: 1180
     height: 1350
-  handler: 'default:node'
+  handler: 'default:file'
   handler_settings: {  }
 field_type: image

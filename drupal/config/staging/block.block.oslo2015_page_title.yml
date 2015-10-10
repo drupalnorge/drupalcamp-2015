@@ -1,0 +1,25 @@
+uuid: 8c6bb132-033e-4880-9500-a239f11b20fe
+langcode: nb
+status: true
+dependencies:
+  module:
+    - system
+  theme:
+    - oslo2015
+id: oslo2015_page_title
+theme: oslo2015
+region: content
+weight: -50
+provider: null
+plugin: page_title_block
+settings:
+  id: page_title_block
+  label: 'Page title'
+  provider: core
+  label_display: '0'
+visibility:
+  request_path:
+    id: request_path
+    pages: '<front>'
+    negate: true
+    context_mapping: {  }

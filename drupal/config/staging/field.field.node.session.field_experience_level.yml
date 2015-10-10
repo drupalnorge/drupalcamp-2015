@@ -5,8 +5,7 @@ dependencies:
   config:
     - field.storage.node.field_experience_level
     - node.type.session
-  module:
-    - entity_reference
+    - taxonomy.vocabulary.experience_level
 id: node.session.field_experience_level
 field_name: field_experience_level
 entity_type: node

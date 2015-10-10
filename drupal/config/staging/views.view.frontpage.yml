@@ -289,12 +289,14 @@ display:
           hide_empty: false
           empty_zero: false
           hide_alter_empty: true
-          date_format: fallback
-          custom_date_format: ''
-          timezone: ''
           entity_type: node
           entity_field: created
-          plugin_id: date
+          plugin_id: field
+          type: timestamp
+          settings:
+            date_format: fallback
+            custom_date_format: ''
+            timezone: ''
         title:
           id: title
           table: node_field_data
@@ -480,13 +482,15 @@ display:
     id: default
     position: 0
     cache_metadata:
+      max-age: -1
       contexts:
         - 'languages:language_content'
         - 'languages:language_interface'
         - url.query_args
         - 'user.node_grants:view'
         - user.permissions
-      cacheable: false
+      tags:
+        - 'config:field.storage.node.body'
   feed_1:
     display_plugin: feed
     id: feed_1
@@ -516,12 +520,14 @@ display:
           view_mode: rss
       display_extenders: {  }
     cache_metadata:
+      max-age: -1
       contexts:
         - 'languages:language_content'
         - 'languages:language_interface'
         - 'user.node_grants:view'
         - user.permissions
-      cacheable: false
+      tags:
+        - 'config:field.storage.node.body'
   page_1:
     display_options:
       path: node
@@ -531,10 +537,12 @@ display:
     id: page_1
     position: 1
     cache_metadata:
+      max-age: -1
       contexts:
         - 'languages:language_content'
         - 'languages:language_interface'
         - url.query_args
         - 'user.node_grants:view'
         - user.permissions
-      cacheable: false
+      tags:
+        - 'config:field.storage.node.body'

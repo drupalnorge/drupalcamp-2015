@@ -6,6 +6,7 @@ dependencies:
     - field.storage.user.field_homepage
   module:
     - link
+    - user
 id: user.user.field_homepage
 field_name: field_homepage
 entity_type: user

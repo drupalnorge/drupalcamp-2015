@@ -4,8 +4,6 @@ status: true
 dependencies:
   config:
     - node.type.page
-  module:
-    - entity_reference
 id: node.page.uid
 field_name: uid
 entity_type: node

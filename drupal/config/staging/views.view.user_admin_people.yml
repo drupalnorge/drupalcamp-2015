@@ -400,12 +400,14 @@ display:
           hide_empty: false
           empty_zero: false
           hide_alter_empty: true
-          date_format: 'raw time ago'
-          custom_date_format: ''
-          timezone: ''
-          plugin_id: date
+          plugin_id: field
           entity_type: user
           entity_field: created
+          type: timestamp_ago
+          settings:
+            future_format: '@interval'
+            past_format: '@interval'
+            granularity: 2
         access:
           id: access
           table: users_field_data
@@ -454,12 +456,14 @@ display:
           hide_empty: false
           empty_zero: false
           hide_alter_empty: true
-          date_format: 'time ago'
-          custom_date_format: ''
-          timezone: ''
-          plugin_id: date
+          plugin_id: field
           entity_type: user
           entity_field: access
+          type: timestamp_ago
+          settings:
+            future_format: '@interval hence'
+            past_format: '@interval ago'
+            granularity: 2
         operations:
           id: operations
           table: users
@@ -819,13 +823,14 @@ display:
           1: AND
       display_extenders: {  }
     cache_metadata:
+      max-age: 0
       contexts:
         - 'languages:language_content'
         - 'languages:language_interface'
         - url
         - url.query_args
         - user.permissions
-      cacheable: false
+      tags: {  }
   page_1:
     display_plugin: page
     id: page_1
@@ -851,10 +856,11 @@ display:
         show_admin_links: false
       display_extenders: {  }
     cache_metadata:
+      max-age: 0
       contexts:
         - 'languages:language_content'
         - 'languages:language_interface'
         - url
         - url.query_args
         - user.permissions
-      cacheable: false
+      tags: {  }

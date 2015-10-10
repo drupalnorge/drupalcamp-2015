@@ -178,8 +178,7 @@ display:
           table: node_field_data
           field: changed
           label: 'Last update'
-          date_format: long
-          plugin_id: date
+          plugin_id: field
           relationship: none
           group_type: group
           admin_label: ''
@@ -223,10 +222,13 @@ display:
           hide_empty: false
           empty_zero: false
           hide_alter_empty: true
-          custom_date_format: ''
-          timezone: ''
           entity_type: node
           entity_field: changed
+          type: timestamp
+          settings:
+            date_format: long
+            custom_date_format: ''
+            timezone: ''
       arguments:
         title:
           id: title
@@ -352,6 +354,7 @@ display:
           entity_field: langcode
       display_extenders: {  }
     cache_metadata:
+      max-age: 0
       contexts:
         - 'languages:language_content'
         - 'languages:language_interface'
@@ -359,7 +362,7 @@ display:
         - url.query_args
         - 'user.node_grants:view'
         - user.permissions
-      cacheable: false
+      tags: {  }
   attachment_1:
     id: attachment_1
     display_title: Attachment
@@ -419,6 +422,7 @@ display:
       inherit_arguments: false
       display_extenders: {  }
     cache_metadata:
+      max-age: 0
       contexts:
         - 'languages:language_content'
         - 'languages:language_interface'
@@ -426,7 +430,7 @@ display:
         - url.query_args
         - 'user.node_grants:view'
         - user.permissions
-      cacheable: false
+      tags: {  }
   page_1:
     id: page_1
     display_title: Page
@@ -445,6 +449,7 @@ display:
         parent: ''
       display_extenders: {  }
     cache_metadata:
+      max-age: 0
       contexts:
         - 'languages:language_content'
         - 'languages:language_interface'
@@ -452,4 +457,4 @@ display:
         - url.query_args
         - 'user.node_grants:view'
         - user.permissions
-      cacheable: false
+      tags: {  }

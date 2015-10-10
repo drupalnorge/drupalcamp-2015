@@ -1,0 +1,18 @@
+uuid: 317d6d85-b30d-4dac-9c01-1a32c8313ff3
+langcode: nb
+status: true
+dependencies:
+  theme:
+    - oslo2015
+id: oslo2015_local_actions
+theme: oslo2015
+region: content
+weight: -10
+provider: null
+plugin: local_actions_block
+settings:
+  id: local_actions_block
+  label: 'Primary admin actions'
+  provider: core
+  label_display: '0'
+visibility: {  }

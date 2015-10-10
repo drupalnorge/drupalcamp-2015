@@ -395,12 +395,16 @@ display:
       arguments: {  }
       display_extenders: {  }
     cache_metadata:
+      max-age: -1
       contexts:
         - 'languages:language_content'
         - 'languages:language_interface'
         - 'user.node_grants:view'
         - user.permissions
-      cacheable: false
+      tags:
+        - 'config:field.storage.node.field_link'
+        - 'config:field.storage.node.field_sponsor_description'
+        - 'config:field.storage.node.field_sponsor_logo'
   block_1:
     display_plugin: block
     id: block_1
@@ -409,9 +413,13 @@ display:
     display_options:
       display_extenders: {  }
     cache_metadata:
+      max-age: -1
       contexts:
         - 'languages:language_content'
         - 'languages:language_interface'
         - 'user.node_grants:view'
         - user.permissions
-      cacheable: false
+      tags:
+        - 'config:field.storage.node.field_link'
+        - 'config:field.storage.node.field_sponsor_description'
+        - 'config:field.storage.node.field_sponsor_logo'

@@ -366,13 +366,17 @@ display:
       arguments: {  }
       display_extenders: {  }
     cache_metadata:
+      max-age: -1
       contexts:
         - 'languages:language_content'
         - 'languages:language_interface'
         - url.query_args
         - 'user.node_grants:view'
         - user.permissions
-      cacheable: false
+      tags:
+        - 'config:field.storage.node.body'
+        - 'config:field.storage.node.field_presenter'
+        - 'config:field.storage.node.field_time'
   page_1:
     display_plugin: page
     id: page_1
@@ -382,10 +386,14 @@ display:
       display_extenders: {  }
       path: program
     cache_metadata:
+      max-age: -1
       contexts:
         - 'languages:language_content'
         - 'languages:language_interface'
         - url.query_args
         - 'user.node_grants:view'
         - user.permissions
-      cacheable: false
+      tags:
+        - 'config:field.storage.node.body'
+        - 'config:field.storage.node.field_presenter'
+        - 'config:field.storage.node.field_time'

@@ -4,8 +4,6 @@ status: true
 dependencies:
   config:
     - node.type.featured_speaker
-  module:
-    - entity_reference
 id: node.featured_speaker.uid
 field_name: uid
 entity_type: node
