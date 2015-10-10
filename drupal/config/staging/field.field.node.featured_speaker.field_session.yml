@@ -5,8 +5,7 @@ dependencies:
   config:
     - field.storage.node.field_session
     - node.type.featured_speaker
-  module:
-    - entity_reference
+    - node.type.session
 id: node.featured_speaker.field_session
 field_name: field_session
 entity_type: node

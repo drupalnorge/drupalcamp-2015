@@ -86,7 +86,7 @@ class SignupBlock extends BlockBase implements ContainerFactoryPluginInterface {
    */
   public function build() {
     $logged_in = TRUE;
-    if ($this->account->isAnonymous()) {
+    if (!$this->account || $this->account->isAnonymous()) {
       $logged_in = FALSE;
     }
     return array(

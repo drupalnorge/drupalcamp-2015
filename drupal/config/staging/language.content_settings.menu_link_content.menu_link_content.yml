@@ -4,6 +4,7 @@ status: true
 dependencies:
   module:
     - content_translation
+    - menu_link_content
 third_party_settings:
   content_translation:
     enabled: true

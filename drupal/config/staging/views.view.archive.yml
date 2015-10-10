@@ -91,7 +91,7 @@ display:
           exception:
             title_enable: true
           title_enable: true
-          title: '%1'
+          title: '{{ arguments.created_year_month }}'
           default_argument_type: fixed
           summary:
             sort_order: desc
@@ -172,13 +172,14 @@ display:
       fields: {  }
       display_extenders: {  }
     cache_metadata:
+      max-age: -1
       contexts:
         - 'languages:language_interface'
         - url
         - url.query_args
         - 'user.node_grants:view'
         - user.permissions
-      cacheable: false
+      tags: {  }
   block_1:
     id: block_1
     display_title: Block
@@ -199,7 +200,7 @@ display:
           exception:
             title_enable: true
           title_enable: true
-          title: '%1'
+          title: '{{ arguments.created_year_month }}'
           default_argument_type: fixed
           summary:
             format: default_summary
@@ -210,13 +211,14 @@ display:
           entity_type: node
       display_extenders: {  }
     cache_metadata:
+      max-age: -1
       contexts:
         - 'languages:language_interface'
         - url
         - url.query_args
         - 'user.node_grants:view'
         - user.permissions
-      cacheable: false
+      tags: {  }
   page_1:
     id: page_1
     display_title: Page
@@ -229,10 +231,11 @@ display:
       path: archive
       display_extenders: {  }
     cache_metadata:
+      max-age: -1
       contexts:
         - 'languages:language_interface'
         - url
         - url.query_args
         - 'user.node_grants:view'
         - user.permissions
-      cacheable: false
+      tags: {  }

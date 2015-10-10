@@ -6,6 +6,7 @@ dependencies:
     - field.storage.user.field_drupal_org_profile
   module:
     - link
+    - user
 id: user.user.field_drupal_org_profile
 field_name: field_drupal_org_profile
 entity_type: user

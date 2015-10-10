@@ -1,5 +1,5 @@
 id: d6_view_modes
-label: Drupal 6 view modes
+label: View modes
 migration_tags:
   - Drupal 6
 source:
@@ -7,7 +7,6 @@ source:
   constants:
     targetEntityType: node
     status: true
-
 process:
   mode:
     plugin: static_map

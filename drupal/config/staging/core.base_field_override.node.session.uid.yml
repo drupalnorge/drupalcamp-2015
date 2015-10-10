@@ -4,8 +4,6 @@ status: true
 dependencies:
   config:
     - node.type.session
-  module:
-    - entity_reference
 id: node.session.uid
 field_name: uid
 entity_type: node

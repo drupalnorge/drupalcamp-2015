@@ -10,6 +10,9 @@
 #content .comment-wrapper h2.comment-form__title {
   margin-bottom: 1em;
 }
+.field-node--comment {
+  font-size: 0.934em;
+}
 .comment {
   margin-bottom: 19px;
   vertical-align: top;
@@ -29,8 +32,8 @@
 .comment__attribution img {
   border: 1px solid #d3d7d9;
 }
-/* This is required to win over specificity of .field-type-image img */
-.comment .field-name-user-picture img {
+/* This is required to win over specificity of .field--type-image img */
+.comment .field--name-user-picture img {
   margin: 0;
 }
 .comment__author .username {
@@ -61,6 +64,7 @@
   border: 1px solid #d3d7d9;
   font-size: 0.929em;
   line-height: 1.6;
+  word-break: break-all;
 }
 
 .comment__content:before {
@@ -131,8 +135,23 @@
   margin-right: 0;
   padding: 5px 5px 5px 2px;
 }
-.comment--unpublished .comment__content:after,
-.node--unpublished .comment__content:after {
+
+/**
+ * @todo: unpublished nodes have class .node--unpublished.
+ * change this to .comment--unpublished.
+ */
+.unpublished .comment-text .comment-arrow {
+  border-left: 1px solid #fff4f4;
+  border-right: 1px solid #fff4f4;
+}
+.unpublished {
+  padding: 20px 15px 0;
+}
+.comment-footer {
+  display: table-row;
+}
+.comment--unpublished .comment__text:after,
+.node--unpublished .comment__text:after {
   border-right-color: #fff4f4; /* LTR */
 }
 [dir="rtl"] .comment--unpublished .comment__content:after,

@@ -1,0 +1,23 @@
+uuid: 33b091a3-88fd-41a3-9320-32ec746ca60f
+langcode: nb
+status: true
+dependencies:
+  module:
+    - system
+  theme:
+    - oslo2015
+id: oslo2015_branding
+theme: oslo2015
+region: content
+weight: -50
+provider: null
+plugin: system_branding_block
+settings:
+  id: system_branding_block
+  label: 'Site branding'
+  provider: system
+  label_display: '0'
+  use_site_logo: true
+  use_site_name: true
+  use_site_slogan: true
+visibility: {  }

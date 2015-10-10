@@ -1,7 +1,9 @@
 uuid: a6d5a2ac-37ae-4680-aa00-da3b75fc30b3
 langcode: nb
 status: true
-dependencies: {  }
+dependencies:
+  module:
+    - file
 id: file.file
 target_entity_type_id: file
 target_bundle: file

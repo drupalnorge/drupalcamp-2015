@@ -6,6 +6,7 @@ dependencies:
     - field.storage.user.field_about_me
   module:
     - text
+    - user
 id: user.user.field_about_me
 field_name: field_about_me
 entity_type: user

@@ -7,14 +7,14 @@
 
 namespace Drupal\node\Tests\Migrate\d6;
 
-use Drupal\migrate\MigrateExecutable;
+use Drupal\migrate\Entity\Migration;
 use Drupal\Core\Database\Database;
 use Drupal\node\Entity\Node;
 
 /**
  * Node content migration.
  *
- * @group node
+ * @group migrate_drupal_6
  */
 class MigrateNodeTest extends MigrateNodeTestBase {
 
@@ -23,14 +23,10 @@ class MigrateNodeTest extends MigrateNodeTestBase {
    */
   protected function setUp() {
     parent::setUp();
-    /** @var \Drupal\migrate\entity\Migration $migration */
-    $migration = entity_load('migration', 'd6_node');
-    $executable = new MigrateExecutable($migration, $this);
-    $executable->import();
+    $this->executeMigrations(['d6_node:*']);
 
     // This is required for the second import below.
-    db_truncate($migration->getIdMap()->mapTableName())->execute();
-    $this->standalone = TRUE;
+    \Drupal::database()->truncate(Migration::load('d6_node__story')->getIdMap()->mapTableName())->execute();
   }
 
   /**
@@ -55,12 +51,7 @@ class MigrateNodeTest extends MigrateNodeTestBase {
     $this->assertIdentical('Test title', $node_revision->getTitle());
     $this->assertIdentical('1', $node_revision->getRevisionAuthor()->id(), 'Node revision has the correct user');
     // This is empty on the first revision.
-    $this->assertIdentical('', $node_revision->revision_log->value);
-
-    // It is pointless to run the second half from MigrateDrupal6Test.
-    if (empty($this->standalone)) {
-      return;
-    }
+    $this->assertIdentical(NULL, $node_revision->revision_log->value);
 
     // Test that we can re-import using the EntityContentBase destination.
     $connection = Database::getConnection('default', 'migrate');
@@ -75,20 +66,14 @@ class MigrateNodeTest extends MigrateNodeTestBase {
       ->condition('delta', 1)
       ->execute();
 
-    /** @var \Drupal\migrate\entity\Migration $migration */
-    $migration = entity_load('migration', 'd6_node');
-    $executable = new MigrateExecutable($migration, $this);
-    $executable->import();
+    $migration = Migration::load('d6_node__story');
+    $this->executeMigration($migration);
 
     $node = Node::load(1);
     $this->assertIdentical('New node title', $node->getTitle());
     // Test a multi-column fields are correctly upgraded.
     $this->assertIdentical('test', $node->body->value);
     $this->assertIdentical('full_html', $node->body->format);
-
-    $node = Node::load(3);
-    // Test that format = 0 from source maps to filtered_html.
-    $this->assertIdentical('filtered_html', $node->body->format);
   }
 
 }

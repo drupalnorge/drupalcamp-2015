@@ -5,8 +5,6 @@ dependencies:
   config:
     - field.storage.node.field_presenter
     - node.type.session
-  module:
-    - entity_reference
 id: node.session.field_presenter
 field_name: field_presenter
 entity_type: node

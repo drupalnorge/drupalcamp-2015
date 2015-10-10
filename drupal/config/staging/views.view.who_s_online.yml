@@ -199,11 +199,12 @@ display:
       arguments: {  }
       display_extenders: {  }
     cache_metadata:
+      max-age: -1
       contexts:
         - 'languages:language_content'
         - 'languages:language_interface'
         - user.permissions
-      cacheable: false
+      tags: {  }
   who_s_online_block:
     display_plugin: block
     id: who_s_online_block
@@ -214,8 +215,9 @@ display:
       display_description: 'A list of users that are currently logged in.'
       display_extenders: {  }
     cache_metadata:
+      max-age: -1
       contexts:
         - 'languages:language_content'
         - 'languages:language_interface'
         - user.permissions
-      cacheable: false
+      tags: {  }

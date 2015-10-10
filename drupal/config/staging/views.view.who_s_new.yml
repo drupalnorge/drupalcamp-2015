@@ -169,11 +169,12 @@ display:
       arguments: {  }
       display_extenders: {  }
     cache_metadata:
+      max-age: -1
       contexts:
         - 'languages:language_content'
         - 'languages:language_interface'
         - user.permissions
-      cacheable: false
+      tags: {  }
   block_1:
     display_plugin: block
     id: block_1
@@ -185,8 +186,9 @@ display:
       block_category: User
       display_extenders: {  }
     cache_metadata:
+      max-age: -1
       contexts:
         - 'languages:language_content'
         - 'languages:language_interface'
         - user.permissions
-      cacheable: false
+      tags: {  }

@@ -19,9 +19,6 @@ settings:
   label: Sponsorer
   provider: views
   label_display: visible
-  cache:
-    max_age: 0
-    contexts: {  }
   views_label: Sponsorer
   items_per_page: none
 visibility: {  }

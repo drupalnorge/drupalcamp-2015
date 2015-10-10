@@ -18,9 +18,6 @@ settings:
   label: about_block
   provider: camposlo
   label_display: '0'
-  cache:
-    max_age: 0
-    contexts: {  }
 visibility:
   request_path:
     id: request_path

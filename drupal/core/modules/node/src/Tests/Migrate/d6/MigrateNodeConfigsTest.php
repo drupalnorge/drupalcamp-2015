@@ -13,25 +13,17 @@ use Drupal\migrate_drupal\Tests\d6\MigrateDrupal6TestBase;
 /**
  * Upgrade variables to node.settings.yml.
  *
- * @group node
+ * @group migrate_drupal_6
  */
 class MigrateNodeConfigsTest extends MigrateDrupal6TestBase {
 
   use SchemaCheckTestTrait;
 
   /**
-   * Modules to enable.
-   *
-   * @var array
-   */
-  public static $modules = array('node');
-
-  /**
    * {@inheritdoc}
    */
   protected function setUp() {
     parent::setUp();
-    $this->loadDumps(['Variable.php']);
     $this->executeMigration('d6_node_settings');
   }
 
