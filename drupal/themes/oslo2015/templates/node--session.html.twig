@@ -87,7 +87,7 @@
             {{ label }}
           </h2>
           <p class="subtitle">
-            {% trans %}{{ date|passthrough }} | {{ author_name|passthrough }} {% endtrans %}
+            {% trans %}{{ date|raw }} | {{ author_name|raw }} {% endtrans %}
             {{ metadata }}
           </p>
         </div>
