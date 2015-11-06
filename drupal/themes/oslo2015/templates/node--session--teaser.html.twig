@@ -86,20 +86,20 @@
         </div>
         <div class="col-xs-12 col-sm-9">
           <h2 class="title">{{ label }}</h2>
-          <div class="field-wrapper first">
-            <label class="speaker">{%trans%}Speaker{%endtrans%}</label>
-            <div>{{content.field_presenter}}</div>
-          </div>
-          <div class="field-wrapper">
-              <label class="level">{%trans%}Experience level{%endtrans%}</label>
-              <div>
-                  {%if content.field_experience_level['#field_name']%}
-                      {{content.field_experience_level}}
-                  {%else%}
-                      {%trans%}No info{%endtrans%}
-                  {%endif%}
-              </div>
-          </div>
+          {% if content.field_presenter['#field_name'] %}
+            <div class="field-wrapper first">
+              <label class="speaker">{%trans%}Speaker{%endtrans%}</label>
+              <div>{{content.field_presenter}}</div>
+            </div>
+          {%endif%}
+          {%if content.field_experience_level['#field_name']%}
+            <div class="field-wrapper">
+                <label class="level">{%trans%}Experience level{%endtrans%}</label>
+                <div>
+                  {{content.field_experience_level}}
+                </div>
+            </div>
+          {%endif%}
           <div{{ content_attributes.addClass('node__content') }}>
             {{ content.body }}
           </div>
