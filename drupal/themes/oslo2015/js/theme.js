@@ -191,19 +191,6 @@ jQuery(document).ready(function() {
 		mouseDrag:false,
 		touchDrag:false
 	});
-
-	$(".view-id-frontpage").owlCarousel({
-        navigation: false,
-        pagination: false,
-        items: 2,
-        navigationText: false,
-		autoPlay:5000,
-		itemsDesktop : [1000,2], //5 items between 1000px and 901px
-		itemsDesktopSmall : [900,1], // betweem 900px and 601px
-		itemsTablet: [600,1], //2 items between 600 and 0
-		transitionStyle : "slide",
-
-	});
 	/*=================================================================
 	clients slider
 	===================================================================*/

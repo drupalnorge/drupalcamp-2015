@@ -1,10 +1,12 @@
 var gulp = require('gulp');
 var sass = require('gulp-sass');
 var prefix = require('gulp-autoprefixer');
+var sourcemaps = require('gulp-sourcemaps');
 var livereload = require('gulp-livereload');
 
 gulp.task('scss', function() {
   gulp.src('scss/style.scss')
+  .pipe(sourcemaps.init())
     .pipe(sass({
       outputStyle: 'compressed',
       errLogToConsole: true,
@@ -13,6 +15,7 @@ gulp.task('scss', function() {
       }
     }))
     .pipe(prefix("last 1 version", "> 1%", "ie 8", "ie 7"))
+    //.pipe(sourcemaps.write())
     .pipe(gulp.dest('build/css'));
 });
 

@@ -22,3 +22,26 @@
     padding: 0;
   }
 }
+.view-id-frontpage .views-row .views-field-created {
+  text-align: left;
+  margin-bottom: 10px;
+}
+.view-id-frontpage .views-row a {
+  margin: 0;
+}
+.view-id-frontpage .views-row {
+  margin: 1em 0;
+  padding: 30px 20px;
+  p {
+    margin-bottom: .6em;
+  }
+}
+.view-id-frontpage {
+  @extend .container;
+  .views-element-container {
+    @extend .row;
+  }
+  .view-content {
+    @extend .col-lg-12;
+  }
+}
