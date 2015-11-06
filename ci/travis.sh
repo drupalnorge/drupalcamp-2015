@@ -13,7 +13,8 @@ cd drupal
 php -d sendmail_path=`which true` ~/.composer/vendor/bin/drush.php si minimal --db-url="mysql://$DB_USERNAME@127.0.0.1/$DATABASE" --account-pass=secret --keep-config -y
 drush cset system.site uuid ffb6d131-689a-415d-a300-0af2e090ef1e -y
 echo "\$config_directories['staging'] = 'config/staging';" | sudo tee -a sites/default/settings.php
-drush cim staging -y && drush cim staging -y
+drush cim staging -y
+drush cim staging -y
 # Set the testing email interface as default mail interface.
 drush cset system.mail interface.default test_mail_collector -y
 # Disable honeypot time limit, since we are going to be a bot later.
