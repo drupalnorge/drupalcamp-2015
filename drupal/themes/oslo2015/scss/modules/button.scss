@@ -1,12 +1,6 @@
 input[type="submit"],
-.view-id-frontpage .views-row a,
 .page-content button,
 .theme_btn {
   @extend .btn;
-}
-
-.view-id-frontpage .views-row a {
-  margin: 0 auto;
-  width: 290px;
   display: block;
 }

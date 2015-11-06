@@ -35,6 +35,9 @@
   p {
     margin-bottom: .6em;
   }
+  a {
+    text-decoration: underline;
+  }
 }
 .view-id-frontpage {
   @extend .container;
