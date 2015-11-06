@@ -103,7 +103,7 @@
           <div{{ content_attributes.addClass('node__content') }}>
             {{ content.body }}
           </div>
-          {% if content.links %}
+          {% if content.links and content.field_presenter['#field_name'] and content.field_experience_level['#field_name']%}
             <div class="node__links">
               {{ content.links }}
             </div>
