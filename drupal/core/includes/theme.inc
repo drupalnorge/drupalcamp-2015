@@ -14,7 +14,6 @@ use Drupal\Component\Utility\Html;
 use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Component\Render\MarkupInterface;
 use Drupal\Component\Utility\Unicode;
-use Drupal\Component\Utility\Xss;
 use Drupal\Core\Config\Config;
 use Drupal\Core\Config\StorageException;
 use Drupal\Core\Render\RenderableInterface;
@@ -386,7 +385,7 @@ function theme_get_setting($setting_name, $theme = NULL) {
  *   https://www.drupal.org/node/2575065
  */
 function theme_render_and_autoescape($arg) {
-  if ($arg instanceOf MarkupInterface) {
+  if ($arg instanceof MarkupInterface) {
     return (string) $arg;
   }
   $return = NULL;
@@ -408,7 +407,7 @@ function theme_render_and_autoescape($arg) {
       $return = $arg->toString();
     }
     else {
-      throw new \Exception(t('Object of type "@class" cannot be printed.', array('@class' => get_class($arg))));
+      throw new \Exception('Object of type ' . get_class($arg) . ' cannot be printed.');
     }
   }
 
@@ -446,22 +445,22 @@ function theme_settings_convert_to_config(array $theme_settings, Config $config)
     if ($key == 'default_logo') {
       $config->set('logo.use_default', $value);
     }
-    else if ($key == 'logo_path') {
+    elseif ($key == 'logo_path') {
       $config->set('logo.path', $value);
     }
-    else if ($key == 'default_favicon') {
+    elseif ($key == 'default_favicon') {
       $config->set('favicon.use_default', $value);
     }
-    else if ($key == 'favicon_path') {
+    elseif ($key == 'favicon_path') {
       $config->set('favicon.path', $value);
     }
-    else if ($key == 'favicon_mimetype') {
+    elseif ($key == 'favicon_mimetype') {
       $config->set('favicon.mimetype', $value);
     }
-    else if (substr($key, 0, 7) == 'toggle_') {
+    elseif (substr($key, 0, 7) == 'toggle_') {
       $config->set('features.' . Unicode::substr($key, 7), $value);
     }
-    else if (!in_array($key, array('theme', 'logo_upload'))) {
+    elseif (!in_array($key, array('theme', 'logo_upload'))) {
       $config->set($key, $value);
     }
   }
@@ -864,9 +863,6 @@ function template_preprocess_image(&$variables) {
  *     rows.
  */
 function template_preprocess_table(&$variables) {
-  $is_sticky = !empty($variables['sticky']);
-  $is_responsive = !empty($variables['responsive']);
-
   // Format the table columns:
   if (!empty($variables['colgroups'])) {
     foreach ($variables['colgroups'] as &$colgroup) {
@@ -1578,7 +1574,7 @@ function template_preprocess_field_multiple_value_form(&$variables) {
         'data' => array(
           '#prefix' => '<h4' . $header_attributes . '>',
           'title' => array(
-            '#markup' => t($element['#title']),
+            '#markup' => $element['#title'],
           ),
           '#suffix' => '</h4>',
         ),
@@ -1782,7 +1778,7 @@ function drupal_common_theme() {
     ),
     // From menu.inc.
     'menu' => array(
-      'variables' => array('items' => array(), 'attributes' => array()),
+      'variables' => array('menu_name' => NULL, 'items' => array(), 'attributes' => array()),
     ),
     'menu_local_task' => array(
       'render element' => 'element',
