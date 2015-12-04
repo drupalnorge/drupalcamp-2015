@@ -5,4 +5,4 @@ dependencies: {  }
 id: short
 label: 'Default short date'
 locked: false
-pattern: 'd/m/Y - H:i'
+pattern: 'm/d/Y - H:i'
