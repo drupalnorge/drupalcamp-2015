@@ -18,9 +18,11 @@ default_value_callback: ''
 settings:
   handler: 'default:user'
   handler_settings:
+    include_anonymous: true
     filter:
       type: _none
-    target_bundles: {  }
+    target_bundles: null
     sort:
-      field: _none
+      field: name
+      direction: ASC
 field_type: entity_reference
