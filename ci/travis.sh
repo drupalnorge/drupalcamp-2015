@@ -11,6 +11,8 @@ sudo service apache2 restart
 cd drupal
 php -d sendmail_path=`which true` ~/.composer/vendor/bin/drush.php si minimal --db-url="mysql://$DB_USERNAME@127.0.0.1/$DATABASE" --account-pass=secret -y
 drush en config -y
+drush cset system.site uuid ffb6d131-689a-415d-a300-0af2e090ef1e -y
+echo "\$config_directories['staging'] = 'config/staging';" | sudo tee -a sites/default/settings.php
 drush cim staging -y
 # For some reason. Don't have time to figure out why.
 drush cim staging -y
