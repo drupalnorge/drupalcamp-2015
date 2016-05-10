@@ -10,10 +10,7 @@ sudo sed -e "s?%TRAVIS_BUILD_DIR%?$(pwd)?g" --in-place /etc/apache2/sites-availa
 sudo service apache2 restart
 # Install Drupal
 cd drupal
-php -d sendmail_path=`which true` ~/.composer/vendor/bin/drush.php si minimal --db-url="mysql://$DB_USERNAME@127.0.0.1/$DATABASE" --account-pass=secret -y
-drush cset system.site uuid ffb6d131-689a-415d-a300-0af2e090ef1e -y
-echo "\$config_directories['staging'] = 'config/staging';" | sudo tee -a sites/default/settings.php
-drush cim staging -y
+php -d sendmail_path=`which true` ~/.composer/vendor/bin/drush.php si --db-url="mysql://$DB_USERNAME@127.0.0.1/$DATABASE" --account-pass=secret --config-dir=config/staging -y
 drush cim staging -y
 # Set the testing email interface as default mail interface.
 drush cset system.mail interface.default test_mail_collector -y
