@@ -2,7 +2,7 @@
 
 Based on Drupal 8, since we are so cutting edge here in the north.
 
-[![Build Status](https://travis-ci.org/eiriksm/dcamp-d8.svg?branch=master)](https://travis-ci.org/eiriksm/dcamp-d8)
+[![Build Status](https://travis-ci.org/drupalnorge/dcamp-d8.svg?branch=master)](https://travis-ci.org/drupalnorge/dcamp-d8)
 
 ## Installing your own instance.
 - Install Drupal in a regular way (preferrably with the `minimal` profile).
