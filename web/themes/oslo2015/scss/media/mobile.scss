@@ -1,0 +1,28 @@
+@media only screen and (max-width: 767px) {
+  #block-views-block-sponsor-list-block-1,
+  .path-frontpage .block {
+    h2 {
+      font-size: 2em;
+    }
+  }
+  ul.tabs.nav-tabs {
+    font-size: .8em;
+  }
+  .session-meta {
+    .field-wrapper.first {
+      margin-top: 0;
+    }
+    label {
+      font-size: 0px;
+      border: none;
+      float: left;
+      height: 25px;
+    }
+    .field-wrapper div {
+      line-height: 25px;
+    }
+  }
+  #block-featuredspeakers h2, #block-speaker-block h2 {
+    font-size: 2em;
+  }
+}

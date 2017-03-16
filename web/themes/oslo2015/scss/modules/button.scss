@@ -1,0 +1,6 @@
+input[type="submit"],
+.page-content button,
+.theme_btn {
+  @extend .btn;
+  display: block;
+}

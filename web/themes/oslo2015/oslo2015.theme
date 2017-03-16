@@ -1,0 +1,81 @@
+<?php
+
+use Drupal\Core\Template\Attribute;
+
+/**
+ * Implements hook_preprocess_page().
+ */
+function oslo2015_preprocess_page(&$variables) {
+  // Hm. $base_path is probably something new and fancy in Drupal 8?
+  global $base_path;
+  $variables['logo_image'] = $base_path . drupal_get_path('theme', 'oslo2015') . '/logo.png';
+}
+
+/**
+ * Implements hook_preprocess_menu().
+ */
+function oslo2015_preprocess_menu(&$variables) {
+  if ($variables['theme_hook_original'] == 'menu__main') {
+    $class = array('class' => array('nav navbar-nav'), 'id' => array('menu-main-nav'));
+    $variables['attributes'] = new Attribute($class);
+    $delta = 0;
+    foreach ($variables['items'] as &$item) {
+      $delta++;
+      $item['attributes']->addClass('leaf');
+      $item['attributes']->removeClass('menu-item');
+      if ($delta === 1) {
+        $item['attributes']->addClass('first');
+      }
+      if ($delta === count($variables['items'])) {
+        $item['attributes']->addClass('last');
+      }
+      $item['title'] = $item['title'];
+      $item['url']->setOption('html', TRUE);
+    }
+  }
+}
+
+/**
+ * Implements theme_preprocess_input().
+ */
+function oslo2015_preprocess_input(&$vars) {
+  if ($vars['element']['#type'] == 'submit') {
+    return;
+  }
+  $vars['attributes']['class'] = !empty($vars['#attributes']['class']) ? $vars['#attributes']['class'] : [];
+  $vars['attributes']['class'][] = 'form-control';
+}
+
+/**
+ * Implements theme_preprocess_node().
+ */
+function oslo2015_preprocess_node(&$vars) {
+  $session_owner = $vars['node']->getOwner();
+  $picture_value = $session_owner->get('user_picture')->getValue();
+  if (!$picture_value) {
+    return;
+  }
+  $file = file_load($picture_value[0]['target_id']);
+  $uri = $file->get('uri')->getValue();
+  $img_vars = array(
+    '#theme' => 'image_style',
+    '#uri' => $uri[0]['value'],
+    '#style_name' => 'original',
+  );
+  $img_output = drupal_render($img_vars);
+  $vars['user_picture'] = $img_output;
+}
+
+/**
+ * Implements hook_preprocess_links().
+ */
+function oslo2015_preprocess_links(&$vars) {
+  // Add that fancy bootstrap button class to read more links.
+  if (!empty($vars['links']) && !empty($vars['links']['node-readmore'])) {
+    if (empty($vars['links']['node-readmore']['link']['#options']['attributes']['class'])) {
+      $vars['links']['node-readmore']['link']['#options']['attributes']['class'] = [];
+    }
+    $vars['links']['node-readmore']['link']['#options']['attributes']['class'][] = 'btn';
+    $vars['links']['node-readmore']['link']['#options']['attributes']['class'][] = 'btn-primary';
+  }
+}

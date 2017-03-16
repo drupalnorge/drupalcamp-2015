@@ -1,0 +1,68 @@
+<?php
+
+/**
+ * @file
+ * Contains camposlo.module.
+ */
+
+use Drupal\Core\Routing\RouteMatchInterface;
+
+/**
+ * Implements hook_help().
+ */
+function camposlo_help($route_name, RouteMatchInterface $route_match) {
+  switch ($route_name) {
+    // Main module help for the camposlo module.
+    case 'help.page.camposlo':
+      $output = '';
+      $output .= '<h3>' . t('About') . '</h3>';
+      $output .= '<p>' . t('Drupal Camp Oslo specific module') . '</p>';
+      return $output;
+
+    default:
+  }
+}
+
+/**
+ * Implements hook_theme().
+ */
+function camposlo_theme() {
+  $theme = [
+    'camposlo-price-block' => [
+      'variables' => ['prices' => []],
+    ],
+    'camposlo-contact-block' => [
+      'variables' => [],
+    ],
+    'camposlo-register-block' => [
+      'variables' => [
+        'register_link' => [],
+        'session_link' => [],
+        'logged_in' => FALSE,
+      ],
+    ],
+  ];
+
+  return $theme;
+}
+
+/**
+ * Implements hook_menu_local_tasks_alter().
+ *
+ * Make the user tabs shorter, so they can fit a mobile screen.
+ */
+function camposlo_menu_local_tasks_alter(&$data, $route_name) {
+  $alter_routes = [
+    'user.pass' => 'Reset password',
+    'user.register' => 'Register',
+    'user.login' => 'Login',
+  ];
+  if (in_array($route_name, array_keys($alter_routes))) {
+    $tabs = $data['tabs'][0];
+    foreach ($tabs as $route => $tab) {
+      if (!empty($alter_routes[$route])) {
+        $data['tabs'][0][$route]['#link']['title'] = t($alter_routes[$route]);
+      }
+    }
+  }
+}

@@ -1,0 +1,15 @@
+name: Oslo 2015 theme
+type: theme
+description: Drupalcamp Oslo theme
+core: 8.x
+base theme: classy
+
+libraries:
+  - oslo2015/base
+
+regions:
+  primary_menu: Primary menu
+  messages: Messages
+  content: Content
+  content_bottom: Content bottom
+  footer: Footer

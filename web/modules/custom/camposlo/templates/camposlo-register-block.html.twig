@@ -1,0 +1,27 @@
+'<div class="section" id="contact">
+  <div class="container">
+    <div class="row text-center">
+      <div class="section-heading">
+        {% if not logged_in %}
+          <h2 class="title"><span>{%trans%}Sign up!{%endtrans%}</span></h2>
+          <p>
+            {%trans%}Price is either 200,- for members in the Norwegian Drupal Association or 300,- for non-members. Membership costs 200,-. You can register now and pay later.{%endtrans%}
+          </p>
+          <p>
+            {%trans%}
+              Payment will be collected via card at the venue.
+            {%endtrans%}
+          </p>
+        {% else %}
+          <h2 class="title">{% trans %}Submit session{%endtrans%}</h2>
+        {% endif %}
+        <p class="subtitle">
+          {% if not logged_in %}
+            {{register_link}}
+          {% endif %}
+          {{session_link}}
+        </p>
+      </div>
+    </div>
+  </div>
+</div>'

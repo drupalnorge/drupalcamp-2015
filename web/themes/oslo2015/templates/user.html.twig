@@ -1,0 +1,48 @@
+{#
+/**
+ * @file
+ * Default theme implementation to present all user data.
+ *
+ * This template is used when viewing a registered user's page,
+ * e.g., example.com/user/123. 123 being the user's ID.
+ *
+ * Available variables:
+ * - content: A list of content items. Use 'content' to print all content, or
+ *   print a subset such as 'content.field_example'.
+ * - Field variables: For each field attached to the user a corresponding
+ *   variable is defined; e.g., account.field_example has a variable
+ *   'field_example' defined. When needing to access a field's raw values,
+ *   developers/themers are strongly encouraged to use these variables.
+ *   Otherwise they will have to explicitly specify the desired field language,
+ *   e.g. account.field_example.en, thus overriding any language negotiation
+ *   rule that was previously applied.
+ * - attributes: HTML attributes for the container element.
+ *
+ * @see template_preprocess_user()
+ *
+ * @ingroup themeable
+ */
+#}
+<article{{ attributes.addClass('profile') }}>
+  {% if content %}
+    <div class="row">
+      <div class="col-md-3">
+        {{content.user_picture}}
+      </div>
+      <div class="col-md-9">
+        <label>{% trans %}About me{% endtrans %}</label>
+        {% if content.field_about_me['#field_name'] %}
+          <blockquote>{{content.field_about_me}}</blockquote>
+        {% else %}
+          <div></div>
+        {% endif %}
+        <label>{% trans %}Homepage{% endtrans %}</label>
+        <div>{{content.field_homepage}}</div>
+        <label>{% trans %}Twitter{% endtrans %}</label>
+        <div>{{content.field_twitter}}</div>
+        <label>{% trans %}Drupal.org profile{% endtrans %}</label>
+        <div>{{content.field_drupal_org_profile}}</div>
+      </div>
+    </div>
+  {% endif %}
+</article>

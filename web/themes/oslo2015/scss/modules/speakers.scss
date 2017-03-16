@@ -1,0 +1,48 @@
+.speaker-inner:hover {
+  .image-wrap {
+    transform: scale(1.25);
+    transition: transform .6s cubic-bezier(.190,1.000,.220,1.000);
+  }
+  .active-wrapper {
+    opacity: 1;
+  }
+
+}
+.speaker-inner {
+  overflow: hidden;
+  position: relative;
+  .active-wrapper {
+    background: rgba(0,0,0,.8);
+    opacity: 0;
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    transition: opacity .8s cubic-bezier(.190,1.000,.220,1.000);
+  }
+  .text-wrapper {
+    display: table;
+    width: 100%;
+    height: 100%;
+  }
+  .text-inner {
+    display: table-cell;
+    vertical-align: middle;
+    text-align: center;
+  }
+  .image-wrap {
+    text-align: center;
+    img {
+      width: 100%;
+      max-width: 260px;
+      margin: 0 auto;
+    }
+  }
+}
+.speaker-list-item {
+  overflow: hidden;
+}
+.speaker-caption {
+  text-align: center;
+}

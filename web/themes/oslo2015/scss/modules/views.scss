@@ -1,0 +1,50 @@
+// Program view.
+.view-program {
+  .views-row {
+    padding: 1em 0;
+    &.views-odd {
+      background-color: #f9f9f9;
+    }
+  }
+  #blog-detail {
+    background: none;
+  }
+  h2.title {
+    margin: 0 0 .5em;
+  }
+  label {
+    margin: 0;
+  }
+  .field-wrapper {
+    margin-bottom: 1em;
+  }
+  ul.inline li {
+    padding: 0;
+  }
+}
+.view-id-frontpage .views-row .views-field-created {
+  text-align: left;
+  margin-bottom: 10px;
+}
+.view-id-frontpage .views-row a {
+  margin: 0;
+}
+.view-id-frontpage .views-row {
+  margin: 1em 0;
+  padding: 30px 20px;
+  p {
+    margin-bottom: .6em;
+  }
+  a {
+    text-decoration: underline;
+  }
+}
+.view-id-frontpage {
+  @extend .container;
+  .views-element-container {
+    @extend .row;
+  }
+  .view-content {
+    @extend .col-lg-12;
+  }
+}

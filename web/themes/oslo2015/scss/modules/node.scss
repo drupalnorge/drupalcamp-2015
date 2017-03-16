@@ -1,0 +1,32 @@
+.node--type-article #page-title {
+  display: none;
+}
+#blog-detail {
+  padding: 0;
+}
+.session-meta {
+  label {
+    background: url(../../images/user.svg) no-repeat 0 5px;
+    background-size: 20px 20px;
+    border-bottom: $primary 1px solid;
+    display: block;
+    text-transform: uppercase;
+    padding-left: 25px;
+    font-size: 1.3em;
+    &.time {
+      background-image: url(../../images/calendar.svg);
+    }
+    &.level {
+      background-image: url(../../images/stats-bars2.svg);
+    }
+  }
+  .field-wrapper {
+    margin: 2em 0;
+    &.first {
+      margin-top: 0;
+    }
+  }
+}
+.owl-carousel {
+  cursor: auto;
+}
