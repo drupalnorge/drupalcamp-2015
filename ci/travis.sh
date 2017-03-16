@@ -21,3 +21,4 @@ drush cr
 drush cset system.mail interface.default test_mail_collector -y
 # Disable honeypot time limit, since we are going to be a bot later.
 drush cset honeypot.settings time_limit 0 -y
+drush cr
