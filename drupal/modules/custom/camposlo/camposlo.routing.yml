@@ -1,8 +1,0 @@
-camposlo.submit_session_controller_index:
-  path: '/submit_session'
-  defaults:
-    _controller: '\Drupal\camposlo\Controller\SubmitSessionController::index'
-    _title: 'Submit session'
-  requirements:
-    _permission: 'access content'
-

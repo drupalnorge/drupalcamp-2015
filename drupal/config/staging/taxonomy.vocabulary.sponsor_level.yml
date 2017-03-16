@@ -1,9 +1,0 @@
-uuid: 0df482f8-2e64-4f99-b032-5016352e3624
-langcode: nb
-status: true
-dependencies: {  }
-name: 'Sponsor level'
-vid: sponsor_level
-description: 'Used to place sponsors on different spots'
-hierarchy: 0
-weight: 0

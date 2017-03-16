@@ -1,8 +1,0 @@
-name: camposlo
-type: module
-description: Drupal Camp Oslo specific module
-core: 8.x
-package: Other
-dependencies:
-  - block
-
