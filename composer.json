@@ -25,7 +25,9 @@
         "drupal/honeypot": "^1.23",
         "drupal/pathauto": "^1.0@RC",
         "drupal/token": "^1.0@RC",
-        "drupal/sparkpost": "2.x-dev"
+        "drupal/sparkpost": "2.x-dev",
+        "drupal/coffee": "^1.0@beta",
+        "drupal/admin_toolbar": "^1.18"
     },
     "require-dev": {
         "behat/mink": "~1.7",
