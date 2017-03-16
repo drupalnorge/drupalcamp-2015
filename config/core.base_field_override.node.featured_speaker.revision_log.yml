@@ -1,0 +1,18 @@
+uuid: d044befc-17a2-467d-8e00-e54365e0a913
+langcode: nb
+status: true
+dependencies:
+  config:
+    - node.type.featured_speaker
+id: node.featured_speaker.revision_log
+field_name: revision_log
+entity_type: node
+bundle: featured_speaker
+label: 'Meldinger for versjonsloggen'
+description: 'Briefly describe the changes you have made.'
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: string_long

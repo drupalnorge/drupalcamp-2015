@@ -1,0 +1,24 @@
+uuid: 8b8c6d27-dcd7-42be-a53a-58a97d622f36
+langcode: nb
+status: true
+dependencies:
+  config:
+    - views.view.sponsor_list
+  module:
+    - views
+  theme:
+    - oslo2015
+id: views_block__sponsor_list_block_1
+theme: oslo2015
+region: content_bottom
+weight: -3
+provider: null
+plugin: 'views_block:sponsor_list-block_1'
+settings:
+  id: 'views_block:sponsor_list-block_1'
+  label: Sponsorer
+  provider: views
+  label_display: visible
+  views_label: Sponsorer
+  items_per_page: none
+visibility: {  }

@@ -1,0 +1,18 @@
+uuid: 7e483690-f973-43bc-b72f-4711913601b6
+langcode: nb
+status: true
+dependencies:
+  config:
+    - node.type.article
+id: node.article.created
+field_name: created
+entity_type: node
+bundle: article
+label: Skrevet
+description: 'The time that the node was created.'
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: created

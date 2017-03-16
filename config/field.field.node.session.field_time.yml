@@ -1,0 +1,21 @@
+uuid: 9df569de-dd6c-4115-b608-8a06791c8831
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_time
+    - node.type.session
+  module:
+    - datetime
+id: node.session.field_time
+field_name: field_time
+entity_type: node
+bundle: session
+label: Time
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: datetime

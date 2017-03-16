@@ -1,0 +1,20 @@
+uuid: a1ea83e1-f709-433f-b400-eb9b07944e63
+langcode: nb
+status: true
+dependencies:
+  config:
+    - node.type.featured_speaker
+id: node.featured_speaker.title
+field_name: title
+entity_type: node
+bundle: featured_speaker
+label: Tittel
+description: ''
+required: true
+translatable: false
+default_value:
+  -
+    value: ''
+default_value_callback: ''
+settings: {  }
+field_type: string

@@ -1,0 +1,20 @@
+uuid: dda119e1-9b5b-4658-8d08-8ba5ef08400f
+langcode: en
+status: true
+dependencies:
+  module:
+    - system
+  theme:
+    - oslo2015
+id: oslo2015_messages
+theme: oslo2015
+region: messages
+weight: -4
+provider: null
+plugin: system_messages_block
+settings:
+  id: system_messages_block
+  label: 'Status messages'
+  provider: system
+  label_display: '0'
+visibility: {  }

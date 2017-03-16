@@ -1,0 +1,12 @@
+uuid: ffb6d131-689a-415d-a300-0af2e090ef1e
+name: 'Drupalcamp Oslo 2015'
+mail: styret@drupalnorge.no
+slogan: ''
+page:
+  403: ''
+  404: ''
+  front: /node
+admin_compact_mode: false
+weight_select_max: 100
+langcode: nb
+default_langcode: nb

@@ -1,0 +1,20 @@
+uuid: c7bf4866-b626-4d6c-9500-be8c66e83ef4
+langcode: nb
+status: true
+dependencies:
+  config:
+    - core.entity_view_mode.node.teaser
+    - field.field.node.featured_speaker.field_session
+    - node.type.featured_speaker
+  module:
+    - user
+id: node.featured_speaker.teaser
+targetEntityType: node
+bundle: featured_speaker
+mode: teaser
+content:
+  links:
+    weight: 100
+hidden:
+  field_session: true
+  langcode: true

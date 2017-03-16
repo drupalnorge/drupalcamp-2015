@@ -1,0 +1,16 @@
+uuid: bab83f16-674b-46a9-ae07-7d6771cd903b
+langcode: nb
+status: true
+dependencies:
+  config:
+    - block_content.type.basic
+  module:
+    - content_translation
+third_party_settings:
+  content_translation:
+    enabled: false
+id: block_content.basic
+target_entity_type_id: block_content
+target_bundle: basic
+default_langcode: site_default
+language_alterable: false

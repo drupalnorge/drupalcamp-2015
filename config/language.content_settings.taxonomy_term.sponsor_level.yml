@@ -1,0 +1,16 @@
+uuid: 63314cc5-5342-47e0-a000-d116361d1beb
+langcode: nb
+status: true
+dependencies:
+  config:
+    - taxonomy.vocabulary.sponsor_level
+  module:
+    - content_translation
+third_party_settings:
+  content_translation:
+    enabled: true
+id: taxonomy_term.sponsor_level
+target_entity_type_id: taxonomy_term
+target_bundle: sponsor_level
+default_langcode: site_default
+language_alterable: false

@@ -1,0 +1,26 @@
+uuid: 0e8ef7d0-3dbc-4981-9100-af219ec2db9f
+langcode: nb
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_session
+    - node.type.featured_speaker
+    - node.type.session
+id: node.featured_speaker.field_session
+field_name: field_session
+entity_type: node
+bundle: featured_speaker
+label: Session
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:node'
+  handler_settings:
+    target_bundles:
+      session: session
+    sort:
+      field: _none
+field_type: entity_reference

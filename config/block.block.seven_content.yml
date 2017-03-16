@@ -1,0 +1,20 @@
+uuid: 865dcc1e-9801-49b9-870f-15d1598e3e7b
+langcode: nb
+status: true
+dependencies:
+  module:
+    - system
+  theme:
+    - seven
+id: seven_content
+theme: seven
+region: content
+weight: 0
+provider: null
+plugin: system_main_block
+settings:
+  id: system_main_block
+  label: Hovedsideinnhold
+  provider: system
+  label_display: '0'
+visibility: {  }

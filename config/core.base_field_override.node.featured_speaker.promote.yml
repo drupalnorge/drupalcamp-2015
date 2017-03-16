@@ -1,0 +1,22 @@
+uuid: 717018d9-06e2-4d0d-b800-a47790378052
+langcode: nb
+status: true
+dependencies:
+  config:
+    - node.type.featured_speaker
+id: node.featured_speaker.promote
+field_name: promote
+entity_type: node
+bundle: featured_speaker
+label: 'Vis på forsiden'
+description: ''
+required: false
+translatable: false
+default_value:
+  -
+    value: 1
+default_value_callback: ''
+settings:
+  on_label: På
+  off_label: Av
+field_type: boolean

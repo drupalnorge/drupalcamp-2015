@@ -1,0 +1,20 @@
+uuid: f141aba0-0a8d-43d5-af05-5eeafe65af5c
+langcode: nb
+status: true
+dependencies:
+  module:
+    - camposlo
+  theme:
+    - oslo2015
+id: signup_block
+theme: oslo2015
+region: content_bottom
+weight: -5
+provider: null
+plugin: signup_block
+settings:
+  id: signup_block
+  label: signup_block
+  provider: camposlo
+  label_display: '0'
+visibility: {  }

@@ -1,0 +1,38 @@
+uuid: 7c43e566-46b7-42ec-8d41-65ef12a2f31b
+langcode: nb
+status: true
+dependencies:
+  config:
+    - field.storage.user.user_picture
+  module:
+    - image
+    - user
+id: user.user.user_picture
+field_name: user_picture
+entity_type: user
+bundle: user
+label: Bilde
+description: 'Ditt virtuelle ansikt eller bilde.'
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  file_directory: pictures
+  file_extensions: 'png gif jpg jpeg'
+  max_filesize: ''
+  max_resolution: ''
+  min_resolution: ''
+  alt_field: false
+  alt_field_required: false
+  title_field: false
+  title_field_required: false
+  default_image:
+    uuid: 794b6832-93bd-49a1-a100-bd0b70cd8a87
+    alt: ''
+    title: ''
+    width: 1180
+    height: 1350
+  handler: 'default:file'
+  handler_settings: {  }
+field_type: image

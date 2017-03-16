@@ -1,0 +1,9 @@
+uuid: a0e75c9a-bcdb-44b7-b100-d52963a8a094
+langcode: nb
+status: true
+dependencies: {  }
+id: zxx
+label: 'Not applicable'
+direction: ltr
+weight: 3
+locked: true
