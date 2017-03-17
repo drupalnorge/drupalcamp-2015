@@ -35,7 +35,7 @@ install:
   - touch sites/default/settings.local.php
   - ./../vendor/bin/drush site-install minimal --verbose --yes --db-url=mysql://root@127.0.0.1/test --account-pass=secret
   - ./../vendor/bin/drush cset system.site uuid ffb6d131-689a-415d-a300-0af2e090ef1e -y
- before_script:
+before_script:
   - ./../vendor/bin/drush cim --verbose --yes
   - ./../vendor/bin/drush cim --verbose --yes
   - ./../vendor/bin/drush updb --verbose --yes
