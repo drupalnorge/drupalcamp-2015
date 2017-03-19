@@ -1,0 +1,13 @@
+diff --git a/core/modules/content_translation/src/ContentTranslationManager.php b/core/modules/content_translation/src/ContentTranslationManager.php
+index da8bd1c618..8ba7b2fe2c 100644
+--- a/core/modules/content_translation/src/ContentTranslationManager.php
++++ b/core/modules/content_translation/src/ContentTranslationManager.php
+@@ -95,7 +95,7 @@ public function isEnabled($entity_type_id, $bundle = NULL) {
+       $bundles = !empty($bundle) ? [$bundle] : array_keys($this->entityManager->getBundleInfo($entity_type_id));
+       foreach ($bundles as $bundle) {
+         $config = $this->loadContentLanguageSettings($entity_type_id, $bundle);
+-        if ($config->getThirdPartySetting('content_translation', 'enabled', FALSE)) {
++        if ($config && $config->getThirdPartySetting('content_translation', 'enabled', FALSE)) {
+           $enabled = TRUE;
+           break;
+         }

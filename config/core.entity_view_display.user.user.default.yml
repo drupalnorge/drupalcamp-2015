@@ -1,0 +1,72 @@
+uuid: f50269a1-9336-47a7-ac3f-63434c9bbae5
+langcode: nb
+status: true
+dependencies:
+  config:
+    - field.field.user.user.field_about_me
+    - field.field.user.user.field_drupal_org_profile
+    - field.field.user.user.field_homepage
+    - field.field.user.user.field_twitter
+    - field.field.user.user.user_picture
+    - image.style.original
+  module:
+    - image
+    - link
+    - text
+    - user
+id: user.user.default
+targetEntityType: user
+bundle: user
+mode: default
+content:
+  field_about_me:
+    type: text_trimmed
+    weight: 4
+    settings:
+      trim_length: 600
+    third_party_settings: {  }
+    label: above
+  field_drupal_org_profile:
+    type: link
+    weight: 3
+    settings:
+      trim_length: 80
+      url_only: false
+      url_plain: false
+      rel: ''
+      target: ''
+    third_party_settings: {  }
+    label: above
+  field_homepage:
+    type: link
+    weight: 2
+    settings:
+      trim_length: 80
+      url_only: false
+      url_plain: false
+      rel: ''
+      target: ''
+    third_party_settings: {  }
+    label: above
+  field_twitter:
+    type: link
+    weight: 1
+    settings:
+      trim_length: 80
+      url_only: false
+      url_plain: false
+      rel: ''
+      target: ''
+    third_party_settings: {  }
+    label: above
+  user_picture:
+    type: image
+    weight: 0
+    settings:
+      image_style: original
+      image_link: content
+    third_party_settings: {  }
+    label: hidden
+hidden:
+  langcode: true
+  member_for: true
