@@ -1,4 +1,4 @@
-@import url(http://fonts.googleapis.com/css?family=Oswald:400,500,700);@import url(http://fonts.googleapis.com/css?family=Open+Sans:400,600,700,800,300);.icon.fontello{background:none;display:inline-block;height:inherit;line-height:inherit;margin:0;padding:0;vertical-align:inherit;width:auto;*display:inline;*zoom:1}.animate-spin{animation:spin 2s infinite linear;display:inline-block}@keyframes spin{0%{transform:rotate(0deg)}100%{transform:rotate(359deg)}}/*!
+@import url(https://fonts.googleapis.com/css?family=Oswald:400,500,700);@import url(https://fonts.googleapis.com/css?family=Open+Sans:400,600,700,800,300);.icon.fontello{background:none;display:inline-block;height:inherit;line-height:inherit;margin:0;padding:0;vertical-align:inherit;width:auto;*display:inline;*zoom:1}.animate-spin{animation:spin 2s infinite linear;display:inline-block}@keyframes spin{0%{transform:rotate(0deg)}100%{transform:rotate(359deg)}}/*!
  * Bootstrap v3.0.0
  *
  * Copyright 2013 Twitter, Inc
