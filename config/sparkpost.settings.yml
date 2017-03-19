@@ -1,0 +1,10 @@
+api_key: ''
+debug: true
+sender: styret@drupalnorge.no
+sender_name: 'Drupal Norge'
+format: basic_html
+async: false
+skip_cron: false
+_core:
+  default_config_hash: z3l4ndIiWm2qFKsLF2skyKEeSvOziAueoQY0ixY0-Ws
+langcode: nb
