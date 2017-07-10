@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains Drupal\camposlo\Plugin\Block\PriceBlock.
- */
-
 namespace Drupal\camposlo\Plugin\Block;
 
 use Drupal\Core\Block\BlockBase;
@@ -18,7 +13,6 @@ use Drupal\Core\Block\BlockBase;
  * )
  */
 class PriceBlock extends BlockBase {
-
 
   /**
    * {@inheritdoc}

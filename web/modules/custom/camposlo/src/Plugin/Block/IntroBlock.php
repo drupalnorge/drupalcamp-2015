@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains Drupal\camposlo\Plugin\Block\IntroBlock.
- */
-
 namespace Drupal\camposlo\Plugin\Block;
 
 use Drupal\Core\Block\BlockBase;
@@ -19,12 +14,11 @@ use Drupal\Core\Block\BlockBase;
  */
 class IntroBlock extends BlockBase {
 
-
   /**
    * {@inheritdoc}
    */
   public function build() {
-    return array(
+    return [
       '#markup' => '<section id="introWrapper"><div class="view view-about view-id-about view-display-id-block view-dom-id-2f3f04d40a8a067f2c65f5fdcf915b72">
 
 
@@ -103,7 +97,7 @@ class IntroBlock extends BlockBase {
 
 
 </div>  </section>',
-    );
+    ];
   }
 
 }

@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains Drupal\camposlo\Plugin\Block\ContactBlock.
- */
-
 namespace Drupal\camposlo\Plugin\Block;
 
 use Drupal\Core\Block\BlockBase;
@@ -24,9 +19,9 @@ class ContactBlock extends BlockBase {
    */
   public function build() {
 
-    return array(
+    return [
       '#theme' => 'camposlo-contact-block',
-    );
+    ];
   }
 
 }

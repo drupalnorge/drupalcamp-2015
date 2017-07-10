@@ -37,13 +37,9 @@ install:
   - ./../vendor/bin/drush cset system.site uuid ffb6d131-689a-415d-a300-0af2e090ef1e -y
 before_script:
   - ./../vendor/bin/drush cim --verbose --yes
-  - ./../vendor/bin/drush cim --verbose --yes
   - ./../vendor/bin/drush updb --verbose --yes
   - ./../vendor/bin/drush cr
   - ./../vendor/bin/drush runserver http://127.0.0.1:8888 &
   - sleep 3
 script:
-- cd $TRAVIS_BUILD_DIR
-- npm i casperjs
-- "./node_modules/.bin/casperjs test tests/*"
-
+  - composer test
