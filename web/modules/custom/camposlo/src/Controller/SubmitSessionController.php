@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains Drupal\camposlo\Controller\SubmitSessionController.
- */
-
 namespace Drupal\camposlo\Controller;
 
 use Drupal\Core\Controller\ControllerBase;
@@ -15,6 +10,7 @@ use Drupal\Core\Controller\ControllerBase;
  * @package Drupal\camposlo\Controller
  */
 class SubmitSessionController extends ControllerBase {
+
   /**
    * Index.
    *

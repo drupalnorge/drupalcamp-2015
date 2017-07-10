@@ -5,4 +5,3 @@ camposlo.submit_session_controller_index:
     _title: 'Submit session'
   requirements:
     _permission: 'access content'
-
