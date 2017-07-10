@@ -24,6 +24,7 @@ content:
       trim_length: 600
     third_party_settings: {  }
     label: hidden
+    region: content
   field_image:
     type: image
     weight: -1
@@ -32,8 +33,10 @@ content:
       image_link: content
     third_party_settings: {  }
     label: hidden
+    region: content
   links:
     weight: 100
+    region: content
 hidden:
   field_image: true
   langcode: true

@@ -6,7 +6,6 @@ fetch:
   max_attempts: 2
   timeout: 30
 notification:
-  emails:
-    - eirik@morland.no
+  emails: {  }
   threshold: security
 langcode: nb

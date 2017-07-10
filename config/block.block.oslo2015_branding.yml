@@ -8,7 +8,7 @@ dependencies:
     - oslo2015
 id: oslo2015_branding
 theme: oslo2015
-region: '-1'
+region: primary_menu
 weight: -50
 provider: null
 plugin: system_branding_block

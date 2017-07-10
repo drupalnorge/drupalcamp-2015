@@ -26,6 +26,7 @@ content:
       image_link: content
     third_party_settings: {  }
     label: hidden
+    region: content
 hidden:
   field_about_me: true
   field_drupal_org_profile: true

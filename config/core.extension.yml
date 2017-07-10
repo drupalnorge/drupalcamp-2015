@@ -54,3 +54,4 @@ theme:
   oslo2015: 0
   stable: 0
 langcode: nb
+profile: minimal

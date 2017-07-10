@@ -23,8 +23,10 @@ content:
     weight: 0
     settings: {  }
     third_party_settings: {  }
+    region: content
   contact:
     weight: 5
+    region: content
   field_about_me:
     type: text_textarea
     weight: 4
@@ -32,6 +34,7 @@ content:
       rows: 5
       placeholder: ''
     third_party_settings: {  }
+    region: content
   field_drupal_org_profile:
     type: link_default
     weight: 6
@@ -39,6 +42,7 @@ content:
       placeholder_url: ''
       placeholder_title: ''
     third_party_settings: {  }
+    region: content
   field_homepage:
     type: link_default
     weight: 5
@@ -46,6 +50,7 @@ content:
       placeholder_url: ''
       placeholder_title: ''
     third_party_settings: {  }
+    region: content
   field_twitter:
     type: link_default
     weight: 7
@@ -53,19 +58,23 @@ content:
       placeholder_url: ''
       placeholder_title: ''
     third_party_settings: {  }
+    region: content
   language:
     weight: 2
     settings: {  }
     third_party_settings: {  }
+    region: content
   path:
     type: pathauto
     weight: 30
     settings: {  }
     third_party_settings: {  }
+    region: content
   timezone:
     weight: 3
     settings: {  }
     third_party_settings: {  }
+    region: content
   user_picture:
     type: image_image
     weight: 1
@@ -73,5 +82,6 @@ content:
       progress_indicator: throbber
       preview_image_style: thumbnail
     third_party_settings: {  }
+    region: content
 hidden:
   langcode: true
