@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "8f3b9146e47369ca6f901a5225ae8db8",
+    "content-hash": "547bfa2e73df3301c1cc2578a809d1a8",
     "packages": [
         {
             "name": "alchemy/zippy",
@@ -6148,17 +6148,21 @@
         },
         {
             "name": "eiriksm/wait-for-listen",
-            "version": "dev-master",
+            "version": "1.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/eiriksm/wait-for-listen.git",
-                "reference": "64b5c91b91054ca54b94ad0f24603f361fd2bc49"
+                "reference": "c2c2bae2b7ffd5473c83e8eac7d2a070600f8a7f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/eiriksm/wait-for-listen/zipball/64b5c91b91054ca54b94ad0f24603f361fd2bc49",
-                "reference": "64b5c91b91054ca54b94ad0f24603f361fd2bc49",
+                "url": "https://api.github.com/repos/eiriksm/wait-for-listen/zipball/c2c2bae2b7ffd5473c83e8eac7d2a070600f8a7f",
+                "reference": "c2c2bae2b7ffd5473c83e8eac7d2a070600f8a7f",
                 "shasum": ""
+            },
+            "require-dev": {
+                "phpunit/phpunit": "~5.7.21",
+                "satooshi/php-coveralls": "^1.0"
             },
             "bin": [
                 "wait-for-listen"
@@ -6180,7 +6184,7 @@
                 }
             ],
             "description": "Waits until a port is listening.",
-            "time": "2017-07-10T09:10:14+00:00"
+            "time": "2017-07-10T10:27:35+00:00"
         },
         {
             "name": "fabpot/goutte",
@@ -6481,8 +6485,7 @@
         "drupal/pathauto": 5,
         "drupal/token": 5,
         "drupal/sparkpost": 20,
-        "drupal/coffee": 10,
-        "eiriksm/wait-for-listen": 20
+        "drupal/coffee": 10
     },
     "prefer-stable": true,
     "prefer-lowest": false,
