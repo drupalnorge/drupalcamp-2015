@@ -24,7 +24,7 @@
         "drupal/console": "~1.0",
         "drupal/honeypot": "^1.23",
         "drupal/pathauto": "^1.0@RC",
-        "drupal/token": "^1.0@RC",
+        "drupal/token": "^1.0.0",
         "drupal/sparkpost": "2.x-dev",
         "drupal/coffee": "^1.0@beta",
         "drupal/admin_toolbar": "^1.18"
