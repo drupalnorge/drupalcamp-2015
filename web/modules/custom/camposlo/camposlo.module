@@ -53,15 +53,15 @@ function camposlo_theme() {
  */
 function camposlo_menu_local_tasks_alter(&$data, $route_name) {
   $alter_routes = [
-    'user.pass' => 'Reset password',
-    'user.register' => 'Register',
-    'user.login' => 'Login',
+    'user.pass' => t('Reset password'),
+    'user.register' => t('Register'),
+    'user.login' => t('Login'),
   ];
   if (in_array($route_name, array_keys($alter_routes))) {
     $tabs = $data['tabs'][0];
     foreach ($tabs as $route => $tab) {
       if (!empty($alter_routes[$route])) {
-        $data['tabs'][0][$route]['#link']['title'] = t($alter_routes[$route]);
+        $data['tabs'][0][$route]['#link']['title'] = $alter_routes[$route];
       }
     }
   }

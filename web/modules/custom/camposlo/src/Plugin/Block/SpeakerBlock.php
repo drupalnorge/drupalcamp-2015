@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains Drupal\camposlo\Plugin\Block\SpeakerBlock.
- */
-
 namespace Drupal\camposlo\Plugin\Block;
 
 use Drupal\Core\Url;
@@ -20,17 +15,16 @@ use Drupal\Core\Block\BlockBase;
  */
 class SpeakerBlock extends BlockBase {
 
-
   /**
    * {@inheritdoc}
    */
   public function build() {
-    $build = array();
+    $build = [];
 
     // Find all nodes of the type featured_speaker.
-    $rows = db_query('SELECT * FROM {node} n WHERE n.type=:type', array(
+    $rows = db_query('SELECT * FROM {node} n WHERE n.type=:type', [
       ':type' => 'featured_speaker',
-    ));
+    ]);
     $has_output = FALSE;
     $output = '<div class="row">';
     foreach ($rows as $row) {
@@ -52,11 +46,11 @@ class SpeakerBlock extends BlockBase {
         $picture_value = $session_user->get('user_picture')->getValue();
         $file = file_load($picture_value[0]['target_id']);
         $uri = $file->get('uri')->getValue();
-        $img_vars = array(
+        $img_vars = [
           '#theme' => 'image_style',
           '#uri' => $uri[0]['value'],
           '#style_name' => 'original',
-        );
+        ];
         $img_output = drupal_render($img_vars);
         $has_output = TRUE;
       }
@@ -90,9 +84,9 @@ class SpeakerBlock extends BlockBase {
       ];
     }
 
-    return array(
+    return [
       '#markup' => $output,
-    );
+    ];
   }
 
 }

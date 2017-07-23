@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains Drupal\camposlo\Plugin\Block\SignupBlock.
- */
-
 namespace Drupal\camposlo\Plugin\Block;
 
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
@@ -15,6 +10,7 @@ use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Block\BlockBase;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+
 /**
  * Provides a 'SignupBlock' block.
  *
@@ -36,6 +32,8 @@ class SignupBlock extends BlockBase implements ContainerFactoryPluginInterface {
 
   /**
    * The current user.
+   *
+   * @var \Drupal\Core\Session\AccountInterface
    */
   protected $account;
 
@@ -89,9 +87,9 @@ class SignupBlock extends BlockBase implements ContainerFactoryPluginInterface {
     if (!$this->account || $this->account->isAnonymous()) {
       $logged_in = FALSE;
     }
-    return array(
+    return [
       '#theme' => 'camposlo-register-block',
-      '#register_link' => array(
+      '#register_link' => [
         '#type' => 'link',
         '#url' => Url::fromRoute('user.register'),
         '#title' => $this->t('Register'),
@@ -100,8 +98,8 @@ class SignupBlock extends BlockBase implements ContainerFactoryPluginInterface {
             'btn btn-primary btn-lg',
           ],
         ],
-      ),
-      '#session_link' => array(
+      ],
+      '#session_link' => [
         '#type' => 'link',
         '#url' => Url::fromRoute('camposlo.submit_session_controller_index'),
         '#title' => $this->t('Submit session'),
@@ -110,9 +108,9 @@ class SignupBlock extends BlockBase implements ContainerFactoryPluginInterface {
             'btn btn-primary btn-lg',
           ],
         ],
-      ),
+      ],
       '#logged_in' => $logged_in,
-    );
+    ];
   }
 
 }
