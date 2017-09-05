@@ -6184,16 +6184,16 @@
         },
         {
             "name": "eiriksm/wait-for-listen",
-            "version": "1.0.0",
+            "version": "1.0.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/eiriksm/wait-for-listen.git",
-                "reference": "c2c2bae2b7ffd5473c83e8eac7d2a070600f8a7f"
+                "reference": "f101c597427be4be873ab7bc99a9bf96a06902c8"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/eiriksm/wait-for-listen/zipball/c2c2bae2b7ffd5473c83e8eac7d2a070600f8a7f",
-                "reference": "c2c2bae2b7ffd5473c83e8eac7d2a070600f8a7f",
+                "url": "https://api.github.com/repos/eiriksm/wait-for-listen/zipball/f101c597427be4be873ab7bc99a9bf96a06902c8",
+                "reference": "f101c597427be4be873ab7bc99a9bf96a06902c8",
                 "shasum": ""
             },
             "require-dev": {
@@ -6220,7 +6220,7 @@
                 }
             ],
             "description": "Waits until a port is listening.",
-            "time": "2017-07-10T10:27:35+00:00"
+            "time": "2017-09-04T18:09:59+00:00"
         },
         {
             "name": "fabpot/goutte",
