@@ -19,15 +19,15 @@
         "composer/installers": "^v1.4.0",
         "drupal-composer/drupal-scaffold": "^2.2",
         "cweagans/composer-patches": "~1.6.1",
-        "drupal/core": "~8.3.7",
-        "drush/drush": "~8.1.12",
         "drupal/console": "~1.0",
         "drupal/honeypot": "^1.23",
         "drupal/pathauto": "^1.0@RC",
         "drupal/token": "^1.0.0",
         "drupal/sparkpost": "^2.0@beta",
         "drupal/coffee": "^1.0@beta",
-        "drupal/admin_toolbar": "^1.19.0"
+        "drupal/admin_toolbar": "^1.19.0",
+        "drupal/core": "^8.4",
+        "drush/drush": "^9-rc"
     },
     "require-dev": {
         "drupal/coder": "^8.2",
