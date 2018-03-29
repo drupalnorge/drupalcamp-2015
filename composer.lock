@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "c36f6f6fd98ec77f162df4b6fafca938",
+    "content-hash": "07bb9b1f11895ed3fcc80ff23696ccd5",
     "packages": [
         {
             "name": "alchemy/zippy",
@@ -1952,6 +1952,12 @@
                 "symfony/phpunit-bridge": "~3.2.8"
             },
             "type": "drupal-core",
+            "extra": {
+                "patches_applied": {
+                    "Install problem hack": "./ci/thirpartyettingsproblem.patch",
+                    "SA-CORE-2018-002": "https://cgit.drupalcode.org/drupal/patch/?id=88e134084c440adf7a977f410f603e1effe795c6"
+                }
+            },
             "autoload": {
                 "psr-4": {
                     "Drupal\\Core\\": "lib/Drupal/Core",

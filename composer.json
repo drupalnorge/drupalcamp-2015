@@ -81,7 +81,8 @@
         },
         "patches": {
             "drupal/core": {
-                "Install problem hack": "./ci/thirpartyettingsproblem.patch"
+                "Install problem hack": "./ci/thirpartyettingsproblem.patch",
+                "SA-CORE-2018-002": "https://cgit.drupalcode.org/drupal/patch/?id=88e134084c440adf7a977f410f603e1effe795c6"
             }
         }
     }
